@@ -182,7 +182,7 @@ MonoBehaviour:
   - {fileID: 73626302}
   generationList:
   - {fileID: 11400000, guid: 8daa0a8c091990a4c8abdbac26e8dc75, type: 2}
-  - {fileID: 11400000, guid: 8daa0a8c091990a4c8abdbac26e8dc75, type: 2}
+  - {fileID: 11400000, guid: adef450a005b0a942a4733e2fb929b6f, type: 2}
   MaxObjectCnt: 10
   bonusMaxCount: 4
   bonusMinCount: 2
