@@ -74,37 +74,6 @@ public class MapEditorWindow : EditorWindow
 
         fallingObjectList = new List<FallingObject>(parentObject.GetComponentsInChildren<FallingObject>(true));
 
-
-        foreach (var obj in fallingObjectList)
-        {
-            //if (!obj.GetRequired()) continue;
-            ShapeEnum shape = obj.Shape;
-
-            if (ShapeCnt.ContainsKey(shape))
-            {
-                
-                ShapeCnt[shape]++;
-                
-            }
-            else if(ShapeNotRequiredCnt.ContainsKey(shape))
-            {
-                
-                ShapeNotRequiredCnt[shape]++;
-                
-            }
-            else
-            {
-                if(obj.GetRequired())
-                {
-                    ShapeCnt[shape]=1;
-                }
-                else
-                {
-                    ShapeNotRequiredCnt[shape] = 1;
-                }
-            }
-        }
-
     }
 
     private void OnGUI()

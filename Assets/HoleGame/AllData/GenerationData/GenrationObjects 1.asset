@@ -9,13 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76645d18fa29de749a75d68ae7c6e7c1, type: 3}
-  m_Name: M_1
+  m_Script: {fileID: 11500000, guid: c44526a62a104af4d99953cb9ff18b2e, type: 3}
+  m_Name: GenrationObjects 1
   m_EditorClassIdentifier: 
-  bisdefaultStat: 1
-  EXPCnt: 5
-  bRequired: 1
-  bMovement: 1
-  jumpDistance: 2
-  squishAmount: 0.2
-  mass: 1
+  objects:
+  - {fileID: 5349104326824382967, guid: 8040702dd5c003a4eb83bd4a0b322560, type: 3}
+  bomb: {fileID: 0}
+  spawnWeights:
+  - 1

@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bisdefaultStat: 1
   EXPCnt: 20
+  TimeCnt: 10
   bRequired: 1
   bMovement: 1
   jumpDistance: 1
   squishAmount: 0.4
-  mass: 4
+  mass: 1

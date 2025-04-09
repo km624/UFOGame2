@@ -170,11 +170,11 @@ public class BeamTrigger : MonoBehaviour
     {
         Beamobject.SetActive(false);
         Inrange.Remove(obj);
-        //if(obj.GetRequired())
-            GameState.Instance.RemoveFallingObject( obj,obj.transform.position);
-       
-        Destroy(obj.gameObject);
-       
+      
+
+        obj.OnSwallow();
+
+
     }
 
 }

@@ -1,9 +1,11 @@
 using Lean.Gui;
 using Lean.Transition.Method;
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+
 using UnityEngine;
+using static UnityEngine.InputSystem.LowLevel.InputStateHistory;
 
 
 
@@ -11,36 +13,46 @@ public class GameState : MonoBehaviour
 {
     public static GameState Instance { get; private set; }
 
-    private StageData stagedata;
+  
     [SerializeField]
     private UFOPlayer ufoplayer;
+
+    [SerializeField]
+    private ObjectManager objectManager;
+
     [SerializeField]
     private CameraShake Camerashake;
 
     [SerializeField]
     private PlayerHudWidget PlayerHud;
-    //[SerializeField]
-   // private ShapeManager AllShapeImage;
+ 
     [SerializeField]
     private SkillManager AllSkillManager;
-    public Dictionary<ShapeEnum, List<FallingObject>> FallingObjects { get; private set; } = new Dictionary<ShapeEnum, List<FallingObject>>();
 
-    delegate void FUpdateShapeCount(ShapeEnum shape, int count);
-    FUpdateShapeCount ShapeCountChanged;
-
-    public event Action<Vector3 /*아이콘 생성 위치*/, Sprite/*아이콘 도형*/ , ShapeEnum> FOnSwallowShaped;
-    public event Action FOnBombSwallowed;
+    // 총 남은 시간(초), float으로 관리
+    [SerializeField]
+    private float TotalTime = 30.0f;
+    //private bool bIsTimeStop = false;
+    Coroutine GameTimeCoroutine;
+    Coroutine PlayTimeCoroutine;
+    public event Action<int /*TotalSecound*/> FOnTotalTimeChanged;
+   
+    // 플레이 시간 누적, float으로 관리 (원한다면 int로 변환해서 표시 가능)
+    public float TotalPlayTime { get; private set; } = 0.0f;
 
     [SerializeField]
-    private int TimeMin = 1;
-    [SerializeField]
-    private int TimeSecond = 30;
+    private int AddChangeGenerationScore = 1000;
+    private int CurrentChangeGenerationScore = 0; 
+    private int TotalScore = 0;
+   
+    private bool bIgnoredbomb = false;
+    private bool bIceActive = false;
+    
+    private bool bIsGameEnd = false; 
 
-    private bool bIgnoreBomb = false;
 
-    //게임 스테이트 (클리어 ,실패 ) 이벤트 생성 예정
-    //public event Action<bool /*게임 클리어 , 실패 */> FOnGameStated;
-    bool bIsGameClear = false;
+    public Vector3 GetPlayerPostion() { return ufoplayer.transform.position; }
+
     private void Awake()
     {
         if (Instance == null)
@@ -53,32 +65,32 @@ public class GameState : MonoBehaviour
             return;
         }
 
-
-        foreach (ShapeEnum shape in System.Enum.GetValues(typeof(ShapeEnum)))
-        {
-            FallingObjects[shape] = new List<FallingObject>();
-        }
-
-
-
-      
     }
 
     void Start()
     {
-        
+        CurrentChangeGenerationScore = AddChangeGenerationScore;
 
-        //오브젝트 위젯 생성
-        SetAllFallingObjectWidget();
+     //보너스 목표 위젯 생성 or 갱신
+        objectManager.FOnBounsWidgetCreated += PlayerHud.CallBack_CreateShapeWidget;
 
-        //오브젝트 카운트 바인딩
-        ShapeCountChanged += PlayerHud.UpdateAllShapeCount;
+        //보너스 목표 위젯 흡수 , 파괴 시 아이콘 생성ㄴ
+        objectManager.FOnBonusSwallowed += PlayerHud.CallBack_SpawnUIImageAtWorldPos;
 
+        objectManager.FOnBounusCompleted += CallBack_BonusClear;
         //오브젝트 빨아들였을때 바인딩
-        FOnSwallowShaped += PlayerHud.SpawnUIImageAtWorldPos;
+        objectManager.FOnObjectSwallowed += CallBack_ObjectSwallow;
+        
+        //장애물 빨아들였을때
+        objectManager.FOnBomnbSwallowed += CallBack_BombSwallow;
+
+
+        PlayerHud.FOnAllBounusAnimEnded += objectManager.CallBack_RenewalBonusObject;
+
+
+
         //스킬 세팅
         AllSkillManager.SetSkill(ufoplayer);
-
         //스킬 표시
         foreach (SkillBase skilldata in AllSkillManager.AllSkillPrefabs)
         {
@@ -88,208 +100,194 @@ public class GameState : MonoBehaviour
         //스킬 바인딩
         AllSkillManager.FOnSkillActivated += PlayerHud.ActiveSkill;
 
-        //타이머 세팅
 
-        if (stagedata != null)
-        {
-            TimeMin = stagedata.TimeMin;
-            TimeSecond = stagedata.TimeSecond;
-        }
+        PlayerHud.SetTimeWidget(TotalTime,this);
+        StartPlayTimer();
+        StartGameTimer();
+        PlayerHud.SetScoreText(TotalScore);
 
-        PlayerHud.SetTimeWidget(TimeMin, TimeSecond);
+        objectManager.InitObjectManager();
 
-        PlayerHud.StartTimer();
 
-        //폭탄 바인딩
-        FOnBombSwallowed += PlayerHud.MinusTimer;
-        FOnBombSwallowed += Camerashake.ShakeCamera;
     }
-   
-    /*void OnLoadandSetData(UFOData data)
-    {
-        if(ufoplayer!=null)
-        {
-            if(data!=null)
-                ufoplayer.SetUFOData(data);
-        }
-        else
-        {
-            Debug.Log("UFO Not Set");
-        }
-    }*/
 
-    public void AbsorptionObject(FallingObject obj)
-    { 
-        if(obj!=null)
+    private void OnDisable()
+    {
+        objectManager.FOnBounsWidgetCreated -= PlayerHud.CallBack_CreateShapeWidget;
+        objectManager.FOnBonusSwallowed -= PlayerHud.CallBack_SpawnUIImageAtWorldPos;
+        objectManager.FOnBounusCompleted -= CallBack_BonusClear;
+        objectManager.FOnObjectSwallowed -= CallBack_ObjectSwallow;
+        objectManager.FOnBomnbSwallowed -= CallBack_BombSwallow;
+
+        AllSkillManager.FOnSkillActivated -= PlayerHud.ActiveSkill;
+        PlayerHud.FOnAllBounusAnimEnded -= objectManager.CallBack_RenewalBonusObject;
+    }
+
+    private void CallBack_ObjectSwallow(FallingObject fallingobject,int currentgeneration)
+    {
+
+        Debug.Log("흡수함");
+        TotalScore += (int)(fallingobject.TimeCnt * 100.0f)*(1+currentgeneration);
+        TotalTime += fallingobject.TimeCnt;
+
+        PlayerHud.SetScoreText(TotalScore);
+
+        ufoplayer.AddEXPGauge(fallingobject.EXPCnt);
+
+        if (TotalScore >= CurrentChangeGenerationScore)
         {
-            ShapeEnum objshape = obj.GetShapeEnum();
-            if(objshape ==ShapeEnum.boomb)
+            CurrentChangeGenerationScore += AddChangeGenerationScore;
+            bool changed = objectManager.ChangeGeneration();
+            if (changed)
             {
-                if(!bIgnoreBomb)
-                    FOnBombSwallowed?.Invoke();
-                return;
+                PlayerHud.OnForceRenewalBounusWidget();
             }
            
-
-            RemoveFallingObject(obj, ufoplayer.gameObject.transform.position);
         }
     }
-
-    void SetAllFallingObjectWidget()
+    private void CallBack_BonusClear(Dictionary<ShapeEnum, int> allbouns , int currentgeneration)
     {
-
-        if (stagedata != null)
+        
+        foreach(var item in allbouns)
         {
-            //StageData stagedata = GameManager.Instance.GetCurrentMapData();
-            //Debug.Log("아이콘 생성");
-            if(stagedata.RequiredShapeCnt.Count==0)
+            for(int i = 0; i < item.Value;i++)
             {
-                Debug.Log("없음");
+                float timecnt = objectManager.SearchShapeData(item.Key, currentgeneration);
+
+                TotalScore += (int)(timecnt * 100.0f) * (1 + currentgeneration) * 2;
+                Debug.Log("보너스 점수 추가 : " + TotalScore);
             }
-            foreach (var fallingobject in stagedata.RequiredShapeCnt)
-            {
-                if (fallingobject.Value == 0)
-                {
-                   
-                    continue;
-                }
-
-
-                    Sprite ShapeImage = ShapeManager.Instance.GetShapeSprite(fallingobject.Key);
-
-                PlayerHud.CreateShapeWidget(fallingobject.Key, fallingobject.Value, ShapeImage);
-
-                if (ShapeImage == null)
-                    Debug.Log(fallingobject.Key + " : 아이콘 없음");
-
-            }
+         
         }
-
       
     }
 
-    public void RegisterFallingObject(FallingObject obj)
+
+    private void CallBack_BombSwallow()
     {
-        if(!FallingObjects[obj.Shape].Contains(obj))
-        {
-            FallingObjects[obj.Shape].Add(obj);
-            
-        }
+        TotalTime -= 10.0f;
+        Camerashake.ShakeCamera();
     }
 
-    public void RemoveFallingObject(FallingObject obj , Vector3 iconpostion)
+ 
+    public void StartGameTimer()
     {
-        if (FallingObjects[obj.Shape].Contains(obj))
-        {
-            FallingObjects[obj.Shape].Remove(obj);
-
-            ShapeCountChanged?.Invoke(obj.Shape, FallingObjects[obj.Shape].Count);
-
-            FOnSwallowShaped?.Invoke(iconpostion, ShapeManager.Instance.GetShapeSprite(obj.Shape), obj.Shape);
-
-            //ufoplayer.AddEXPGauge(obj.EXPCnt);
-        }
-        if (ShapeEnum.boomb != obj.Shape)
-            ufoplayer.AddEXPGauge(obj.EXPCnt);
-        else
-            ufoplayer.AddEXPGauge(1);
-
-        if (CheckFallingObjectCount())
-        {
-            bIsGameClear = true;
-            GameEnd();
-        }
-
+        GameTimeCoroutine = StartCoroutine(GameTimerCount());
+        
     }
 
-    bool CheckFallingObjectCount()
+    public void StartPlayTimer()
     {
-        bool AllFall = true;
+        PlayTimeCoroutine = StartCoroutine(PlayTimerCount());
+    }
 
-        foreach(var fallingobject in FallingObjects)
+    // 게임 진행 타이머: 매 프레임 Time.deltaTime 만큼 감소
+    IEnumerator GameTimerCount()
+    {
+        // 코루틴 시작 시 초기 초 값 저장 (Floor)
+        int lastSecond = Mathf.CeilToInt(TotalTime);
+
+        while (TotalTime > 0f)
         {
-            if(fallingobject.Value.Count!=0)
-            { 
-                AllFall = false;
-                break;
+            yield return null;
+
+           
+            // 남은 시간 감소
+            TotalTime -= Time.deltaTime;
+            if (TotalTime < 0f)
+            {
+                TotalTime = 0f;
+            }
+
+            // 현재 남은 초 (정수) 계산
+            int currentSecond = Mathf.CeilToInt(TotalTime);
+            // 만약 이전 프레임과 초가 달라졌다면 이벤트 호출
+            if (currentSecond != lastSecond)
+            {
+                
+                lastSecond = currentSecond;
+                FOnTotalTimeChanged?.Invoke(lastSecond);
             }
         }
 
-        return AllFall;
+        // 게임 타이머 종료 시 처리
+        GameEnd();
     }
 
-    public void SetStopGameTimer(bool bisStop)
+    IEnumerator PlayTimerCount()
     {
+        while (true)
+        {
+            yield return null;
+            TotalPlayTime += Time.deltaTime;
+        }
+    }
+
+
+    private void StopGameTimer(bool bisStop)
+    {
+
         if (bisStop)
         {
-            PlayerHud.StopTimer();
+            StopCoroutine(GameTimeCoroutine);
         }
         else
         {
-            PlayerHud.StartTimer();
+            StartGameTimer();
         }
     }
 
-  
-    public void SetIgnoreBomb(bool active)
+    private void StopPlayTimer(bool bisStop)
     {
-        bIgnoreBomb = active;
+        if (bisStop)
+        {
+            StopCoroutine(PlayTimeCoroutine);
+        }
+        else
+        {
+           StartPlayTimer();
+        }
+    }
+
+    public void Skill_SetIgnoreBomb(bool active)
+    {
+        bIgnoredbomb = active;
+    }
+    public void Skill_SetIceActive(bool active)
+    {
+        bIceActive = active;
+        StopGameTimer(active); 
+    }
+
+ 
+    public void AllObjectStopActive(bool active)
+    {
+        if (!active)
+        {
+            if (bIsGameEnd)
+            {
+                Debug.Log("이미 게임 끝남");
+                return;
+
+            }
+        }
+        objectManager.AllObjectStopActive(active);
+        objectManager.IceActive(active);
+      
     }
 
     public void GameEnd()
     {
-        int star = 0;
-        int totalsecond = PlayerHud.StopTimer();
+       
         AllObjectStopActive(true);
-        if (bIsGameClear)
-        {
-            switch (totalsecond)
-            {
-                case int n when (n >= stagedata.star3):
-                    star = 3;
-                    Debug.Log("star3 " + totalsecond);
-                    break;
 
-                case int n when (n >= stagedata.star2):
-                    star = 2;
-                    Debug.Log("star2 " + totalsecond);
-                    break;
+        bIsGameEnd = true;
 
-                case int n when (n >= stagedata.star1):
-                    star = 1;
-                    Debug.Log("star1 " + totalsecond);
-                    break;
-
-                default:
-                    star = 1;
-
-                    break;
-            }
-        }
         ufoplayer.CallBack_StopMovement();
-        PlayerHud.UpdateGameState(bIsGameClear, star);
-     
+        int converttime = Mathf.FloorToInt(TotalPlayTime);
+        PlayerHud.UpdateGameState(converttime, TotalScore);
+
         GameManager.Instance.SaveUserData();
     }
-    public void AllObjectStopActive(bool active)
-    {
-        //bool AllFall = true;
-
-        foreach (var fallingobject in FallingObjects)
-        {
-            if (fallingobject.Value.Count != 0)
-            {
-                foreach (var fallingobjectscript in fallingobject.Value)
-                {
-
-                    //fallingobjectscript.ActiveIce(active);
-                    fallingobjectscript.ActivateBounce(!active);
-
-
-                }
-            }
-        }
-    }
-
 
 }

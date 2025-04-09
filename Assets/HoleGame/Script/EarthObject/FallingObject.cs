@@ -1,18 +1,24 @@
 
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 
 public class FallingObject : MonoBehaviour
 {
     [Header("모습")]
-    public ShapeEnum Shape = ShapeEnum.baseball;
+    [SerializeField]
+    private ShapeEnum Shape = ShapeEnum.baseball;
     [Header("경험치량")]
     [SerializeField]
-    public float EXPCnt  = 50.0f;
-    [Header("클리어 목표")]
+    public float EXPCnt { get; private set; }  = 50.0f;
     [SerializeField]
-    private bool bRequired = true;
+    public float TimeCnt { get; private set; } = 0.5f;
+
+
+    //[Header("클리어 목표")]
+   /* [SerializeField]
+    private bool bRequired = true;*/
     [Header("이동하는지")]
     [SerializeField]
     private bool bMovement = false;
@@ -32,17 +38,12 @@ public class FallingObject : MonoBehaviour
     [SerializeField]
     private GameObject Ice;
 
-    
+    public UnityEvent<FallingObject> onSwallowed;
 
-    private void OnValidate()
-    {
-        // 만약 Shape가 Bomb라면 bRequired를 false로 설정
-        if (Shape == ShapeEnum.boomb)
-        {
-            bRequired = false;
-        }
-    }
+    public bool bIsAttacked { get; private set; } = false;
 
+
+  
     public void SetStatData(EarthObjectStatData data)
     {
         ForceStatData =  data;
@@ -60,7 +61,7 @@ public class FallingObject : MonoBehaviour
         if(rb != null ) rb.mass = data.mass;
 
         EXPCnt = data.EXPCnt;
-        bRequired = data.bRequired;
+        TimeCnt = data.TimeCnt;
         bMovement = data.bMovement;
 
         float squishspeed = Mathf.Clamp(data.squishAmount, 0.2f, 0.5f);
@@ -82,36 +83,20 @@ public class FallingObject : MonoBehaviour
 
 
         SetObjectData(ForceStatData);
-
-
-        if (bRequired)
-        {
-            if(Shape !=ShapeEnum.boomb)
-            {
-               GameState.Instance.RegisterFallingObject(this);
-            }
-
-           
-        }
-            
-       
+    
     }
 
     void Start()
     {
 
-       /* idleBounce = GetComponent<BounceShape>();
-        MoveBounce = GetComponent<ObjectMovement>();
-*/
-      
         SelectMove();
 
     }
 
-    
-    void Update()
+    public void OnSwallow()
     {
-        
+        onSwallowed?.Invoke(this);
+
     }
 
     void SelectMove()
@@ -167,6 +152,5 @@ public class FallingObject : MonoBehaviour
       
     }
     public ShapeEnum GetShapeEnum() { return Shape; }
-
-    public bool GetRequired() { return bRequired; }
+   
 }

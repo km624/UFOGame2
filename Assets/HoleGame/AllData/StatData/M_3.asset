@@ -10,12 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 76645d18fa29de749a75d68ae7c6e7c1, type: 3}
-  m_Name: M_2
+  m_Name: M_3
   m_EditorClassIdentifier: 
   bisdefaultStat: 1
-  EXPCnt: 10
+  EXPCnt: 15
+  TimeCnt: 10
   bRequired: 1
   bMovement: 1
-  jumpDistance: 1.5
-  squishAmount: 0.25
-  mass: 2
+  jumpDistance: 1.25
+  squishAmount: 0.3
+  mass: 1

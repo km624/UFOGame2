@@ -410,13 +410,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Shape: 8
-  EXPCnt: 20
-  bRequired: 0
   bMovement: 1
-  ForceStatData: {fileID: 0}
+  ForceStatData: {fileID: 11400000, guid: 0c9b077c9897abc44bedd6184ad6b7f8, type: 2}
   CanvasGameObject: {fileID: 12875912026779631}
   StateIconWidget: {fileID: 4518603849163388335}
   Ice: {fileID: 371623501730428380}
+  onDestroyed:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &4453283430784985530
 MonoBehaviour:
   m_ObjectHideFlags: 0

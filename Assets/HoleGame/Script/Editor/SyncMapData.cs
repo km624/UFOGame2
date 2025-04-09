@@ -85,20 +85,7 @@ public class SyncMapData : EditorWindow
 
             // Dictionary 리셋
             stageData.RequiredShapeCnt.Clear();
-            foreach (var shape in shapeObjects)
-            {
-                if(!shape.GetForceData().bRequired)continue;
-
-                if (!stageData.RequiredShapeCnt.ContainsKey(shape.Shape))
-                {
-                    stageData.RequiredShapeCnt.Add(shape.Shape, 1);
-                }
-                else
-                {
-                    stageData.RequiredShapeCnt[shape.Shape]++;
-                }
-             
-            }
+            
 
             //프리팹 할당
             stageData.stagePrefab = new AssetReferenceGameObject(prefabGuid);

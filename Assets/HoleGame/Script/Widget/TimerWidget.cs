@@ -12,70 +12,21 @@ public class TimerWidget : MonoBehaviour
     private int TotalSecond;
 
     
-    public void SetTime(int Min,int Second)
+    public void SetTime(float totaltime)
     {
-        TotalSecond = Min*60 + Second;
-        UpdateTimeText(TotalSecond);
+        TotalSecond = (int)totaltime;
+        CallBack_UpdateTimeText(TotalSecond);
     }
-    void Start()
+   
+    public void CallBack_UpdateTimeText(int total)
     {
-        
-    }
-
-    
-    void Update()
-    {
-        
-    }
-
-    public void StartTimer()
-    {
-        StartCoroutine("TimerCount");
-    }
-
-    IEnumerator TimerCount()
-    {
-
-        while (TotalSecond > 0)
-        {
-            yield return new WaitForSeconds(1); 
-            TotalSecond--;
-            if (TotalSecond < 0)
-                TotalSecond = 0;
-            UpdateTimeText(TotalSecond);
-        }
-
-
-        //타이머 종료
-        //게임 종료
-        GameState.Instance.GameEnd();
-    }
-    public void UpdateTimeText(int total)
-    {
-        int min = TotalSecond / 60;
-        int sec = TotalSecond % 60;
+        int min = total / 60;
+        int sec = total % 60;
         Minute.text = min.ToString("D2")+" :";
         Second.text = sec.ToString("D2");
-    }
-
-    public int GetTotalSecond()
-    {
-        return TotalSecond;
-    }
-
-    public void StopTime()
-    {
-        StopCoroutine("TimerCount");
-    }
-
-    public void ChangeTimer(int totalsecond)
-    {
         
-         TotalSecond = totalsecond;
-        if (totalsecond < 0) TotalSecond = 0;
-        UpdateTimeText(TotalSecond);
-
     }
 
+  
 }
 

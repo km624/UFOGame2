@@ -82,7 +82,7 @@ public class StageWidget : MonoBehaviour
             {
                 shapeimg= ShapeManager.Instance.GetShapeSprite(shapeEnum);
             }
-            ShapeCntWidgets[cnt].SetShapeWidget(shapecnt, shapeimg);
+            //ShapeCntWidgets[cnt].SetShapeWidget(shapecnt, shapeimg);
             ShapeCntWidgets[cnt].gameObject.SetActive(true);
            // Debug.Log("도형 세팅중");
             cnt++;

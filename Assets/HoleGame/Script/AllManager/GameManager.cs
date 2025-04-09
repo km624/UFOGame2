@@ -46,19 +46,6 @@ public class GameManager : MonoBehaviour
     private  void Start()
     {
 
-        /*  userData = await userDatasaveload.LoadPlayerDataAsync("Guest");
-
-
-          //Debug.Log(userData.ToString() + " : " + userData.userId);
-
-          stageManager.SetUserData(userData);
-
-          SelectLevel = userData.currentClearIndex;
-
-         //await stageManager.LoadStage(SelectLevel);
-          await LoadStage(SelectLevel);*/
-        
-
     }
     public async void TestLoadData()
     {

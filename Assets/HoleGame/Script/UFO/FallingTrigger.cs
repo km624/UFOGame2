@@ -16,9 +16,10 @@ public class FallingTrigger : MonoBehaviour
         FallingObject fallingobject = other.GetComponent<FallingObject>();
         if (fallingobject != null)
         {
-            GameState.Instance.AbsorptionObject(fallingobject);
+            //GameState.Instance.AbsorptionObject(fallingobject);
             //player.AddEXPGauge(fallingobject.EXPCnt, fallingobject);
-            Destroy(other.gameObject);
+            fallingobject.OnSwallow();
+            //Destroy(other.gameObject);
 
         }
 
