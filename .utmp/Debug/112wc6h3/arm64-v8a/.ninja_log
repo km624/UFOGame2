@@ -1,0 +1,14 @@
+# ninja log v5
+24	3123	7656411786333676	GameActivity/CMakeFiles/game.dir/UGAConfiguration.cpp.o	2cdd5e914f0870d8
+56	3177	7656411786850783	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	eae998aed30e4c18
+50	3154	7656411786609233	GameActivity/CMakeFiles/game.dir/UGAInputKeyEvent.cpp.o	e5deede2bfcd6805
+18	3136	7656411786433409	GameActivity/CMakeFiles/game.dir/UGAEntry.cpp.o	d13ff3c02d589756
+31	3152	7656411786599287	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	369fbae02ae751d0
+7	3173	7656411786825837	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	82b5cda336a234d4
+43	3272	7656411787848281	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	8ad532d345872498
+63	1005	7656411764476905	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	3f749283e9875c30
+13	3343	7656411788562310	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	cf9146079fc0ca21
+3343	3433	7656411789457713	D:/GitUnity/HoleGame/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/Debug/112wc6h3/obj/arm64-v8a/libgame.so	7fcc4df28ac971df
+1006	1555	7656411768453291	D:/GitUnity/HoleGame/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/Debug/112wc6h3/obj/arm64-v8a/libswappywrapper.so	cd997147dc9751ea
+5	304	7658128681971807	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	3f749283e9875c30
+304	412	7658128683066321	D:/GitUnity/HoleGame/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/Debug/112wc6h3/obj/arm64-v8a/libswappywrapper.so	cd997147dc9751ea

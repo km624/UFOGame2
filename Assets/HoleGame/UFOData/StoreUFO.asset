@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a08779f880e7cf943ab05e046a2d8b03, type: 3}
+  m_Name: StoreUFO
+  m_EditorClassIdentifier: 
+  UFOName: UFOStore
+  UFOMesh: {fileID: 8547471881871753710, guid: 55a7154760840453cbf09a19f950e2f8, type: 3}
+  UFOMaterials:
+  - {fileID: -9103484930961366303, guid: 55a7154760840453cbf09a19f950e2f8, type: 3}
+  - {fileID: 8556262120643298411, guid: 55a7154760840453cbf09a19f950e2f8, type: 3}
+  MoveSpeed: 13
+  LiftSpeed: 7
