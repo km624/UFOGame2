@@ -126,7 +126,7 @@ public class GameState : MonoBehaviour
     private void CallBack_ObjectSwallow(FallingObject fallingobject,int currentgeneration)
     {
 
-        Debug.Log("ศํผ๖วิ");
+        //Debug.Log("ศํผ๖วิ");
         TotalScore += (int)(fallingobject.TimeCnt * 100.0f)*(1+currentgeneration);
         TotalTime += fallingobject.TimeCnt;
 
@@ -272,7 +272,8 @@ public class GameState : MonoBehaviour
             }
         }
         objectManager.AllObjectStopActive(active);
-        objectManager.IceActive(active);
+        if(bIceActive)
+            objectManager.IceActive(active);
       
     }
 
@@ -280,7 +281,7 @@ public class GameState : MonoBehaviour
     {
        
         AllObjectStopActive(true);
-
+        objectManager.StopSpawnObjects();
         bIsGameEnd = true;
 
         ufoplayer.CallBack_StopMovement();
