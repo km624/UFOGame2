@@ -1,5 +1,6 @@
-using NUnit.Framework;
+
 using System.Collections.Generic;
+
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "GenrationObjects", menuName = "Scriptable Objects/GenrationObjects")]
@@ -10,6 +11,7 @@ public class GenerationObjects : ScriptableObject
     public FallingObject bomb = null;
 
     public float[] spawnWeights;
+
 
     private void OnValidate()
     {

@@ -25,8 +25,8 @@ public class HoleScript : MonoBehaviour
    
 
     [Header("개발자")]
-    public int LiftUpLayer;
-    public int NormalLayer;
+    private int LiftUpLayer =10;
+    private int NormalLayer = 9;
 
     [SerializeField]
     private float wobbleAmount = 2.5f;
@@ -36,117 +36,7 @@ public class HoleScript : MonoBehaviour
     private Tween spinTween;
 
     private bool bIsMove = false;
-    /* public void InitGameState(GameState gamestate)
-     {
-         this.gameState = gamestate;
-
-     }
-
-     void Start()
-     {
-         UpdateSizeText(CurrentSizeLevel);
-
-         initialHoleSize = transform.localScale.x;
-         targetSize = initialHoleSize;
-         targetHeight = transform.position.y;
-
-
-     }
-
-
-     void FixedUpdate()
-     {
-         float moveX;
-         float moveZ;
-
-
-         moveX = joystick.Horizontal * 0.01f * HoleSpeed;
-         moveZ = joystick.Vertical * 0.01f * HoleSpeed;
-
-         transform.position += new Vector3(moveX, 0, moveZ);
-
-
-         UpdateSizeGaugeBar();
-
-         UpdateHoleSize();
-     }
-
-     private void UpdateSizeGaugeBar()
-     {
-
-         SizeGaugeBar.fillAmount =  Mathf.Lerp(SizeGaugeBar.fillAmount, TargetfillPercent, Time.deltaTime * fillSpeed);
-     }
-
-     public void AddSizeGauge(float gauge , FallingObject fallingobj)
-     {
-
-         CurrentSizeGauge += gauge;
-
-         if(CurrentSizeGauge>= MaxSizeGauge)
-         {
-             CurrentSizeGauge -= MaxSizeGauge;
-             SizeGaugeBar.fillAmount = 0.0f;
-             ChangeSize(true);
-         }
-         TargetfillPercent = Mathf.Clamp01(CurrentSizeGauge/ MaxSizeGauge);
-
-         SpawnGagueEffect(gauge);
-
-         gameState.RemoveFallingObject(fallingobj);
-     }
-
-     void SpawnGagueEffect(float gauge)
-     {
-         AddGaugeSound.Play();
-         DamageNumber damageNumber = numberPrefab.Spawn(transform.position, gauge);
-     }
-
-     public void ChangeSize(bool bSizeUp)
-     {
-         if (bSizeUp)
-         {
-             CurrentSizeLevel++;
-             Vector3 CurrentScale = transform.localScale;
-
-             targetSize = CurrentScale.x + AddSizeUp;
-             targetHeight = transform.position.y + AddSizeUp;
-
-         }
-         else
-         {
-             CurrentSizeLevel--;
-             Vector3 CurrentScale = transform.localScale;
-             targetSize = CurrentScale.x - AddSizeUp;
-             targetHeight = transform.position.y - AddSizeUp;
-         }
-         float SizePercent = targetSize / initialHoleSize;
-
-
-         CameraScript.CallBack_CameraDistancedUp(SizePercent);
-         UpdateSizeText(CurrentSizeLevel);
-     }
-
-
-     private void UpdateHoleSize()
-     {
-
-         //사이즈 업데이트
-         float NewSizeupSclale = Mathf.SmoothDamp(transform.localScale.x, targetSize, ref Holevelocity, smoothTime);
-         transform.localScale = new Vector3(NewSizeupSclale, transform.localScale.y, NewSizeupSclale);
-
-         //ufo 높이
-         float newY = Mathf.SmoothDamp(transform.position.y, targetHeight, ref Heightvelocity, smoothTime);
-
-         transform.position = new Vector3(transform.position.x, newY, transform.position.z);
-
-
-     }
-
-     private void UpdateSizeText(int currentsizelevel)
-     {
-         SizeText.text = "크기: " + currentsizelevel;
-     }*/
-
+   
     public void StartWobble(Vector3 direction)
     {
         spinTween?.Kill();
@@ -184,13 +74,13 @@ public class HoleScript : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-       
 
         if (other.gameObject.layer == NormalLayer && other.attachedRigidbody != null)
         {
            
             objectsInTrigger.Add(other.attachedRigidbody);
             other.gameObject.layer = LiftUpLayer;
+           
             LiftAbsorption absorption = other.GetComponent<LiftAbsorption>();
             if (absorption)
             {
@@ -203,9 +93,11 @@ public class HoleScript : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-       
+      
+
         if (other.gameObject.layer == LiftUpLayer && other.attachedRigidbody != null)
         {
+            
             LiftAbsorption absorption = other.GetComponent<LiftAbsorption>();
             if (absorption)
             {
@@ -222,8 +114,7 @@ public class HoleScript : MonoBehaviour
         Rigidbody rb = other.attachedRigidbody;
         if (rb != null && objectsInTrigger.Contains(rb))
         {
-           
-           
+
             Vector3 directionToShip = (UFOtransform.position - rb.position).normalized;
    
             Vector3 liftForce = Vector3.up * LiftSpeed;

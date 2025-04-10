@@ -19,4 +19,4 @@ MonoBehaviour:
   bMovement: 1
   jumpDistance: 1.25
   squishAmount: 0.3
-  mass: 1
+  mass: 3

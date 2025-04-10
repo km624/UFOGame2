@@ -40,9 +40,13 @@ public class GameState : MonoBehaviour
     // 플레이 시간 누적, float으로 관리 (원한다면 int로 변환해서 표시 가능)
     public float TotalPlayTime { get; private set; } = 0.0f;
 
-    [SerializeField]
+    /*[SerializeField]
     private int AddChangeGenerationScore = 1000;
-    private int CurrentChangeGenerationScore = 0; 
+    private int CurrentChangeGenerationScore = 0;*/
+
+    [SerializeField]
+    private float ChangeGenIntervalTime = 10.0f;
+
     private int TotalScore = 0;
    
     private bool bIgnoredbomb = false;
@@ -69,7 +73,7 @@ public class GameState : MonoBehaviour
 
     void Start()
     {
-        CurrentChangeGenerationScore = AddChangeGenerationScore;
+        //CurrentChangeGenerationScore = AddChangeGenerationScore;
 
      //보너스 목표 위젯 생성 or 갱신
         objectManager.FOnBounsWidgetCreated += PlayerHud.CallBack_CreateShapeWidget;
@@ -134,28 +138,20 @@ public class GameState : MonoBehaviour
 
         ufoplayer.AddEXPGauge(fallingobject.EXPCnt);
 
-        if (TotalScore >= CurrentChangeGenerationScore)
-        {
-            CurrentChangeGenerationScore += AddChangeGenerationScore;
-            bool changed = objectManager.ChangeGeneration();
-            if (changed)
-            {
-                PlayerHud.OnForceRenewalBounusWidget();
-            }
-           
-        }
+      
     }
+
     private void CallBack_BonusClear(Dictionary<ShapeEnum, int> allbouns , int currentgeneration)
     {
-        
-        foreach(var item in allbouns)
+        Debug.Log("보너스 점수 추가 ");
+        foreach (var item in allbouns)
         {
             for(int i = 0; i < item.Value;i++)
             {
                 float timecnt = objectManager.SearchShapeData(item.Key, currentgeneration);
 
                 TotalScore += (int)(timecnt * 100.0f) * (1 + currentgeneration) * 2;
-                Debug.Log("보너스 점수 추가 : " + TotalScore);
+               
             }
          
         }
@@ -165,6 +161,7 @@ public class GameState : MonoBehaviour
 
     private void CallBack_BombSwallow()
     {
+       
         TotalTime -= 10.0f;
         Camerashake.ShakeCamera();
     }
@@ -186,6 +183,7 @@ public class GameState : MonoBehaviour
     {
         // 코루틴 시작 시 초기 초 값 저장 (Floor)
         int lastSecond = Mathf.CeilToInt(TotalTime);
+        float ChangeSecond = 0.0f;
 
         while (TotalTime > 0f)
         {
@@ -207,6 +205,14 @@ public class GameState : MonoBehaviour
                 
                 lastSecond = currentSecond;
                 FOnTotalTimeChanged?.Invoke(lastSecond);
+            }
+            ChangeSecond += Time.deltaTime;
+           
+            if (ChangeSecond > ChangeGenIntervalTime)
+            {
+                
+                OnTimeChangeGenration();
+                ChangeSecond = 0.0f;
             }
         }
 
@@ -249,6 +255,22 @@ public class GameState : MonoBehaviour
         }
     }
 
+    private void OnTimeChangeGenration()
+    {
+
+        bool changed = objectManager.ChangeGeneration();
+        if (changed)
+        {
+            PlayerHud.OnForceRenewalBounusWidget();
+        }
+
+    }
+
+    public void ForceRenewalBonus()
+    {
+
+    }
+
     public void Skill_SetIgnoreBomb(bool active)
     {
         bIgnoredbomb = active;
@@ -282,6 +304,7 @@ public class GameState : MonoBehaviour
        
         AllObjectStopActive(true);
         objectManager.StopSpawnObjects();
+        objectManager.StopBombSpawn();
         bIsGameEnd = true;
 
         ufoplayer.CallBack_StopMovement();

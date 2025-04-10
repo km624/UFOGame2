@@ -123,6 +123,7 @@ public class PlayerHudWidget : MonoBehaviour
         EndBounsWidgetCnt++;
         if (AllBonusWidget.Count <= EndBounsWidgetCnt)
         {
+
             foreach (var widget in AllBonusWidget)
             {
                 Destroy(widget.Value.gameObject);
@@ -132,13 +133,16 @@ public class PlayerHudWidget : MonoBehaviour
             AllBonusWidget.Clear();
             EndBounsWidgetCnt = 0;
 
+
             Debug.Log("보너스 위젯 초기화");
             FOnAllBounusAnimEnded?.Invoke(bIsFroceRenewal);
+            bIsFroceRenewal = false;
         }
 
-        bIsFroceRenewal = false;
+        
 
     }
+
 
     public void OnForceRenewalBounusWidget()
     {
@@ -148,7 +152,11 @@ public class PlayerHudWidget : MonoBehaviour
         foreach (var widget in AllBonusWidget.ToList())
         {
             if (!widget.Value.CheckDisable())
+            {
                 widget.Value.OnShpaeWidgetAnimation();
+
+            }
+               
         }
 
     }

@@ -35,7 +35,7 @@ public class ObjectSpawnPoint : MonoBehaviour
         // 이미 코루틴이 실행중이면 중복 실행하지 않음
         if (SpawnCoroutine != null) return;
 
-        // 먼저 즉시 한 번 스폰 (최대 스폰 개수 조건도 체크)
+      /*  // 먼저 즉시 한 번 스폰 (최대 스폰 개수 조건도 체크)
         if (objectManager.AllSpawnObjects.Count < objectManager.GetMaxObjectCnt())
         {
             if (currentGeneration != null)
@@ -54,7 +54,7 @@ public class ObjectSpawnPoint : MonoBehaviour
                     }
                 }
             }
-        }
+        }*/
 
         // 이후 기존 스폰 루틴 코루틴을 시작하여 주기적으로 스폰
         SpawnCoroutine = StartCoroutine(SpawnRoutine());
@@ -72,8 +72,8 @@ public class ObjectSpawnPoint : MonoBehaviour
             }
 
             // SpawnTime ± variation 범위 내의 랜덤 지연시간을 계산
-            float delay = SpawnTime + Random.Range(-variation, variation);
-            yield return WaitForSecondsWithPause(delay);
+         /*   float delay = SpawnTime + Random.Range(-variation, variation);
+            yield return WaitForSecondsWithPause(delay);*/
 
             if (currentGeneration != null)
             {
@@ -86,11 +86,13 @@ public class ObjectSpawnPoint : MonoBehaviour
                     if (falling != null)
                     {
                         objectManager.RegisterSpawnedObject(falling);
-                        // onDestroyed 이벤트가 실행되면 ObjectManager의 RemoveSpawnedObject가 호출되도록 등록
+                       
                         falling.onSwallowed.AddListener(objectManager.RemoveSpawnedObject);
                     }
                 }
             }
+            float delay = SpawnTime + Random.Range(-variation, variation);
+            yield return WaitForSecondsWithPause(delay);
         }
     }
 

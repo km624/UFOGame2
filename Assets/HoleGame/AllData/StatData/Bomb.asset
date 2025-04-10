@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bisdefaultStat: 1
   EXPCnt: 0
+  TimeCnt: 0
   bRequired: 0
   bMovement: 0
   jumpDistance: 0

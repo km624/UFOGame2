@@ -1,10 +1,15 @@
 using NUnit.Framework;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Serialization;
 using System.Xml.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using Random = UnityEngine.Random;
 
 public class ObjectManager : MonoBehaviour
 {
@@ -19,10 +24,27 @@ public class ObjectManager : MonoBehaviour
     public int CurrentGenration { get; private set; } = 0;
     public List<FallingObject> AllSpawnObjects { get; private set; } = new List<FallingObject>();
 
+    public TMP_Text GenereationText;
+    [Header("전체 오브젝트 수")]
     [SerializeField]
     private int MaxObjectCnt  = 50;
 
-   
+    [Header("맵 범위")]
+    [SerializeField]
+    private Renderer SpawnRange;
+
+    Bounds RangeBounds;
+    
+    [Header("폭탄")]
+    [SerializeField]
+    private float BombSpawnHeight=1.0f;
+    [SerializeField] 
+    private int BombPostionInterval = 1; 
+    [SerializeField]
+    float BombSpawnTime = 5.0f;
+
+    private Coroutine BombCoroutine;
+
     public event Action<FallingObject,int /*currentgeneration*/ > FOnObjectSwallowed;
     public event Action<Vector3 /*아이콘 생성 위치*/, ShapeEnum> FOnBonusSwallowed;
     public event Action FOnBomnbSwallowed;
@@ -35,14 +57,19 @@ public class ObjectManager : MonoBehaviour
    
 
     public int GetMaxObjectCnt() { return MaxObjectCnt; }
-
+    [Header("보너스")]
     [SerializeField]
-    private int bonusMaxCount = 5;
+    private int bonusObjectsMinCount = 2;
+    [SerializeField]
+    private int bonusObjectsMaxCount = 4;
+
     [SerializeField]
     private int bonusMinCount = 1;
-
     [SerializeField]
-    private int bonusObjectsMinCount =2;
+    private int bonusMaxCount = 5;
+    
+
+   
 
     
 
@@ -51,6 +78,7 @@ public class ObjectManager : MonoBehaviour
         CreateBonusObjects();
         SetUpSpawnObjects(CurrentGenration);
         StartSpawnObjects();
+        StartBombSapwn();
     }
 
     //무조건 바꿔야함
@@ -88,14 +116,15 @@ public class ObjectManager : MonoBehaviour
     {
         if (generationList.Count <= CurrentGenration + 1)
         {
-            Debug.Log("다음 세대 없음");
+            //Debug.Log("다음 세대 없음");
             return false;
         }
 
         CurrentGenration += 1;
+        GenereationText.text= CurrentGenration.ToString();  
         SetUpSpawnObjects(CurrentGenration);
 
-        Debug.Log(CurrentGenration + " : 현재 세대");
+       // Debug.Log(CurrentGenration + " : 현재 세대");
 
         return true;
 
@@ -203,12 +232,12 @@ public class ObjectManager : MonoBehaviour
         }
 
         // 최대 선택 가능한 개수: 5와 리스트 개수 중 작은 값
-        int maxSelectable = currentGen.objects.Count;
+        int maxSelectable = Mathf.Clamp(bonusObjectsMaxCount, 1, currentGen.objects.Count);                                                                  
         int minSelectable = Mathf.Clamp(bonusObjectsMinCount, 1, maxSelectable);
         // 선택할 오브젝트의 개수: 최소 2개부터 maxSelectable 개 사이 (maxSelectable + 1은 Random.Range의 상한 미포함 특성 때문)
         int countToSelect = UnityEngine.Random.Range(minSelectable, maxSelectable + 1);
 
-        Debug.Log("랜덤 : " + countToSelect);
+        //Debug.Log("랜덤 : " + countToSelect);
         // objects 리스트를 복사한 후 무작위 순서로 셔플
         List<FallingObject> tempList = new List<FallingObject>(currentGen.objects);
         for (int i = 0; i < tempList.Count; i++)
@@ -268,10 +297,62 @@ public class ObjectManager : MonoBehaviour
         CreateBonusObjects();
     }
 
-   
+    private void StartBombSapwn()
+    {
+        
+        BombCoroutine = StartCoroutine(SpawnRoutine());
+    }
+
+    public void StopBombSpawn()
+    {
+        StopCoroutine(BombCoroutine);
+    }
+    private IEnumerator SpawnRoutine()
+    {
+        while (true)
+        {
+            SpawnAtRandomGridPosition();
+            yield return new WaitForSeconds(BombSpawnTime);
+        }
+    }
+
+    private void SpawnAtRandomGridPosition()
+    {
+        FallingObject spawnbomb = generationList[CurrentGenration].bomb;
     
 
-   
+        Vector2 SpawnLocation = RandomSpawnRange();
+
+       
+        Vector3 spawnPosition = new Vector3(SpawnLocation.x, BombSpawnHeight, SpawnLocation.y);
+        GameObject bombobj = Instantiate(spawnbomb.gameObject, spawnPosition, Quaternion.identity);
+       
+        FallingObject falling = bombobj.GetComponent<FallingObject>();
+        if (falling != null)
+        {
+           
+            falling.onSwallowed.AddListener(RemoveSpawnedObject);
+        }
+    }
+
+    private Vector2 RandomSpawnRange()
+    {
+       
+       RangeBounds = SpawnRange.bounds;
+        // Plane의 Bounds에서 x, z 좌표의 최소/최대값을 정수 단위로 구합니다.
+        int minX = Mathf.CeilToInt(RangeBounds.min.x);
+        int maxX = Mathf.FloorToInt(RangeBounds.max.x);
+        int minZ = Mathf.CeilToInt(RangeBounds.min.z);
+        int maxZ = Mathf.FloorToInt(RangeBounds.max.z);
+
+        // 랜덤하게 정수 좌표 생성 (max는 포함시키기 위해 +1)
+        int randomX = Random.Range(minX, maxX + BombPostionInterval);
+        int randomZ = Random.Range(minZ, maxZ + BombPostionInterval);
+
+        return new Vector2(randomX, randomZ);   
+    }
+
+
 
     public void AllObjectStopActive(bool active)
     {
