@@ -11,6 +11,7 @@ public class ObjectSpawnPoint : MonoBehaviour
     private float variation = 1.0f;
 
     private GenerationObjects currentGeneration = null;
+   
     private ObjectManager objectManager = null;
 
     private Coroutine SpawnCoroutine;
@@ -23,10 +24,23 @@ public class ObjectSpawnPoint : MonoBehaviour
         CurrentSpawnPoint = transform.position;
     }
 
-    public void SetGeneration(GenerationObjects generation, ObjectManager objectm)
+    public void SetGeneration(GenerationObjects generation, ObjectManager objectm ,float time , float vari)
     {
         currentGeneration = generation;
+
         objectManager = objectm;
+        SpawnTime=time;
+        if(SpawnTime - variation<=0)
+        {
+            variation = SpawnTime;
+            SpawnTime += 1;
+            
+        }
+        else
+        {
+            variation = vari;
+        }
+      
     }
 
     // SpawnPrefab이 호출되면, 이미 실행 중이 아니면 스폰 루틴 코루틴을 시작합니다.
@@ -35,27 +49,7 @@ public class ObjectSpawnPoint : MonoBehaviour
         // 이미 코루틴이 실행중이면 중복 실행하지 않음
         if (SpawnCoroutine != null) return;
 
-      /*  // 먼저 즉시 한 번 스폰 (최대 스폰 개수 조건도 체크)
-        if (objectManager.AllSpawnObjects.Count < objectManager.GetMaxObjectCnt())
-        {
-            if (currentGeneration != null)
-            {
-                // 가중치 기반으로 FallingObject 프리팹 선택
-                FallingObject prefabToSpawn = SelectPrefabByWeight(currentGeneration);
-                if (prefabToSpawn != null)
-                {
-                    GameObject spawnObject = Instantiate(prefabToSpawn.gameObject, transform.position, transform.rotation);
-                    FallingObject falling = spawnObject.GetComponent<FallingObject>();
-                    if (falling != null)
-                    {
-                        objectManager.RegisterSpawnedObject(falling);
-                        // onDestroyed 이벤트가 실행되면 ObjectManager의 RemoveSpawnedObject가 호출되도록 등록
-                        falling.onSwallowed.AddListener(objectManager.RemoveSpawnedObject);
-                    }
-                }
-            }
-        }*/
-
+     
         // 이후 기존 스폰 루틴 코루틴을 시작하여 주기적으로 스폰
         SpawnCoroutine = StartCoroutine(SpawnRoutine());
     }
@@ -86,7 +80,7 @@ public class ObjectSpawnPoint : MonoBehaviour
                     if (falling != null)
                     {
                         objectManager.RegisterSpawnedObject(falling);
-                       
+                        falling.AddGenerationMass(objectManager.CurrentGenration);
                         falling.onSwallowed.AddListener(objectManager.RemoveSpawnedObject);
                     }
                 }

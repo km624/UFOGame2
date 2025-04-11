@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 5717506054135916116}
   - component: {fileID: 5492066247542282792}
   - component: {fileID: 7904552586816147286}
-  m_Layer: 9
+  m_Layer: 6
   m_Name: 'FatHumanPrefab '
   m_TagString: FallingObject
   m_Icon: {fileID: 0}
@@ -102,7 +102,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1688420503023063025}
   serializedVersion: 4
-  m_Mass: 2
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -139,7 +139,7 @@ MonoBehaviour:
   CanvasGameObject: {fileID: 7222936278839114291}
   StateIconWidget: {fileID: 8543040638164041339}
   Ice: {fileID: 6644917805080142553}
-  onDestroyed:
+  onSwallowed:
     m_PersistentCalls:
       m_Calls: []
 --- !u!114 &1958875057396320640

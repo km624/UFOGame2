@@ -40,6 +40,9 @@ public class PlayerHudWidget : MonoBehaviour
     public GameStateWidget gameStateWidget;
 
     public TransitionSettings transition;
+    
+    [SerializeField]
+    private ThermometerWidget thermometerWidget;
 
     
   
@@ -139,8 +142,6 @@ public class PlayerHudWidget : MonoBehaviour
             bIsFroceRenewal = false;
         }
 
-        
-
     }
 
 
@@ -198,6 +199,24 @@ public class PlayerHudWidget : MonoBehaviour
     public void SetScoreText(int score)
     {
         CurrentScoreText.text = score.ToString();
+    }
+
+    public void CallBack_SetThermometerWidget(GenerationObjects generationdata)
+    {
+        
+        if(thermometerWidget != null)
+        {
+            thermometerWidget.SetThermometerData(generationdata);
+        }
+    }
+    public void CallBack_AddEXPThermometerWidget(float addgauge)
+    {
+       
+        if (thermometerWidget != null)
+        {
+            //Debug.Log(addgauge);
+            thermometerWidget.AddEXPGauge(addgauge);
+        }
     }
 
 

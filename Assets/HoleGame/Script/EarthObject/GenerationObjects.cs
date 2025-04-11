@@ -10,6 +10,8 @@ public class GenerationObjects : ScriptableObject
 
     public FallingObject bomb = null;
 
+    public BossObject Boss = null;
+
     public float[] spawnWeights;
 
 

@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
-using static UnityEngine.InputSystem.LowLevel.InputStateHistory;
+
 
 
 
@@ -40,13 +40,7 @@ public class GameState : MonoBehaviour
     // 플레이 시간 누적, float으로 관리 (원한다면 int로 변환해서 표시 가능)
     public float TotalPlayTime { get; private set; } = 0.0f;
 
-    /*[SerializeField]
-    private int AddChangeGenerationScore = 1000;
-    private int CurrentChangeGenerationScore = 0;*/
-
-    [SerializeField]
-    private float ChangeGenIntervalTime = 10.0f;
-
+ 
     private int TotalScore = 0;
    
     private bool bIgnoredbomb = false;
@@ -56,6 +50,8 @@ public class GameState : MonoBehaviour
 
 
     public Vector3 GetPlayerPostion() { return ufoplayer.transform.position; }
+
+    public int GetPlayerCurrentLevel() { return ufoplayer.CurrentLevel; }
 
     private void Awake()
     {
@@ -75,21 +71,30 @@ public class GameState : MonoBehaviour
     {
         //CurrentChangeGenerationScore = AddChangeGenerationScore;
 
-     //보너스 목표 위젯 생성 or 갱신
+        //보너스 목표 위젯 생성 
         objectManager.FOnBounsWidgetCreated += PlayerHud.CallBack_CreateShapeWidget;
 
         //보너스 목표 위젯 흡수 , 파괴 시 아이콘 생성ㄴ
         objectManager.FOnBonusSwallowed += PlayerHud.CallBack_SpawnUIImageAtWorldPos;
 
-        objectManager.FOnBounusCompleted += CallBack_BonusClear;
         //오브젝트 빨아들였을때 바인딩
         objectManager.FOnObjectSwallowed += CallBack_ObjectSwallow;
         
         //장애물 빨아들였을때
         objectManager.FOnBomnbSwallowed += CallBack_BombSwallow;
 
+        //보너스 목표 클리어 했을때 바인딩
+        objectManager.FOnBounusCompleted += CallBack_BonusClear;
 
+        //보너스 목표 시대 변경되서 강제 갱신 바인딩
+        objectManager.FOnGenerationChanged += CallBack_ForceRenewalBonus;
+
+        //보너스 위젯 클리어 애니메이션 끝났을때
         PlayerHud.FOnAllBounusAnimEnded += objectManager.CallBack_RenewalBonusObject;
+
+        //온도계 위젯 바인딩
+        objectManager.FOnGenerationDataSeted += PlayerHud.CallBack_SetThermometerWidget;
+        ufoplayer.FOnExpGagueAdded += PlayerHud.CallBack_AddEXPThermometerWidget;
 
 
 
@@ -112,6 +117,7 @@ public class GameState : MonoBehaviour
 
         objectManager.InitObjectManager();
 
+       
 
     }
 
@@ -125,6 +131,7 @@ public class GameState : MonoBehaviour
 
         AllSkillManager.FOnSkillActivated -= PlayerHud.ActiveSkill;
         PlayerHud.FOnAllBounusAnimEnded -= objectManager.CallBack_RenewalBonusObject;
+        ufoplayer.FOnExpGagueAdded -= PlayerHud.CallBack_AddEXPThermometerWidget;
     }
 
     private void CallBack_ObjectSwallow(FallingObject fallingobject,int currentgeneration)
@@ -136,8 +143,7 @@ public class GameState : MonoBehaviour
 
         PlayerHud.SetScoreText(TotalScore);
 
-        ufoplayer.AddEXPGauge(fallingobject.EXPCnt);
-
+        ufoplayer.AddEXPGauge(fallingobject.EXPCnt, fallingobject.ObjectMass);
       
     }
 
@@ -155,7 +161,8 @@ public class GameState : MonoBehaviour
             }
          
         }
-      
+       
+
     }
 
 
@@ -183,7 +190,7 @@ public class GameState : MonoBehaviour
     {
         // 코루틴 시작 시 초기 초 값 저장 (Floor)
         int lastSecond = Mathf.CeilToInt(TotalTime);
-        float ChangeSecond = 0.0f;
+       
 
         while (TotalTime > 0f)
         {
@@ -206,14 +213,7 @@ public class GameState : MonoBehaviour
                 lastSecond = currentSecond;
                 FOnTotalTimeChanged?.Invoke(lastSecond);
             }
-            ChangeSecond += Time.deltaTime;
            
-            if (ChangeSecond > ChangeGenIntervalTime)
-            {
-                
-                OnTimeChangeGenration();
-                ChangeSecond = 0.0f;
-            }
         }
 
         // 게임 타이머 종료 시 처리
@@ -255,7 +255,7 @@ public class GameState : MonoBehaviour
         }
     }
 
-    private void OnTimeChangeGenration()
+   /* private void OnTimeChangeGenration()
     {
 
         bool changed = objectManager.ChangeGeneration();
@@ -264,11 +264,11 @@ public class GameState : MonoBehaviour
             PlayerHud.OnForceRenewalBounusWidget();
         }
 
-    }
+    }*/
 
-    public void ForceRenewalBonus()
+    public void CallBack_ForceRenewalBonus(int currentgeneration)
     {
-
+        PlayerHud.OnForceRenewalBounusWidget();
     }
 
     public void Skill_SetIgnoreBomb(bool active)

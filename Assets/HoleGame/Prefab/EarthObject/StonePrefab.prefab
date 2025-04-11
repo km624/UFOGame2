@@ -293,7 +293,7 @@ GameObject:
   - component: {fileID: 7061002084497992850}
   - component: {fileID: 8700898273921279477}
   - component: {fileID: 8623618276854047353}
-  m_Layer: 9
+  m_Layer: 6
   m_Name: StonePrefab
   m_TagString: FallingObject
   m_Icon: {fileID: 0}
@@ -378,7 +378,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1300599383138542413}
   serializedVersion: 4
-  m_Mass: 2
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}

@@ -1,10 +1,7 @@
-using DamageNumbersPro;
-using System.Collections.Generic;
 
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.UI;
-using DG.Tweening;
+
 
 
 public class HoleScript : MonoBehaviour
@@ -15,11 +12,12 @@ public class HoleScript : MonoBehaviour
     [Header("UFO ²ø¾î´ç±â´Â Èû")]
     [SerializeField]
     private float LiftSpeed = 10f;  // ²ø¾î´ç±â´Â Èû
-    [Header("Ãß°¡µÇ´Â ²ø¾î´ç±â´Â Èû")]
-    [SerializeField]
-    private float addLiftSpeed = 5f;
+                                    // [Header("Ãß°¡µÇ´Â ²ø¾î´ç±â´Â Èû")]
+                                    //[SerializeField]
+                                    //private float addLiftSpeed = 5f;
 
-    private HashSet<Rigidbody> objectsInTrigger = new HashSet<Rigidbody>();
+    private int CurrentSwallowLevel = 0;
+    //private HashSet<Rigidbody> objectsInTrigger = new HashSet<Rigidbody>();
     public Transform UFOtransform;
 
    
@@ -28,37 +26,11 @@ public class HoleScript : MonoBehaviour
     private int LiftUpLayer =10;
     private int NormalLayer = 9;
 
-    [SerializeField]
-    private float wobbleAmount = 2.5f;
-    private float wobbleDuration = 1f;
 
-    private Tween rotationTween;
-    private Tween spinTween;
-
-    private bool bIsMove = false;
-   
-    public void StartWobble(Vector3 direction)
+    private Dictionary<Collider, LiftAbsorption> absorptionCache = new();
+    public void SetSwallowLevelSet(int swallowlevel)
     {
-        spinTween?.Kill();
-        rotationTween?.Kill();
-        direction *= 100;
-
-        //Debug.Log("¿òÁ÷ÀÓ~");
-        bIsMove = true;
-        Vector3 targetRotation = new Vector3(direction.z * wobbleAmount, 0, -direction.x * wobbleAmount);
-
-        rotationTween = transform.DORotate(targetRotation, wobbleDuration)
-            .SetEase(Ease.OutQuad);
-    }
-
-    public void ResetRotation()
-    {
-        if (!bIsMove) return;
-        rotationTween?.Kill();
-        // Debug.Log("Á¦ÀÚ¸®·Î");
-        bIsMove = false;
-        rotationTween = transform.DORotate(Vector3.zero, wobbleDuration).SetEase(Ease.OutQuad);
-           
+        CurrentSwallowLevel = swallowlevel;
     }
 
     public void SetInitLiftSpeed(float liftSpeed)
@@ -66,11 +38,6 @@ public class HoleScript : MonoBehaviour
         LiftSpeed = liftSpeed;
     }
 
-    public void ChangeLiftSpeed(bool bLevelUp)
-    {
-
-        LiftSpeed += bLevelUp ? addLiftSpeed : -addLiftSpeed;
-    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -78,14 +45,14 @@ public class HoleScript : MonoBehaviour
         if (other.gameObject.layer == NormalLayer && other.attachedRigidbody != null)
         {
            
-            objectsInTrigger.Add(other.attachedRigidbody);
-            other.gameObject.layer = LiftUpLayer;
+            //objectsInTrigger.Add(other.attachedRigidbody);
+            //other.gameObject.layer = LiftUpLayer;
            
-            LiftAbsorption absorption = other.GetComponent<LiftAbsorption>();
+            /*LiftAbsorption absorption = other.GetComponent<LiftAbsorption>();
             if (absorption)
             {
                 absorption.StartAbsorp(LiftSpeed);
-            }
+            }*/
 
         }
 
@@ -97,14 +64,22 @@ public class HoleScript : MonoBehaviour
 
         if (other.gameObject.layer == LiftUpLayer && other.attachedRigidbody != null)
         {
-            
-            LiftAbsorption absorption = other.GetComponent<LiftAbsorption>();
-            if (absorption)
+            other.gameObject.layer = NormalLayer;
+            if (!absorptionCache.TryGetValue(other, out var absorption))
+            {
+                absorption = other.GetComponent<LiftAbsorption>();
+                if (absorption != null)
+                    absorptionCache[other] = absorption;
+            }
+            absorption?.ResetScale();
+            absorptionCache.Remove(other);
+           // LiftAbsorption absorption = other.GetComponent<LiftAbsorption>();
+           /* if (absorption)
             {
                 absorption.ResetScale();
-            }
+            }*/
             other.gameObject.layer = NormalLayer;
-            objectsInTrigger.Remove(other.attachedRigidbody);
+            //objectsInTrigger.Remove(other.attachedRigidbody);
         }
 
     }
@@ -112,32 +87,57 @@ public class HoleScript : MonoBehaviour
     private void OnTriggerStay(Collider other)
     {
         Rigidbody rb = other.attachedRigidbody;
-        if (rb != null && objectsInTrigger.Contains(rb))
+        if (rb != null && (other.gameObject.layer == NormalLayer || other.gameObject.layer ==LiftUpLayer)) //&& objectsInTrigger.Contains(rb))
         {
+            if(other.gameObject.layer == NormalLayer)
+            {
+                other.gameObject.layer = LiftUpLayer;
+            }
+           
+
+            if (!absorptionCache.TryGetValue(other, out var absorption))
+            {
+                absorption = other.GetComponent<LiftAbsorption>();
+                if (absorption != null)
+                    absorptionCache[other] = absorption;
+                absorption.StartAbsorp(CurrentSwallowLevel);
+            }
+
+            absorption?.ApplyAbsorptionScale();
 
             Vector3 directionToShip = (UFOtransform.position - rb.position).normalized;
-   
-            Vector3 liftForce = Vector3.up * LiftSpeed;
 
-            float distance = Vector3.Distance(rb.position, UFOtransform.position); 
-            float attractionStrength = Mathf.Clamp(distance * 2f, 10f, 50f); 
+            float newLifSpeed = CalculateLiftSpeed(CurrentSwallowLevel, absorption.GetObjectMass());
+            
+            //Vector3 liftForce = Vector3.up * LiftSpeed;
+            Vector3 liftForce = Vector3.up * newLifSpeed;
+           
+            float distance = Vector3.Distance(rb.position, UFOtransform.position);
+            float attractionStrength = Mathf.Clamp(distance * 2f, 10f, 50f);
+          
 
-            Vector3 attractionForce = directionToShip * attractionStrength; 
-  
+            Vector3 attractionForce = directionToShip * attractionStrength;
+
             rb.AddForce(liftForce + attractionForce, ForceMode.Force);
-         
+
             rb.linearDamping = Mathf.Lerp(rb.linearDamping, 2f, Time.deltaTime * 2f);
 
-            LiftAbsorption absorption = other.GetComponent<LiftAbsorption>();
-            if (absorption)
-            {
-                absorption.ApplyAbsorptionScale();
-            }
+           
 
 
         }
 
     }
 
-    
+    public float CalculateLiftSpeed(int ufoLevel, float objectLevel)
+    {
+        float delta = objectLevel - ufoLevel;
+
+        float rawSpeed = Mathf.Pow(LiftSpeed, 1f - delta); // °¨¼è ¼ö½Ä
+        float clampedSpeed = Mathf.Clamp(rawSpeed, 0.1f, LiftSpeed*3); // ¹üÀ§ Á¦ÇÑ
+
+        return clampedSpeed;
+    }
+
+
 }

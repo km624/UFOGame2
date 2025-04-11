@@ -1,10 +1,12 @@
 using DamageNumbersPro;
+using System;
 using System.Buffers.Text;
 using System.Collections.Generic;
 using Unity.Cinemachine;
 using UnityEngine;
-using UnityEngine.InputSystem;
+
 using UnityEngine.UI;
+
 
 public class UFOPlayer : MonoBehaviour
 {
@@ -12,17 +14,20 @@ public class UFOPlayer : MonoBehaviour
 
     [Header("레벨 스텟")]
     //private float LiftSpeed = 10f;  // 끌어당기는 힘
-    private int CurrentLevel = 1;
-    private int MaxLevel = 5;
+    public int CurrentLevel { get; private set; } = 1;
+    //private int MaxLevel = 5;
 
     private float CurrentExpGauge;
     [Header("초기 경험치량")]
     [SerializeField]
-    private float MaxExpGauge = 25.0f;
+   // private float MaxExpGauge = 25.0f;
+    private float MaxExpGauge = 100.0f;
+
+    float baseExpPerMass = 10f;
 
     [Header("레벨에 따른 최대 경험치 추가량")]
-    [SerializeField]
-    private float AddMaxExp = 25.0f;
+    //[SerializeField]
+   // private float AddMaxExp = 25.0f;
 
     private float fillSpeed = 3.0f;
     private float TargetfillPercent = 0.0f;
@@ -50,6 +55,11 @@ public class UFOPlayer : MonoBehaviour
     private CinemachinePositionComposer CamerapositionComposer;
     [SerializeField]
     private Renderer UFORenderer;
+    [SerializeField]
+    private FallingTrigger trigger;
+
+    public event Action<float /**/> FOnExpGagueAdded;
+   
 
     private float DefaultCameraDistance = 0.0f;
 
@@ -76,6 +86,12 @@ public class UFOPlayer : MonoBehaviour
         {
             defaultMaterial = UFORenderer.material;
         }
+
+        if (UFOBeam != null)
+            UFOBeam.SetSwallowLevelSet(CurrentLevel);
+
+        if(trigger!=null)
+            trigger.SetCurrentLevel(CurrentLevel);
 
         UpdateSizeText(CurrentLevel);
     }
@@ -148,32 +164,38 @@ public class UFOPlayer : MonoBehaviour
         EXPGaugeBar.fillAmount = Mathf.Lerp(EXPGaugeBar.fillAmount, TargetfillPercent, Time.deltaTime * fillSpeed);
     }
 
-    public void AddEXPGauge(float gauge)
+    public void AddEXPGauge(float gauge,float mass)
     {
         SpawnGagueEffect(gauge);
-        if (MaxLevel == CurrentLevel) return;
-        //Debug.Log(gauge);
-        CurrentExpGauge += gauge;
+
+        float newGague = CalculateExpGain(CurrentLevel, mass);
+        //CurrentExpGauge += gauge;
+        CurrentExpGauge += newGague;
+        Debug.Log("UFOPLAYEr : " + newGague);
+        FOnExpGagueAdded?.Invoke(newGague);
 
         if (CurrentExpGauge >= MaxExpGauge)
         {
-            if (CurrentLevel != MaxLevel - 1)
-                CurrentExpGauge -= MaxExpGauge;
-            else
-                CurrentExpGauge = 0;
+            
+            CurrentExpGauge -= MaxExpGauge;
 
             EXPGaugeBar.fillAmount = 0.0f;
 
             ChangeLevel(true);
 
-            MaxExpGauge += AddMaxExp;
+            //MaxExpGauge += AddMaxExp;
         }
         TargetfillPercent = Mathf.Clamp01(CurrentExpGauge / MaxExpGauge);
 
         //SpawnGagueEffect(gauge);
-
-        
     }
+    public float CalculateExpGain(int level, float absorbedMass)
+    {
+
+        float exp = baseExpPerMass * absorbedMass / Mathf.Pow(2f, level - 1);
+        return exp;
+    }
+
 
     void SpawnGagueEffect(float gauge)
     {
@@ -181,23 +203,27 @@ public class UFOPlayer : MonoBehaviour
         DamageNumber damageNumber = numberPrefab.Spawn(transform.position, gauge);
     }
 
+    public void SwallowSound()
+    {
+        AddGaugeSound.Play();
+    }
+
     public void ChangeLevel(bool bLevelUp)
     {
 
         CurrentLevel += bLevelUp ? 1 : -1;
       
-        UFOBeam.ChangeLiftSpeed(bLevelUp);
-
+        UFOBeam.SetSwallowLevelSet(CurrentLevel);
+        trigger.SetCurrentLevel(CurrentLevel);
        
         UpdateSizeText(CurrentLevel);
     }
 
     private void UpdateSizeText(int currentsizelevel)
     {
-        if (CurrentLevel != MaxLevel)
-            LevelText.text = "레벨: " + currentsizelevel;
-        else
-            LevelText.text = "레벨: Max";
+       
+       LevelText.text = "레벨: " + currentsizelevel;
+        
     }
 
     public void ChangeCameraDistance(float cameradistance)

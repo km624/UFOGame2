@@ -205,8 +205,8 @@ public class MapEditorWindow : EditorWindow
 
             GUI.enabled = false;
             EditorGUILayout.FloatField("경험치량", statData.EXPCnt);
-            EditorGUILayout.Toggle("클리어 목표", statData.bRequired);
-            EditorGUILayout.FloatField("질량", statData.mass);
+            //EditorGUILayout.Toggle("클리어 목표", statData.bRequired);
+           // EditorGUILayout.FloatField("질량", statData.mass);
             EditorGUILayout.Toggle("이동 여부", statData.bMovement);
             if (statData.bMovement)
             {

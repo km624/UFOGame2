@@ -22,9 +22,11 @@ public class ObjectManager : MonoBehaviour
     //public int TotalObjectCnt { get; private set; } = 0;
 
     public int CurrentGenration { get; private set; } = 0;
+
+    public event Action<GenerationObjects> FOnGenerationDataSeted;
+    public event Action<int /*currentgeneraetion*/> FOnGenerationChanged;
     public List<FallingObject> AllSpawnObjects { get; private set; } = new List<FallingObject>();
 
-    public TMP_Text GenereationText;
     [Header("전체 오브젝트 수")]
     [SerializeField]
     private int MaxObjectCnt  = 50;
@@ -43,6 +45,12 @@ public class ObjectManager : MonoBehaviour
     [SerializeField]
     float BombSpawnTime = 5.0f;
 
+    [Header("스폰시간")]
+    [SerializeField]
+    private float SpawnTime = 5.0f;
+    [SerializeField]
+    private float variation = 1.0f;
+
     private Coroutine BombCoroutine;
 
     public event Action<FallingObject,int /*currentgeneration*/ > FOnObjectSwallowed;
@@ -54,9 +62,10 @@ public class ObjectManager : MonoBehaviour
     private Dictionary<ShapeEnum, int> BonusObjectsCnt = new Dictionary<ShapeEnum, int>();
     public event Action< ShapeEnum, int /*count*/> FOnBounsWidgetCreated;
     public event Action<Dictionary<ShapeEnum,int>/*BonusObjectsOrgin*/, int/*CurrentGenration*/> FOnBounusCompleted;
-   
 
+    
     public int GetMaxObjectCnt() { return MaxObjectCnt; }
+    
     [Header("보너스")]
     [SerializeField]
     private int bonusObjectsMinCount = 2;
@@ -101,32 +110,34 @@ public class ObjectManager : MonoBehaviour
     public void SetUpSpawnObjects(int currentgeneration)
     {
         GenerationObjects gen = (generationList.Count > 0) ? generationList[currentgeneration] : null;
+        FOnGenerationDataSeted?.Invoke(gen);
         foreach (var spawnPoint in objectspawnPoints)
         {
             if (gen != null)
             {
-                spawnPoint.SetGeneration(gen, this);
+                spawnPoint.SetGeneration(gen, this,SpawnTime,variation);
                 spawnPoint.SpawnPrefab();
             }
             
         }
     }
 
-    public bool ChangeGeneration()
+    public void ChangeGeneration()
     {
         if (generationList.Count <= CurrentGenration + 1)
         {
             //Debug.Log("다음 세대 없음");
-            return false;
+            return; 
         }
 
         CurrentGenration += 1;
-        GenereationText.text= CurrentGenration.ToString();  
+
         SetUpSpawnObjects(CurrentGenration);
 
+        FOnGenerationChanged?.Invoke(CurrentGenration);
        // Debug.Log(CurrentGenration + " : 현재 세대");
 
-        return true;
+       
 
     }
     public void StartSpawnObjects()
@@ -311,15 +322,15 @@ public class ObjectManager : MonoBehaviour
     {
         while (true)
         {
-            SpawnAtRandomGridPosition();
+            SpawnBombAtRandomGridPosition();
             yield return new WaitForSeconds(BombSpawnTime);
         }
     }
 
-    private void SpawnAtRandomGridPosition()
+    private void SpawnBombAtRandomGridPosition()
     {
         FallingObject spawnbomb = generationList[CurrentGenration].bomb;
-    
+        if (spawnbomb == null) return;
 
         Vector2 SpawnLocation = RandomSpawnRange();
 
@@ -350,6 +361,34 @@ public class ObjectManager : MonoBehaviour
         int randomZ = Random.Range(minZ, maxZ + BombPostionInterval);
 
         return new Vector2(randomX, randomZ);   
+    }
+
+    void SpawnBossAtRandomGridPosition()
+    {
+        BossObject bossprefab = generationList[CurrentGenration].Boss;
+        if (bossprefab == null) return;
+
+        Vector2 SpawnLocation = RandomSpawnRange();
+
+
+        Vector3 spawnPosition = new Vector3(SpawnLocation.x, BombSpawnHeight, SpawnLocation.y);
+        GameObject bossobj = Instantiate(bossprefab.gameObject, spawnPosition, Quaternion.identity);
+
+        BossObject boss = bossobj.GetComponent<BossObject>();
+        if (boss != null)
+        {
+
+            boss.FOnBossSwallowed += CallBacK_BossSwallow;
+        }
+    }
+
+    void CallBacK_BossSwallow(BossObject bossObject)
+    {
+        if(bossObject!=null)
+        {
+            ChangeGeneration();
+            Destroy(bossObject.gameObject);
+        }
     }
 
 

@@ -28,7 +28,7 @@ public class SkillBeam : SkillBase
         BeamTrigger trigger = BeamRangeInstant.GetComponent<BeamTrigger>();
         if (trigger != null)
         {
-            trigger.SetBeamData(GunInstant.transform, ShootInterval, BeamInstant);
+            trigger.SetBeamData(GunInstant.transform, ShootInterval, BeamInstant, UFOplayer);
         }
        
         UFOplayer.ChangeCameraDistance(15.0f);

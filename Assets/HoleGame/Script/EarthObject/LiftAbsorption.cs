@@ -1,7 +1,7 @@
 using DG.Tweening;
 
 using UnityEngine;
-using UnityEngine.Timeline;
+
 
 public class LiftAbsorption : MonoBehaviour
 {
@@ -19,46 +19,55 @@ public class LiftAbsorption : MonoBehaviour
     //[SerializeField]
     private float TargetScaleValue = 0.25f;
     private Vector3 targetScale;
-    private Tween scaleTween;
+    private Sequence scaleseq;
 
     Rigidbody rb;
   
     private float objectmass;
 
-    private bool activelift = false;
+    //private bool activelift = false;
 
     
-    public void InitiaLiftAbsorption(Vector3 orginsclale)
+    public void InitiaLiftAbsorption(Vector3 orginsclale,float mass)
     {
         targetScale = new Vector3(TargetScaleValue, TargetScaleValue, TargetScaleValue);
         swallowobject = GetComponent<FallingObject>();
         defaultScale = orginsclale;
-       
-        rb = GetComponent<Rigidbody>();
-        
-        objectmass = (rb != null) ? rb.mass : 1f;
-       
+        objectmass = mass;
+
     }
 
    
 
-    public void StartAbsorp(float liftSpeed)
+    public void StartAbsorp(int swallowlevel)
     {
 
-        float referenceSpeed = 10f;
-        float referenceMass = 1f;
-        float baseScaleTime = 1.5f;
+        /* float referenceSpeed = 10f;
+         float referenceMass = 1f;
+         float baseScaleTime = 1.5f;
 
-        float liftRatio = (liftSpeed / referenceSpeed) / (objectmass / referenceMass);
-        ScaleTime = baseScaleTime * liftRatio;
-
+         float liftRatio = (liftSpeed / referenceSpeed) / (objectmass / referenceMass);
+         ScaleTime = baseScaleTime * liftRatio;
+ */
         /* float power = -1f;
          float baseFactor = 15f;
 
          ScaleTime = baseFactor * Mathf.Pow(objectmass / liftSpeed, power);*/
+       
+       
 
-        Debug.Log(ScaleTime);
-        scaleTween?.Kill();
+        if((swallowlevel - objectmass) >=0)
+        {
+            ScaleTime = 2.0f;
+        }
+        else
+        {
+            ScaleTime = 0.5f;
+        }
+       
+
+
+        scaleseq?.Kill();
         swallowobject.ActivateBounce(false);
     }
 
@@ -69,6 +78,11 @@ public class LiftAbsorption : MonoBehaviour
         
         transform.localScale = Vector3.Lerp(transform.localScale, targetScale, Time.deltaTime* ScaleTime);
     }
+    public float GetObjectMass()
+    {
+        return objectmass;
+    }
+    
 
 
         /// <summary>
@@ -76,13 +90,13 @@ public class LiftAbsorption : MonoBehaviour
         /// </summary>
     public void ResetScale()
     {
+       
+        scaleseq = DOTween.Sequence();
+        scaleseq.Append(transform.DOScale(defaultScale, 0.5f).SetEase(Ease.OutQuad));  // 0.5초 스케일 tween
+        scaleseq.AppendInterval(1.0f);  // tween 완료 후 1초 지연
+        scaleseq.OnComplete(() => swallowobject.ActivateBounce(true));  // 지연 후 콜백 실행
 
-        Sequence seq = DOTween.Sequence();
-        seq.Append(transform.DOScale(defaultScale, 0.5f).SetEase(Ease.OutQuad));  // 0.5초 스케일 tween
-        seq.AppendInterval(1.0f);  // tween 완료 후 1초 지연
-        seq.OnComplete(() => swallowobject.ActivateBounce(true));  // 지연 후 콜백 실행
 
        
-        scaleTween = seq;
     }
 }

@@ -31,9 +31,7 @@ public class ObjectMovement : MonoBehaviour
     [SerializeField]
     private float jumpPower = 1.0f;
 
-    //디폴트로 둘지 보류
-    [Tooltip("흡수 되고 나서 대기 시간")]
-    private float AbsorpDelay = 1.0f;
+  
 
     private Vector3 defaultScale = Vector3.zero;
     
@@ -85,37 +83,32 @@ public class ObjectMovement : MonoBehaviour
     }
     private void OnEnable()
     {
-       if(defaultScale !=Vector3.zero)
-        {
-            Invoke(nameof(delayJumpActivate), AbsorpDelay);
-        }
-            
+        if(defaultScale!=Vector3.zero)
+            JumpActivate(true);
+
+
     }
     void OnDisable()
     {
-        CancelInvoke(nameof(delayJumpActivate));
-
+       
         JumpActivate(false);
     }
 
-    void delayJumpActivate()
-    {
-        JumpActivate(true);
-    }
 
     public void JumpActivate(bool bActiveJump)
     {
         if (!bActiveJump)
         {
-            if (jumpRoutine != null)
-            {
-                StopCoroutine(jumpRoutine);
-                jumpSeq?.Kill();
-                jumpRoutine = null;
-            }
+
+            
+            StopCoroutine(jumpRoutine);
+            jumpSeq?.Kill();
+            jumpRoutine = null;
+
         }
         else
         {
+           
             jumpRoutine = StartCoroutine(JumpLoop());
         }
 
@@ -152,25 +145,6 @@ public class ObjectMovement : MonoBehaviour
     }
 
 
-   /* public void PerformRandomJump()
-    {
-        // 랜덤한 수평 방향 생성 (X-Z 평면)
-        Vector2 randomDir2D = Random.insideUnitCircle.normalized;
-        Vector3 horizontalDir = new Vector3(randomDir2D.x, 0f, randomDir2D.y);
-        // 점프할 때는 수직 방향도 포함 (예: 위쪽 + 랜덤한 수평)
-        Vector3 jumpDirection = (horizontalDir + Vector3.up).normalized;
-
-        // DOTween을 사용하여 점프 이동 애니메이션 실행
-        transform.DOMove(transform.position + jumpDirection * jumpDistance, jumpDuration)
-            .SetEase(Ease.OutQuad);
-
-        // 동시에 squish 효과 실행 (점프 순간 squish되었다가 복귀)
-        Sequence jumpSeq = DOTween.Sequence();
-        Vector3 squishedScale = new Vector3(defaultScale.x * 1.1f, defaultScale.y * (1 - squishAmount), defaultScale.z * 1.1f);
-        jumpSeq.Append(transform.DOScale(squishedScale, squishDuration).SetEase(Ease.OutQuad))
-               .Append(transform.DOScale(defaultScale, squishDuration).SetEase(Ease.InQuad));
-    }
-*/
     private void PerformRandomJump2()
     {
 

@@ -293,7 +293,7 @@ GameObject:
   - component: {fileID: 1860806055644286296}
   - component: {fileID: 2246600155577430902}
   - component: {fileID: 5733699602626567631}
-  m_Layer: 9
+  m_Layer: 6
   m_Name: ThinHumanPrefab
   m_TagString: FallingObject
   m_Icon: {fileID: 0}
@@ -378,7 +378,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8878195400969433860}
   serializedVersion: 4
-  m_Mass: 2
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -415,7 +415,7 @@ MonoBehaviour:
   CanvasGameObject: {fileID: 879291349823901729}
   StateIconWidget: {fileID: 6620564982748026280}
   Ice: {fileID: 8029568198718268702}
-  onDestroyed:
+  onSwallowed:
     m_PersistentCalls:
       m_Calls: []
 --- !u!114 &4832152545124272801

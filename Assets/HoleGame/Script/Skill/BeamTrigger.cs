@@ -10,7 +10,7 @@ public class BeamTrigger : MonoBehaviour
 {
     private Transform GunTransform;
     private Transform FireTransform;
-   
+    private UFOPlayer player;
     private List<FallingObject> Inrange = new List<FallingObject>();
 
     private Coroutine BeamCoroutine = null;
@@ -21,25 +21,27 @@ public class BeamTrigger : MonoBehaviour
 
     private float BeamActiveTime = 0.1f;
     private float RotateDuration = 0.2f;
-    public void SetBeamData(Transform gun , float interval,GameObject beamprefab)
+    public void SetBeamData(Transform gun , float interval,GameObject beamprefab, UFOPlayer ufoplayer)
     {
         GunTransform = gun;
         BeamInterval = interval;
         Beamobject = beamprefab;
         Beamobject.SetActive(false);
         FireTransform = GunTransform.GetChild(0).transform;
+        player = ufoplayer;
 
 
     }
 
-    private void OnTriggerEnter(Collider other)
+  /*  private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer == 9)
         {
+           
             FallingObject FObject = other.GetComponent<FallingObject>();
             if (FObject != null)
             {
-               
+                if (player->CurrentLevel <)
                 if (!Inrange.Contains(FObject))
                 {
                     Inrange.Add(FObject);
@@ -54,6 +56,35 @@ public class BeamTrigger : MonoBehaviour
               
             }
          
+        }
+    }*/
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.gameObject.layer == 9)
+        {
+
+
+            FallingObject FObject = other.GetComponent<FallingObject>();
+            if (FObject != null)
+            {
+               // if (player.CurrentLevel < FObject.ObjectMass) return;
+                
+
+                if (!Inrange.Contains(FObject))
+                {
+                    Inrange.Add(FObject);
+                    if (BeamCoroutine == null)
+                    {
+
+                        BeamCoroutine = StartCoroutine(DestroyClosestRoutine());
+
+                    }
+
+                }
+
+            }
+
         }
     }
 

@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 9158981098621082165}
   - component: {fileID: 8594808592780592121}
   - component: {fileID: 2013696071175976593}
-  m_Layer: 9
+  m_Layer: 6
   m_Name: 'TRexPrefab '
   m_TagString: FallingObject
   m_Icon: {fileID: 0}
@@ -102,7 +102,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1006106219408604765}
   serializedVersion: 4
-  m_Mass: 2
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -135,11 +135,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Shape: 4
   bMovement: 1
-  ForceStatData: {fileID: 11400000, guid: 35efeda576a27c44ebdf40686b47c16a, type: 2}
+  ForceStatData: {fileID: 11400000, guid: 2dd08ad9962a8d6419e7b2874cde7ce0, type: 2}
   CanvasGameObject: {fileID: 2317875604133627427}
   StateIconWidget: {fileID: 7673635861145860941}
   Ice: {fileID: 3544233954342206382}
-  onDestroyed:
+  onSwallowed:
     m_PersistentCalls:
       m_Calls: []
 --- !u!114 &5276872793198437437

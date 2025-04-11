@@ -1,6 +1,5 @@
 
 using DG.Tweening;
-using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -16,6 +15,8 @@ public class FallingObject : MonoBehaviour
     public float EXPCnt { get; private set; }  = 50.0f;
     [SerializeField]
     public float TimeCnt { get; private set; } = 0.5f;
+
+    public float ObjectMass { get; private set; } = 1.0f;
 
 
     //[Header("클리어 목표")]
@@ -47,12 +48,13 @@ public class FallingObject : MonoBehaviour
     private Vector3 originalScale;
 
     
-    private int SpawnLayer = 6;
+    //private int SpawnLayer = 6;
     private int NormalLayer = 9;
 
     public void SetStatData(EarthObjectStatData data)
     {
         ForceStatData =  data;
+
     }
 
     public EarthObjectStatData GetForceData() { return ForceStatData; }
@@ -63,13 +65,11 @@ public class FallingObject : MonoBehaviour
 
         idleBounce = GetComponent<BounceShape>();
         MoveBounce = GetComponent<ObjectMovement>();
-        Rigidbody rb = GetComponent<Rigidbody>();
-        if(rb != null ) rb.mass = data.mass;
-
+    
         EXPCnt = data.EXPCnt;
         TimeCnt = data.TimeCnt;
         bMovement = data.bMovement;
-
+        ObjectMass =data.mass;
         float squishspeed = Mathf.Clamp(data.squishAmount, 0.2f, 0.5f);
         if(idleBounce&& MoveBounce)
         {
@@ -79,9 +79,28 @@ public class FallingObject : MonoBehaviour
 
     }
 
+    public virtual void AddGenerationMass(int generation)
+    {
+        SetObjectData(ForceStatData);
+
+        ObjectMass += (4 * generation);
+
+        LiftAbsorption lift = GetComponent<LiftAbsorption>();
+        if (lift)
+        {
+            lift.InitiaLiftAbsorption(originalScale, ObjectMass);
+        }
+
+
+        transform.DOScale(originalScale, 1.0f)
+                 .SetEase(Ease.OutElastic).OnComplete(() => SelectMove());
+    }
+
     private void Awake()
     {
         originalScale = transform.localScale;
+        transform.localScale = originalScale * 0.01f;
+       
     }
 
     private void OnEnable()
@@ -90,23 +109,19 @@ public class FallingObject : MonoBehaviour
         {
             ForceStatData = ScriptableObject.CreateInstance<EarthObjectStatData>();
         }
-        gameObject.layer = SpawnLayer;
+        
 
-        SetObjectData(ForceStatData);
+       /* SetObjectData(ForceStatData);
 
         LiftAbsorption lift = GetComponent<LiftAbsorption>();
         if (lift)
         {
-            lift.InitiaLiftAbsorption(originalScale);
+            lift.InitiaLiftAbsorption(originalScale, ObjectMass);
         }
-
-
-        transform.localScale = originalScale * 0.01f;
 
        
         transform.DOScale(originalScale, 1.0f)
-                 .SetEase(Ease.OutElastic).OnComplete(() => SelectMove());
-
+                 .SetEase(Ease.OutElastic).OnComplete(() => SelectMove());*/
 
     }
 
@@ -119,7 +134,7 @@ public class FallingObject : MonoBehaviour
 
     void SelectMove()
     {
-
+       
         gameObject.layer = NormalLayer;
 
         if (idleBounce != null && MoveBounce != null)
@@ -153,9 +168,8 @@ public class FallingObject : MonoBehaviour
         }
       
             BouncesdActivate = boucneactive;
-
-      if(BouncesdActivate)
-            SelectMove();
+       
+       SelectMove();
     }
 
     public void ActiveIce(bool active)

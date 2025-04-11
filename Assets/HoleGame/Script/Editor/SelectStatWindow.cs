@@ -64,7 +64,7 @@ public class SelectStatWindow : EditorWindow
                 int index = row * columns + col;
                 if (index < count)
                 {
-                    GUI.backgroundColor = dataList[index].bisdefaultStat ? Color.blue : Color.gray;
+                    //GUI.backgroundColor = dataList[index].bisdefaultStat ? Color.blue : Color.gray;
                     if (GUILayout.Button(dataList[index].name, GUILayout.Width(75), GUILayout.Height(75)))
                     {
                         bIsCompleted = false;
@@ -102,7 +102,7 @@ public class SelectStatWindow : EditorWindow
             GUILayout.Label("데이터 이름 : " + selectedData.name, EditorStyles.helpBox, GUILayout.Height(30.0f));
             GUILayout.Space(10);
 
-            if (!selectedData.bisdefaultStat && !bIsModify)
+            //if (!selectedData.bisdefaultStat && !bIsModify)
             {
                 GUILayout.Space(20);
                 GUI.backgroundColor = Color.yellow;
@@ -119,8 +119,8 @@ public class SelectStatWindow : EditorWindow
 
             GUI.backgroundColor = Color.gray;
             selectedData.EXPCnt = EditorGUILayout.FloatField("경험치량", selectedData.EXPCnt);
-            selectedData.bRequired = EditorGUILayout.Toggle("클리어 목표", selectedData.bRequired);
-            selectedData.mass = EditorGUILayout.FloatField("질량", selectedData.mass);
+            //selectedData.bRequired = EditorGUILayout.Toggle("클리어 목표", selectedData.bRequired);
+            //selectedData.mass = EditorGUILayout.FloatField("질량", selectedData.mass);
            
             selectedData.bMovement = EditorGUILayout.Toggle("이동 여부", selectedData.bMovement);
             if (selectedData.bMovement)
