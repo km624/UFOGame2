@@ -64,7 +64,7 @@ public class LiftAbsorption : MonoBehaviour
         {
             ScaleTime = 0.5f;
         }
-       
+       // Debug.Log(gameObject.name + " : " + objectmass);
 
 
         scaleseq?.Kill();

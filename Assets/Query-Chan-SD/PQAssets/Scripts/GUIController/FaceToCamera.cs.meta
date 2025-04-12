@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 91b4d4218578045cb8a32a84a3f1374c
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35616
+  packageName: '"Query-Chan" model SD'
+  packageVersion: 2.2.0
+  assetPath: Assets/Query-Chan-SD/PQAssets/Scripts/GUIController/FaceToCamera.cs
+  uploadId: 747367

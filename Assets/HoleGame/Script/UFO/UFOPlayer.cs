@@ -3,19 +3,19 @@ using System;
 using System.Buffers.Text;
 using System.Collections.Generic;
 using Unity.Cinemachine;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-
 using UnityEngine.UI;
 
 
-public class UFOPlayer : MonoBehaviour
+public class UFOPlayer : MonoBehaviour, IDetctable
 {
     //private GameState gameState;
 
     [Header("레벨 스텟")]
     //private float LiftSpeed = 10f;  // 끌어당기는 힘
     public int CurrentLevel { get; private set; } = 1;
-    //private int MaxLevel = 5;
+    private int MaxLevel = 5;
 
     private float CurrentExpGauge;
     [Header("초기 경험치량")]
@@ -23,7 +23,7 @@ public class UFOPlayer : MonoBehaviour
    // private float MaxExpGauge = 25.0f;
     private float MaxExpGauge = 100.0f;
 
-    float baseExpPerMass = 10f;
+    float baseExpPerMass = 10.0f;
 
     [Header("레벨에 따른 최대 경험치 추가량")]
     //[SerializeField]
@@ -64,8 +64,8 @@ public class UFOPlayer : MonoBehaviour
     private float DefaultCameraDistance = 0.0f;
 
     public Material defaultMaterial { get; private set; } // 기본 머티리얼
-    
 
+    public Vector3 WorldPosition => transform.position;
     void Start()
     {
         if (GameManager.Instance != null)
@@ -168,16 +168,25 @@ public class UFOPlayer : MonoBehaviour
     {
         SpawnGagueEffect(gauge);
 
+        if (CurrentLevel >= MaxLevel) return;
+
         float newGague = CalculateExpGain(CurrentLevel, mass);
         //CurrentExpGauge += gauge;
         CurrentExpGauge += newGague;
-        Debug.Log("UFOPLAYEr : " + newGague);
+        //Debug.Log("UFOPLAYEr : " + newGague);
         FOnExpGagueAdded?.Invoke(newGague);
 
         if (CurrentExpGauge >= MaxExpGauge)
         {
+            if(CurrentLevel < MaxLevel - 1)
+            {
+                CurrentExpGauge -= MaxExpGauge;
+            }
+            else
+            {
+                CurrentExpGauge = 0.0f;
+            }
             
-            CurrentExpGauge -= MaxExpGauge;
 
             EXPGaugeBar.fillAmount = 0.0f;
 
@@ -217,6 +226,11 @@ public class UFOPlayer : MonoBehaviour
         trigger.SetCurrentLevel(CurrentLevel);
        
         UpdateSizeText(CurrentLevel);
+    }
+
+    public void MaxLevelLimitUp()
+    {
+        MaxLevel += 4;
     }
 
     private void UpdateSizeText(int currentsizelevel)

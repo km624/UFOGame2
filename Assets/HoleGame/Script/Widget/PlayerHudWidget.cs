@@ -44,8 +44,14 @@ public class PlayerHudWidget : MonoBehaviour
     [SerializeField]
     private ThermometerWidget thermometerWidget;
 
-    
-  
+    [SerializeField]
+    private TMP_Text StarCntText;
+   
+    [SerializeField]
+    private DetectWidget detectWidget;
+
+
+
 
     public void CallBack_CreateShapeWidget(ShapeEnum shapetype , int count)
     {
@@ -137,7 +143,7 @@ public class PlayerHudWidget : MonoBehaviour
             EndBounsWidgetCnt = 0;
 
 
-            Debug.Log("보너스 위젯 초기화");
+            //Debug.Log("보너스 위젯 초기화");
             FOnAllBounusAnimEnded?.Invoke(bIsFroceRenewal);
             bIsFroceRenewal = false;
         }
@@ -218,6 +224,28 @@ public class PlayerHudWidget : MonoBehaviour
             thermometerWidget.AddEXPGauge(addgauge);
         }
     }
+
+    public void ChangeStarCntText(int cnt)
+    {
+        StarCntText.text = cnt.ToString();
+    }
+    
+    public void SetDetectStandardTarget(IDetctable standard)
+    {
+        detectWidget.AddstandardTarget(standard);
+    }
+
+    public void CallBack_AddDetectTarget(IDetctable star)
+    {
+        detectWidget.AddTarget(star);   
+    }
+
+    public void CallBack_RemoveDetectTarget(IDetctable star) 
+    {
+        detectWidget.RemoveTarget(star);
+    }
+
+
 
 
 

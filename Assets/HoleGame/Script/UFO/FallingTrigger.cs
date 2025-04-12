@@ -7,21 +7,24 @@ public class FallingTrigger : MonoBehaviour
     {
         currentLevel = level;
     }
- 
 
-    
-    private void OnTriggerEnter(Collider other)
+   
+    private void OnTriggerStay(Collider other)
     {
+        //Debug.Log(other.name);
         FallingObject fallingobject = other.GetComponent<FallingObject>();
         if (fallingobject != null&& fallingobject.gameObject.layer==10)
         {
             
             fallingobject.OnSwallow();
-    
+
+            BossObject boss = other.GetComponent<BossObject>();
+            if(boss)
+            {
+                boss.BossSwallow();
+            }
+
         }
-
     }
-
-   
-   
+ 
 }

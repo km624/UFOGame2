@@ -53,6 +53,8 @@ public class GameState : MonoBehaviour
 
     public int GetPlayerCurrentLevel() { return ufoplayer.CurrentLevel; }
 
+    public int StarCnt { get; private set; } = 0;
+
     private void Awake()
     {
         if (Instance == null)
@@ -92,6 +94,9 @@ public class GameState : MonoBehaviour
         //보너스 위젯 클리어 애니메이션 끝났을때
         PlayerHud.FOnAllBounusAnimEnded += objectManager.CallBack_RenewalBonusObject;
 
+        //재화 스폰 이벤트 바인딩
+        objectManager.FOnStartSpawned += CallBack_StarSpawned;
+
         //온도계 위젯 바인딩
         objectManager.FOnGenerationDataSeted += PlayerHud.CallBack_SetThermometerWidget;
         ufoplayer.FOnExpGagueAdded += PlayerHud.CallBack_AddEXPThermometerWidget;
@@ -109,13 +114,18 @@ public class GameState : MonoBehaviour
         //스킬 바인딩
         AllSkillManager.FOnSkillActivated += PlayerHud.ActiveSkill;
 
+        //스타 카운트 초기화 0 으로
+        PlayerHud.ChangeStarCntText(StarCnt);
+
+        //감지 위젯 플레이어 세팅
+        PlayerHud.SetDetectStandardTarget(ufoplayer);
 
         PlayerHud.SetTimeWidget(TotalTime,this);
         StartPlayTimer();
         StartGameTimer();
         PlayerHud.SetScoreText(TotalScore);
 
-        objectManager.InitObjectManager();
+        objectManager.InitObjectManager(this);
 
        
 
@@ -149,7 +159,7 @@ public class GameState : MonoBehaviour
 
     private void CallBack_BonusClear(Dictionary<ShapeEnum, int> allbouns , int currentgeneration)
     {
-        Debug.Log("보너스 점수 추가 ");
+        //Debug.Log("보너스 점수 추가 ");
         foreach (var item in allbouns)
         {
             for(int i = 0; i < item.Value;i++)
@@ -255,20 +265,22 @@ public class GameState : MonoBehaviour
         }
     }
 
-   /* private void OnTimeChangeGenration()
-    {
-
-        bool changed = objectManager.ChangeGeneration();
-        if (changed)
-        {
-            PlayerHud.OnForceRenewalBounusWidget();
-        }
-
-    }*/
-
+   
     public void CallBack_ForceRenewalBonus(int currentgeneration)
     {
         PlayerHud.OnForceRenewalBounusWidget();
+    }
+
+    public void CallBack_StarSpawned(IDetctable targetstar)
+    {
+        PlayerHud.CallBack_AddDetectTarget(targetstar);
+    }
+
+    public void CallBack_StartSwallowed(StarObject star)
+    {
+        StarCnt++;
+        PlayerHud.CallBack_RemoveDetectTarget(star);
+        PlayerHud.ChangeStarCntText(StarCnt);
     }
 
     public void Skill_SetIgnoreBomb(bool active)

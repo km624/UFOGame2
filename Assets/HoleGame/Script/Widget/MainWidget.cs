@@ -1,12 +1,11 @@
-using DanielLochner.Assets.SimpleScrollSnap;
+
 using EasyTransition;
 using Lean.Gui;
-using System;
+
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
+
 
 public class MainWidget : MonoBehaviour
 {

@@ -6,6 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using System.Xml.Linq;
 using TMPro;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -13,6 +14,8 @@ using Random = UnityEngine.Random;
 
 public class ObjectManager : MonoBehaviour
 {
+    private GameState gameState;
+
     [SerializeField]
     private List<ObjectSpawnPoint> objectspawnPoints = new List<ObjectSpawnPoint>();
 
@@ -67,27 +70,33 @@ public class ObjectManager : MonoBehaviour
     public int GetMaxObjectCnt() { return MaxObjectCnt; }
     
     [Header("보너스")]
-    [SerializeField]
+   /* [SerializeField]
     private int bonusObjectsMinCount = 2;
     [SerializeField]
-    private int bonusObjectsMaxCount = 4;
+    private int bonusObjectsMaxCount = 4;*/
 
     [SerializeField]
     private int bonusMinCount = 1;
     [SerializeField]
     private int bonusMaxCount = 5;
-    
 
-   
+    [Header("재화 오브젝트")]
+    [SerializeField]
+    private StarObject starobjectprefab;
 
-    
+    public event Action<IDetctable> FOnStartSpawned;
 
-    public void InitObjectManager()
+
+
+    public void InitObjectManager(GameState state)
     {
+        gameState = state;
+        //CreateBonusObjects();
         CreateBonusObjects();
         SetUpSpawnObjects(CurrentGenration);
         StartSpawnObjects();
         StartBombSapwn();
+        SpawnBossAtRandomGridPosition();
     }
 
     //무조건 바꿔야함
@@ -135,7 +144,7 @@ public class ObjectManager : MonoBehaviour
         SetUpSpawnObjects(CurrentGenration);
 
         FOnGenerationChanged?.Invoke(CurrentGenration);
-       // Debug.Log(CurrentGenration + " : 현재 세대");
+        Debug.Log(CurrentGenration + " : 현재 세대");
 
        
 
@@ -223,7 +232,7 @@ public class ObjectManager : MonoBehaviour
 
     }
 
-    private void CreateBonusObjects()
+    /*private void CreateBonusObjects()
     {
         // generationList 체크: 비어있거나 CurrentGenration 인덱스 초과시 경고 후 null 반환
         if (generationList == null || generationList.Count <= CurrentGenration)
@@ -271,6 +280,54 @@ public class ObjectManager : MonoBehaviour
             FOnBounsWidgetCreated?.Invoke(tempList[i].GetShapeEnum(), randomCount);
         }
 
+    }*/
+    private void CreateBonusObjects()
+    {
+
+        // generationList 체크: 비어있거나 CurrentGenration 인덱스 초과시 경고 후 null 반환
+        if (generationList == null || generationList.Count <= CurrentGenration)
+        {
+            Debug.LogWarning("Generation list is empty or CurrentGenration index is out of range!");
+            return;
+        }
+
+        // 현재 GenerationObjects 참조
+        GenerationObjects currentGen = generationList[CurrentGenration];
+
+        // objects 리스트가 비었는지 확인
+        if (currentGen.objects == null || currentGen.objects.Count == 0)
+        {
+            Debug.LogWarning("No objects found in the current GenerationObjects!");
+            return;
+        }
+
+        int levelOffset = CurrentGenration * 4 + 1;
+
+        int usableCount = Mathf.Clamp(gameState.GetPlayerCurrentLevel() - levelOffset + 1, 1, currentGen.objects.Count);
+
+        List<FallingObject> limitedList = currentGen.objects.GetRange(0, usableCount);
+
+        // 셔플
+
+        for (int i = 0; i < limitedList.Count; i++)
+        {
+            int randomIndex = UnityEngine.Random.Range(i, limitedList.Count);
+            (limitedList[i], limitedList[randomIndex]) = (limitedList[randomIndex], limitedList[i]);
+        }
+
+        int countToSelect = UnityEngine.Random.Range(1, limitedList.Count+1);
+
+        for (int i = 0; i < countToSelect; i++)
+        {
+            int randomCount = UnityEngine.Random.Range(bonusMinCount, bonusMaxCount + 1); // 2부터 5까지 (6 미포함)
+
+
+            BonusObjectsOrgin.Add(limitedList[i].GetShapeEnum(), randomCount);
+            BonusObjectsCnt.Add(limitedList[i].GetShapeEnum(), randomCount);
+            FOnBounsWidgetCreated?.Invoke(limitedList[i].GetShapeEnum(), randomCount);
+        }
+
+      
     }
 
     private void CheckBonusCleared(ShapeEnum shape)
@@ -303,6 +360,9 @@ public class ObjectManager : MonoBehaviour
         //초기화
         BonusObjectsOrgin.Clear();
         BonusObjectsCnt.Clear();
+
+        //별(재화) 생성
+        SpawnStarAtRandomGridPosition();
 
         //보너스 목표 재생성
         CreateBonusObjects();
@@ -341,7 +401,7 @@ public class ObjectManager : MonoBehaviour
         FallingObject falling = bombobj.GetComponent<FallingObject>();
         if (falling != null)
         {
-           
+            falling.AddGenerationMass(CurrentGenration);
             falling.onSwallowed.AddListener(RemoveSpawnedObject);
         }
     }
@@ -371,14 +431,15 @@ public class ObjectManager : MonoBehaviour
         Vector2 SpawnLocation = RandomSpawnRange();
 
 
-        Vector3 spawnPosition = new Vector3(SpawnLocation.x, BombSpawnHeight, SpawnLocation.y);
+        Vector3 spawnPosition = new Vector3(SpawnLocation.x, 0.0f, SpawnLocation.y);
         GameObject bossobj = Instantiate(bossprefab.gameObject, spawnPosition, Quaternion.identity);
 
         BossObject boss = bossobj.GetComponent<BossObject>();
         if (boss != null)
         {
-
+            boss.AddGenerationMass(CurrentGenration);
             boss.FOnBossSwallowed += CallBacK_BossSwallow;
+           
         }
     }
 
@@ -388,6 +449,28 @@ public class ObjectManager : MonoBehaviour
         {
             ChangeGeneration();
             Destroy(bossObject.gameObject);
+        }
+    }
+
+    void SpawnStarAtRandomGridPosition()
+    {
+       
+        if (starobjectprefab == null) return;
+
+        Vector2 SpawnLocation = RandomSpawnRange();
+
+
+        Vector3 spawnPosition = new Vector3(SpawnLocation.x, BombSpawnHeight +5.0f, SpawnLocation.y);
+        GameObject starobj = Instantiate(starobjectprefab.gameObject, spawnPosition, Quaternion.identity);
+
+        StarObject star = starobj.GetComponent<StarObject>();
+        if (star != null)
+        {
+            star.AddGenerationMass(0);
+            star.FOnStarSwallowed += gameState.CallBack_StartSwallowed;
+
+            //star spawn 이벤트 발생
+            FOnStartSpawned?.Invoke(star);
         }
     }
 

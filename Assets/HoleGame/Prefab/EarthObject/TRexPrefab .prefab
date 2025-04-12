@@ -110,7 +110,7 @@ Rigidbody:
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 512
+    m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -135,7 +135,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Shape: 4
   bMovement: 1
-  ForceStatData: {fileID: 11400000, guid: 2dd08ad9962a8d6419e7b2874cde7ce0, type: 2}
+  ForceStatData: {fileID: 11400000, guid: 2f1aa392fe97c534198d7cd001e6f735, type: 2}
   CanvasGameObject: {fileID: 2317875604133627427}
   StateIconWidget: {fileID: 7673635861145860941}
   Ice: {fileID: 3544233954342206382}

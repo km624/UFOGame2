@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+
 public class UFOMovement : MonoBehaviour
 {
     [Header("이동속도")]
@@ -14,9 +15,12 @@ public class UFOMovement : MonoBehaviour
 
     private bool MoveActive = true;
     private Rigidbody rb;
+
+  
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+       
     }
 
 
@@ -27,21 +31,27 @@ public class UFOMovement : MonoBehaviour
         float moveZ;
 
 
-        moveX = joystick.Horizontal * 0.01f * HoleSpeed;
-        moveZ = joystick.Vertical * 0.01f * HoleSpeed;
+        moveX = joystick.Horizontal* 0.01f* HoleSpeed;
+        moveZ = joystick.Vertical * 0.01f* HoleSpeed;
 
         //transform.position += new Vector3(moveX, 0, moveZ);
 
         Vector3 moveVector = new Vector3(moveX, 0, moveZ);
+       
+       
 
-      
-        rb.MovePosition(transform.position + moveVector);
+        if (moveVector.sqrMagnitude > 0.0001f)
+        {
+            rb.MovePosition(rb.position + moveVector);
+        }
+
+        //rb.MovePosition(transform.position + moveVector);
 
         if (motion != null)
       {
             Vector3 movementDirection = new Vector3(moveX, 0, moveZ);
 
-            if (movementDirection.magnitude > 0.01f)
+            if (movementDirection.sqrMagnitude > 0.0001f)
             {
                 motion.StartWobble(movementDirection);
                 //Beam.StartWobble(movementDirection);

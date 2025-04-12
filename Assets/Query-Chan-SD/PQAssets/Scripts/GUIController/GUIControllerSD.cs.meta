@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: f42aceb2f16dc4e56bea09392c1e11b7
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35616
+  packageName: '"Query-Chan" model SD'
+  packageVersion: 2.2.0
+  assetPath: Assets/Query-Chan-SD/PQAssets/Scripts/GUIController/GUIControllerSD.cs
+  uploadId: 747367
