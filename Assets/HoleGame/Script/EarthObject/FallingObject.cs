@@ -9,7 +9,7 @@ public class FallingObject : MonoBehaviour
 {
     [Header("모습")]
     [SerializeField]
-    private ShapeEnum Shape = ShapeEnum.baseball;
+    private ShapeEnum Shape = ShapeEnum.Dino_Egg;
     [Header("경험치량")]
     [SerializeField]
     public float EXPCnt { get; private set; }  = 50.0f;
@@ -135,12 +135,13 @@ public class FallingObject : MonoBehaviour
     void SelectMove()
     {
        
-        gameObject.layer = NormalLayer;
+        //gameObject.layer = NormalLayer;
 
         if (idleBounce != null && MoveBounce != null)
         {
             if (BouncesdActivate)
             {
+                gameObject.layer = NormalLayer;
 
                 MoveBounce.enabled = bMovement ? true : false;
                 idleBounce.enabled = bMovement ? false : true;

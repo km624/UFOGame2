@@ -16,7 +16,7 @@ public class HoleScript : MonoBehaviour
                                     //[SerializeField]
                                     //private float addLiftSpeed = 5f;
 
-    private int CurrentSwallowLevel = 0;
+    private int CurrentLevel = 0;
     //private HashSet<Rigidbody> objectsInTrigger = new HashSet<Rigidbody>();
     public Transform UFOtransform;
 
@@ -30,7 +30,7 @@ public class HoleScript : MonoBehaviour
     private Dictionary<Collider, LiftAbsorption> absorptionCache = new();
     public void SetSwallowLevelSet(int swallowlevel)
     {
-        CurrentSwallowLevel = swallowlevel;
+        CurrentLevel = swallowlevel;
     }
 
     public void SetInitLiftSpeed(float liftSpeed)
@@ -39,7 +39,7 @@ public class HoleScript : MonoBehaviour
     }
 
 
-    private void OnTriggerEnter(Collider other)
+   /* private void OnTriggerEnter(Collider other)
     {
 
         if (other.gameObject.layer == NormalLayer && other.attachedRigidbody != null)
@@ -48,15 +48,15 @@ public class HoleScript : MonoBehaviour
             //objectsInTrigger.Add(other.attachedRigidbody);
             //other.gameObject.layer = LiftUpLayer;
            
-            /*LiftAbsorption absorption = other.GetComponent<LiftAbsorption>();
+            *//*LiftAbsorption absorption = other.GetComponent<LiftAbsorption>();
             if (absorption)
             {
                 absorption.StartAbsorp(LiftSpeed);
-            }*/
+            }*//*
 
         }
 
-    }
+    }*/
 
     private void OnTriggerExit(Collider other)
     {
@@ -64,7 +64,7 @@ public class HoleScript : MonoBehaviour
 
         if (other.gameObject.layer == LiftUpLayer && other.attachedRigidbody != null)
         {
-            other.gameObject.layer = NormalLayer;
+            //other.gameObject.layer = NormalLayer;
             if (!absorptionCache.TryGetValue(other, out var absorption))
             {
                 absorption = other.GetComponent<LiftAbsorption>();
@@ -73,13 +73,9 @@ public class HoleScript : MonoBehaviour
             }
             absorption?.ResetScale();
             absorptionCache.Remove(other);
-           // LiftAbsorption absorption = other.GetComponent<LiftAbsorption>();
-           /* if (absorption)
-            {
-                absorption.ResetScale();
-            }*/
-            other.gameObject.layer = NormalLayer;
-            //objectsInTrigger.Remove(other.attachedRigidbody);
+         
+            //other.gameObject.layer = NormalLayer;
+           
         }
 
     }
@@ -101,14 +97,14 @@ public class HoleScript : MonoBehaviour
                 absorption = other.GetComponent<LiftAbsorption>();
                 if (absorption != null)
                     absorptionCache[other] = absorption;
-                absorption.StartAbsorp(CurrentSwallowLevel);
+                absorption.StartAbsorp(CurrentLevel);
             }
 
             absorption?.ApplyAbsorptionScale();
 
             Vector3 directionToShip = (UFOtransform.position - rb.position).normalized;
 
-            float newLifSpeed = CalculateLiftSpeed(CurrentSwallowLevel, absorption.GetObjectMass());
+            float newLifSpeed = CalculateLiftSpeed(CurrentLevel, absorption.GetObjectMass());
             
             //Vector3 liftForce = Vector3.up * LiftSpeed;
             Vector3 liftForce = Vector3.up * newLifSpeed;

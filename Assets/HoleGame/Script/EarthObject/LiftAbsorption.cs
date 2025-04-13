@@ -58,7 +58,7 @@ public class LiftAbsorption : MonoBehaviour
 
         if((swallowlevel - objectmass) >=0)
         {
-            ScaleTime = 2.0f;
+            ScaleTime = 3.0f;
         }
         else
         {

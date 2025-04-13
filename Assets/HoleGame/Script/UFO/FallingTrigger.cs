@@ -19,9 +19,16 @@ public class FallingTrigger : MonoBehaviour
             fallingobject.OnSwallow();
 
             BossObject boss = other.GetComponent<BossObject>();
+            
             if(boss)
             {
                 boss.BossSwallow();
+            }
+
+            StarObject star = other.GetComponent<StarObject>();
+            if(star)
+            {
+                star.StarSwallow();
             }
 
         }

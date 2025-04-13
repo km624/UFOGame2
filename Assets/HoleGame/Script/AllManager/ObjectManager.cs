@@ -26,7 +26,7 @@ public class ObjectManager : MonoBehaviour
 
     public int CurrentGenration { get; private set; } = 0;
 
-    public event Action<GenerationObjects> FOnGenerationDataSeted;
+    //public event Action<GenerationObjects> FOnGenerationDataSeted;
     public event Action<int /*currentgeneraetion*/> FOnGenerationChanged;
     public List<FallingObject> AllSpawnObjects { get; private set; } = new List<FallingObject>();
 
@@ -119,7 +119,7 @@ public class ObjectManager : MonoBehaviour
     public void SetUpSpawnObjects(int currentgeneration)
     {
         GenerationObjects gen = (generationList.Count > 0) ? generationList[currentgeneration] : null;
-        FOnGenerationDataSeted?.Invoke(gen);
+        //FOnGenerationDataSeted?.Invoke(gen);
         foreach (var spawnPoint in objectspawnPoints)
         {
             if (gen != null)
@@ -448,6 +448,10 @@ public class ObjectManager : MonoBehaviour
         if(bossObject!=null)
         {
             ChangeGeneration();
+
+            //임시 소리
+            gameState.OnUfoSwallowSound();
+
             Destroy(bossObject.gameObject);
         }
     }

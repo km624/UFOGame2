@@ -46,6 +46,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AllSkillPrefabs:
   - {fileID: 94922543116983390, guid: 95aaf445d7700024da386eaf9a89f6d7, type: 3}
-  - {fileID: 8329851835277144497, guid: b71ee8f2a5615b240b41a0debd6f1e7f, type: 3}
   - {fileID: 8602964013182044788, guid: 2794c26c865975048804643462fa266d, type: 3}
   - {fileID: 480398716097620623, guid: 81b12c40efe12344f98d328240f61808, type: 3}
+  - {fileID: -922654700078873994, guid: bad763cadbd0c07488241b7848ee8390, type: 3}

@@ -19,7 +19,7 @@ GameObject:
   - component: {fileID: -1943500640179696177}
   m_Layer: 6
   m_Name: Star
-  m_TagString: Untagged
+  m_TagString: FallingObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -33,9 +33,9 @@ Transform:
   m_GameObject: {fileID: 2167725389391718965}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.144636, y: 1.444171, z: -8.005291}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 7514792650542201218}
   - {fileID: 7768784490361357603}
@@ -154,7 +154,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 209ae94ff9f285a4c985c6402f9b5ab7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Shape: 1
+  Shape: 8
   bMovement: 0
   ForceStatData: {fileID: 11400000, guid: 4dccfc19c4be58f4d9a712756ae48d6f, type: 2}
   CanvasGameObject: {fileID: 6438061850519795840}

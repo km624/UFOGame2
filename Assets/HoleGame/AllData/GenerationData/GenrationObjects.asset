@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: GenrationObjects
   m_EditorClassIdentifier: 
   objects:
-  - {fileID: 9216295139255513221, guid: c6daf173d28694748b743e45dc0d0cfe, type: 3}
-  - {fileID: 3391898437462048271, guid: 9bfe19cf16d8f0e4e96c373df99adfa9, type: 3}
+  - {fileID: 6829897734837259997, guid: 6a9cc7b1a921a5c469b2108896e21c70, type: 3}
+  - {fileID: 280135421211903750, guid: 49662204c7114ae4e82775fc8abb8ffd, type: 3}
   - {fileID: 5335334928670281468, guid: 56fc4df49340e9549bcf4cfcb3f0d6ec, type: 3}
   - {fileID: 5349104326824382967, guid: 8040702dd5c003a4eb83bd4a0b322560, type: 3}
   bomb: {fileID: 472563596000138413, guid: 5c65c4cd2c542f9459d55d8b576ac375, type: 3}

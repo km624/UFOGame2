@@ -34,7 +34,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.2, y: 1.2, z: 1.2}
+  m_LocalScale: {x: 1.4, y: 1.4, z: 1.4}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 8176405840925320465}
@@ -48,7 +48,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1969963985239068205}
-  m_Mesh: {fileID: 753221313581179958, guid: 145a9cb68e7aec04c89cb8d3285bc340, type: 3}
+  m_Mesh: {fileID: 753221313581179958, guid: 4c4669de6127dff4a911457327f855eb, type: 3}
 --- !u!23 &5717982552152109236
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -72,7 +72,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9499007b493a2804191cb9456f63eac9, type: 2}
+  - {fileID: 2100000, guid: 27f35d7ac1c2f2246a6034e7f6e351e9, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -133,9 +133,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed1300cb3473b334d89587458664b1ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Shape: 5
+  Shape: 2
   bMovement: 1
-  ForceStatData: {fileID: 11400000, guid: 35efeda576a27c44ebdf40686b47c16a, type: 2}
+  ForceStatData: {fileID: 11400000, guid: 2f1aa392fe97c534198d7cd001e6f735, type: 2}
   CanvasGameObject: {fileID: 2655062078209620073}
   StateIconWidget: {fileID: 2176181956943649365}
   Ice: {fileID: 3627694841990971979}

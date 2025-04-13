@@ -48,7 +48,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1006106219408604765}
-  m_Mesh: {fileID: 8871552709325883717, guid: 83625032ff22c0845b9994ff2408b7e5, type: 3}
+  m_Mesh: {fileID: 8871552709325883717, guid: c01729f99422b194dac1a224cebdf6e3, type: 3}
 --- !u!23 &8068145222856448617
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -72,7 +72,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9499007b493a2804191cb9456f63eac9, type: 2}
+  - {fileID: 2100000, guid: 27f35d7ac1c2f2246a6034e7f6e351e9, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -133,9 +133,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed1300cb3473b334d89587458664b1ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Shape: 4
+  Shape: 3
   bMovement: 1
-  ForceStatData: {fileID: 11400000, guid: 2f1aa392fe97c534198d7cd001e6f735, type: 2}
+  ForceStatData: {fileID: 11400000, guid: 35efeda576a27c44ebdf40686b47c16a, type: 2}
   CanvasGameObject: {fileID: 2317875604133627427}
   StateIconWidget: {fileID: 7673635861145860941}
   Ice: {fileID: 3544233954342206382}

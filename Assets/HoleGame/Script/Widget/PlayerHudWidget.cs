@@ -41,13 +41,13 @@ public class PlayerHudWidget : MonoBehaviour
 
     public TransitionSettings transition;
     
-    [SerializeField]
-    private ThermometerWidget thermometerWidget;
+   /* [SerializeField]
+    private ThermometerWidget thermometerWidget;*/
 
     [SerializeField]
     private TMP_Text StarCntText;
    
-    [SerializeField]
+   [SerializeField]
     private DetectWidget detectWidget;
 
 
@@ -207,7 +207,7 @@ public class PlayerHudWidget : MonoBehaviour
         CurrentScoreText.text = score.ToString();
     }
 
-    public void CallBack_SetThermometerWidget(GenerationObjects generationdata)
+   /* public void CallBack_SetThermometerWidget(GenerationObjects generationdata)
     {
         
         if(thermometerWidget != null)
@@ -223,7 +223,7 @@ public class PlayerHudWidget : MonoBehaviour
             //Debug.Log(addgauge);
             thermometerWidget.AddEXPGauge(addgauge);
         }
-    }
+    }*/
 
     public void ChangeStarCntText(int cnt)
     {

@@ -2,14 +2,15 @@ using UnityEngine;
 
 public enum ShapeEnum
 {
-    golfball,
-    baseball,
-    Soccer,
-    Basketball,
-    TRex,
-    Trikeratops,
-    FatHuman,
-    ThinHuman,
+    Dino_Egg,
+    Dino_Anky,
+    Dino_Trikera,
+    Dino_TRex,
+    Human_Thin,
+    Human_Fat,
     boomb,
-    StaticShape
+    boss,
+    star
+
+   
 }

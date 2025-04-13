@@ -23,7 +23,7 @@ public class UFOPlayer : MonoBehaviour, IDetctable
    // private float MaxExpGauge = 25.0f;
     private float MaxExpGauge = 100.0f;
 
-    float baseExpPerMass = 10.0f;
+    float baseExpPerMass = 50.0f;
 
     [Header("레벨에 따른 최대 경험치 추가량")]
     //[SerializeField]
@@ -57,6 +57,8 @@ public class UFOPlayer : MonoBehaviour, IDetctable
     private Renderer UFORenderer;
     [SerializeField]
     private FallingTrigger trigger;
+    [SerializeField]
+    private PossibleTrigger possibleTrigger;
 
     public event Action<float /**/> FOnExpGagueAdded;
    
@@ -66,6 +68,8 @@ public class UFOPlayer : MonoBehaviour, IDetctable
     public Material defaultMaterial { get; private set; } // 기본 머티리얼
 
     public Vector3 WorldPosition => transform.position;
+
+
     void Start()
     {
         if (GameManager.Instance != null)
@@ -92,6 +96,9 @@ public class UFOPlayer : MonoBehaviour, IDetctable
 
         if(trigger!=null)
             trigger.SetCurrentLevel(CurrentLevel);
+
+        if(possibleTrigger!=null)
+            possibleTrigger.SetLevel(CurrentLevel);
 
         UpdateSizeText(CurrentLevel);
     }
@@ -224,7 +231,8 @@ public class UFOPlayer : MonoBehaviour, IDetctable
       
         UFOBeam.SetSwallowLevelSet(CurrentLevel);
         trigger.SetCurrentLevel(CurrentLevel);
-       
+        possibleTrigger.SetLevel(CurrentLevel);
+
         UpdateSizeText(CurrentLevel);
     }
 

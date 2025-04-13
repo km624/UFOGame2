@@ -355,7 +355,7 @@ GameObject:
   - component: {fileID: 8254364898307150327}
   m_Layer: 6
   m_Name: SD_QUERY_01
-  m_TagString: Untagged
+  m_TagString: FallingObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -369,7 +369,7 @@ Transform:
   m_GameObject: {fileID: 4659561220212469146}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.563559, y: -0.00000011920929, z: -0.31110358}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 2.5, y: 2.5, z: 2.5}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -446,7 +446,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7793a7cfdb1e48040995a53602016aec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Shape: 4
+  Shape: 7
   bMovement: 0
   ForceStatData: {fileID: 11400000, guid: 90f3a44c64308854aabe62cbcd5491fa, type: 2}
   CanvasGameObject: {fileID: 6116142601373946410}
@@ -492,7 +492,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!65 &8254364898307150327
 BoxCollider:

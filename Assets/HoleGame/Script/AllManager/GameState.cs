@@ -71,7 +71,7 @@ public class GameState : MonoBehaviour
 
     void Start()
     {
-        //CurrentChangeGenerationScore = AddChangeGenerationScore;
+        
 
         //보너스 목표 위젯 생성 
         objectManager.FOnBounsWidgetCreated += PlayerHud.CallBack_CreateShapeWidget;
@@ -98,8 +98,8 @@ public class GameState : MonoBehaviour
         objectManager.FOnStartSpawned += CallBack_StarSpawned;
 
         //온도계 위젯 바인딩
-        objectManager.FOnGenerationDataSeted += PlayerHud.CallBack_SetThermometerWidget;
-        ufoplayer.FOnExpGagueAdded += PlayerHud.CallBack_AddEXPThermometerWidget;
+       // objectManager.FOnGenerationDataSeted += PlayerHud.CallBack_SetThermometerWidget;
+        //ufoplayer.FOnExpGagueAdded += PlayerHud.CallBack_AddEXPThermometerWidget;
 
 
 
@@ -141,7 +141,7 @@ public class GameState : MonoBehaviour
 
         AllSkillManager.FOnSkillActivated -= PlayerHud.ActiveSkill;
         PlayerHud.FOnAllBounusAnimEnded -= objectManager.CallBack_RenewalBonusObject;
-        ufoplayer.FOnExpGagueAdded -= PlayerHud.CallBack_AddEXPThermometerWidget;
+        //ufoplayer.FOnExpGagueAdded -= PlayerHud.CallBack_AddEXPThermometerWidget;
     }
 
     private void CallBack_ObjectSwallow(FallingObject fallingobject,int currentgeneration)
@@ -268,6 +268,8 @@ public class GameState : MonoBehaviour
    
     public void CallBack_ForceRenewalBonus(int currentgeneration)
     {
+        //세대 변경 됬을때 
+
         PlayerHud.OnForceRenewalBounusWidget();
     }
 
@@ -279,8 +281,20 @@ public class GameState : MonoBehaviour
     public void CallBack_StartSwallowed(StarObject star)
     {
         StarCnt++;
+
+        //임시 소리 
+        OnUfoSwallowSound();
+
         PlayerHud.CallBack_RemoveDetectTarget(star);
+      
         PlayerHud.ChangeStarCntText(StarCnt);
+        Destroy(star.gameObject);
+    }
+
+    public void OnUfoSwallowSound()
+    {
+        //임시 소리 
+        ufoplayer.SwallowSound();
     }
 
     public void Skill_SetIgnoreBomb(bool active)
@@ -290,6 +304,9 @@ public class GameState : MonoBehaviour
     public void Skill_SetIceActive(bool active)
     {
         bIceActive = active;
+
+        objectManager.PauseSpawnObjects(active);
+
         StopGameTimer(active); 
     }
 
@@ -306,7 +323,8 @@ public class GameState : MonoBehaviour
             }
         }
         objectManager.AllObjectStopActive(active);
-        if(bIceActive)
+       
+        if (bIceActive)
             objectManager.IceActive(active);
       
     }
