@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class UFOMotion : MonoBehaviour
 {
+    [SerializeField]
+    private BounceShape bounceShape;
+
     [Header("위아래 이동 설정")]
     [Tooltip("위아래 이동의 높이"),Range(0.0f, 1.0f)]
     public float verticalLength = 1f;
@@ -73,4 +76,18 @@ public class UFOMotion : MonoBehaviour
         rotationTween = transform.DORotate(Vector3.zero, wobbleDuration).SetEase(Ease.OutQuad)
             .OnComplete(() => StartSpin());
     }
+
+    public void OnLevelUpMotion()
+    {
+        //모든 모션 초기화
+        spinTween?.Kill();
+        rotationTween?.Kill();
+        bounceShape.enabled = false;
+
+
+
+
+    }
+
+    
 }

@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class HoleScript : MonoBehaviour
 {
-    private GameState gameState;
+   
 
     
     [Header("UFO ²ø¾î´ç±â´Â Èû")]
@@ -17,7 +17,7 @@ public class HoleScript : MonoBehaviour
                                     //private float addLiftSpeed = 5f;
 
     private int CurrentLevel = 0;
-    //private HashSet<Rigidbody> objectsInTrigger = new HashSet<Rigidbody>();
+   
     public Transform UFOtransform;
 
    
@@ -26,8 +26,16 @@ public class HoleScript : MonoBehaviour
     private int LiftUpLayer =10;
     private int NormalLayer = 9;
 
+    private BossObject bossobj = null;
+
 
     private Dictionary<Collider, LiftAbsorption> absorptionCache = new();
+
+    public void SetCurrentBoss (BossObject boss)
+    {
+        this.bossobj = boss; 
+    }
+
     public void SetSwallowLevelSet(int swallowlevel)
     {
         CurrentLevel = swallowlevel;
@@ -84,8 +92,13 @@ public class HoleScript : MonoBehaviour
     {
        
         Rigidbody rb = other.attachedRigidbody;
-        if (rb != null && (other.gameObject.layer == NormalLayer || other.gameObject.layer ==LiftUpLayer)) //&& objectsInTrigger.Contains(rb))
+        if (rb != null && (other.gameObject.layer == NormalLayer || other.gameObject.layer == LiftUpLayer))
         {
+            if (bossobj != null && bossobj.gameObject == other.gameObject)
+            {
+                if(bossobj.ObjectMass > CurrentLevel) return;
+            }
+
             if(other.gameObject.layer == NormalLayer)
             {
                 other.gameObject.layer = LiftUpLayer;
@@ -99,6 +112,8 @@ public class HoleScript : MonoBehaviour
                     absorptionCache[other] = absorption;
                 absorption.StartAbsorp(CurrentLevel);
             }
+
+
 
             absorption?.ApplyAbsorptionScale();
 

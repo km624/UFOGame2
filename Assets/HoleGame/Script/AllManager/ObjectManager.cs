@@ -1,15 +1,10 @@
-using NUnit.Framework;
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Runtime.Serialization;
-using System.Xml.Linq;
-using TMPro;
-using UnityEditor.Experimental.GraphView;
+
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.InputSystem;
+
 using Random = UnityEngine.Random;
 
 public class ObjectManager : MonoBehaviour
@@ -91,6 +86,11 @@ public class ObjectManager : MonoBehaviour
     public void InitObjectManager(GameState state)
     {
         gameState = state;
+
+        //csv loader
+        List<ExelEarthObjectData> monsters = CsvLoader.LoadCSV<ExelEarthObjectData>("StatData/EarthObjectData");
+
+
         //CreateBonusObjects();
         CreateBonusObjects();
         SetUpSpawnObjects(CurrentGenration);
@@ -146,7 +146,6 @@ public class ObjectManager : MonoBehaviour
         FOnGenerationChanged?.Invoke(CurrentGenration);
         Debug.Log(CurrentGenration + " : 현재 세대");
 
-       
 
     }
     public void StartSpawnObjects()
@@ -439,7 +438,10 @@ public class ObjectManager : MonoBehaviour
         {
             boss.AddGenerationMass(CurrentGenration);
             boss.FOnBossSwallowed += CallBacK_BossSwallow;
-           
+
+            gameState.CallBack_BossSpawned(boss);
+
+
         }
     }
 

@@ -36,8 +36,7 @@ public class GameState : MonoBehaviour
     Coroutine GameTimeCoroutine;
     Coroutine PlayTimeCoroutine;
     public event Action<int /*TotalSecound*/> FOnTotalTimeChanged;
-   
-    // 플레이 시간 누적, float으로 관리 (원한다면 int로 변환해서 표시 가능)
+ 
     public float TotalPlayTime { get; private set; } = 0.0f;
 
  
@@ -72,11 +71,10 @@ public class GameState : MonoBehaviour
     void Start()
     {
         
-
         //보너스 목표 위젯 생성 
         objectManager.FOnBounsWidgetCreated += PlayerHud.CallBack_CreateShapeWidget;
 
-        //보너스 목표 위젯 흡수 , 파괴 시 아이콘 생성ㄴ
+        //보너스 목표 위젯 흡수 , 파괴 시 아이콘 생성
         objectManager.FOnBonusSwallowed += PlayerHud.CallBack_SpawnUIImageAtWorldPos;
 
         //오브젝트 빨아들였을때 바인딩
@@ -171,16 +169,20 @@ public class GameState : MonoBehaviour
             }
          
         }
-       
-
     }
-
-
     private void CallBack_BombSwallow()
     {
        
         TotalTime -= 10.0f;
         Camerashake.ShakeCamera();
+    }
+
+    public void CallBack_BossSpawned(BossObject boss)
+    {
+        if(ufoplayer!=null)
+        {
+            ufoplayer.SetCurrentBoss(boss);
+        }
     }
 
  

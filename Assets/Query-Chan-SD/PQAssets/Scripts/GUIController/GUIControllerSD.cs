@@ -277,13 +277,13 @@ public class GUIControllerSD : MonoBehaviour {
 
     bool IsSceneInBuildSettings(string sceneName)
     {
-        foreach (var scene in EditorBuildSettings.scenes)
+      /*  foreach (var scene in EditorBuildSettings.scenes)
         {
             if (scene.path.EndsWith(sceneName + ".unity"))
             {
                 return true;
             }
-        }
+        }*/
         return false;
     }
 

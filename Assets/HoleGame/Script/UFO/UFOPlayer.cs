@@ -3,7 +3,7 @@ using System;
 using System.Buffers.Text;
 using System.Collections.Generic;
 using Unity.Cinemachine;
-using UnityEditor.Experimental.GraphView;
+
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -25,7 +25,7 @@ public class UFOPlayer : MonoBehaviour, IDetctable
 
     float baseExpPerMass = 50.0f;
 
-    [Header("레벨에 따른 최대 경험치 추가량")]
+   //[Header("레벨에 따른 최대 경험치 추가량")]
     //[SerializeField]
    // private float AddMaxExp = 25.0f;
 
@@ -59,8 +59,10 @@ public class UFOPlayer : MonoBehaviour, IDetctable
     private FallingTrigger trigger;
     [SerializeField]
     private PossibleTrigger possibleTrigger;
+    [SerializeField]
+    private GameObject AddRangeLevelWidget;
 
-    public event Action<float /**/> FOnExpGagueAdded;
+   // public event Action<float /**/> FOnExpGagueAdded;
    
 
     private float DefaultCameraDistance = 0.0f;
@@ -181,7 +183,7 @@ public class UFOPlayer : MonoBehaviour, IDetctable
         //CurrentExpGauge += gauge;
         CurrentExpGauge += newGague;
         //Debug.Log("UFOPLAYEr : " + newGague);
-        FOnExpGagueAdded?.Invoke(newGague);
+        //FOnExpGagueAdded?.Invoke(newGague);
 
         if (CurrentExpGauge >= MaxExpGauge)
         {
@@ -239,6 +241,11 @@ public class UFOPlayer : MonoBehaviour, IDetctable
     public void MaxLevelLimitUp()
     {
         MaxLevel += 4;
+    }
+
+    public void SetCurrentBoss(BossObject boss)
+    {
+        UFOBeam.SetCurrentBoss(boss);
     }
 
     private void UpdateSizeText(int currentsizelevel)

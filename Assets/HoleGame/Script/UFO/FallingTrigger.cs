@@ -3,6 +3,8 @@ using UnityEngine;
 public class FallingTrigger : MonoBehaviour
 {
     private int currentLevel;
+
+    
     public void SetCurrentLevel(int  level)
     {
         currentLevel = level;
@@ -20,7 +22,7 @@ public class FallingTrigger : MonoBehaviour
 
             BossObject boss = other.GetComponent<BossObject>();
             
-            if(boss)
+            if(boss && currentLevel==boss.ObjectMass)
             {
                 boss.BossSwallow();
             }
