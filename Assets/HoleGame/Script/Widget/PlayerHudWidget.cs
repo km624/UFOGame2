@@ -35,6 +35,9 @@ public class PlayerHudWidget : MonoBehaviour
 
     [SerializeField]
     private TMP_Text CurrentScoreText;
+   
+    [SerializeField]
+    private TMP_Text currentGenerationText;
 
 
     public GameStateWidget gameStateWidget;
@@ -182,6 +185,7 @@ public class PlayerHudWidget : MonoBehaviour
 
             if (skillwidget != null)
             {
+                
                 skillwidget.SetSkillWidget(skillmanager,skillData.SkillIcon, skillData.SkillCount, skillData.SkillDuration, AllSkillWidgets.Count);
                 AllSkillWidgets.Add(skillwidget);
             }
@@ -229,6 +233,11 @@ public class PlayerHudWidget : MonoBehaviour
     {
         StarCntText.text = cnt.ToString();
     }
+
+    public void ChangeGenerationNameText(string generationname)
+    {
+        currentGenerationText.text = generationname;
+    }
     
     public void SetDetectStandardTarget(IDetctable standard)
     {
@@ -249,10 +258,10 @@ public class PlayerHudWidget : MonoBehaviour
 
 
 
-    public void UpdateGameState(int totaltime, int totalscore)
+    public void UpdateGameState(int totaltime, int totalscore,int starcnt)
     {
 
-        gameStateWidget.SetGameState(totaltime, totalscore);
+        gameStateWidget.SetGameState(totaltime, totalscore, starcnt);
        
     }
 
@@ -260,6 +269,11 @@ public class PlayerHudWidget : MonoBehaviour
     {
         
         TransitionManager.Instance().Transition("MainScene", transition, 0.0f);
+    }
+
+    public void RestartGame()
+    {
+        TransitionManager.Instance().Transition("GameScene", transition, 0.0f);
     }
 
    

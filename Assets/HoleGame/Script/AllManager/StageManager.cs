@@ -114,7 +114,7 @@ public class StageManager : MonoBehaviour
     // 예: 스테이지를 클리어했을 때
     public void OnStageClear(int stageindex ,int clearTime,int star)
     {
-        int index = stageindex;
+        /*int index = stageindex;
 
         if (index < 0 || index >= userData.stageClearTimes.Count)
         {
@@ -140,7 +140,7 @@ public class StageManager : MonoBehaviour
 
         // 클리어 데이터 저장
         if(userData.currentClearIndex < index )
-        userData.currentClearIndex = index;
+        userData.currentClearIndex = index;*/
        /* if(GameManager.Instance != null)
         {
             await GameManager.Instance.userDatasaveload.SavePlayerDataAsync(userData);

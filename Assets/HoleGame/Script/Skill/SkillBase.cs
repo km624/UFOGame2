@@ -3,7 +3,7 @@ using System.Collections;
 
 public abstract  class SkillBase : MonoBehaviour
 {
-    public int SkillCount;
+    public int SkillCount { get; private set; }
     public Sprite SkillIcon;
     public float SkillDuration;
     protected bool CanProgressSkill = false;
@@ -11,22 +11,17 @@ public abstract  class SkillBase : MonoBehaviour
     protected UFOPlayer UFOplayer;
     protected SkillManager skillManager;
 
+    
 
-    public void InitializedData(UFOPlayer ufoplayer, SkillManager manager)
+
+    public void InitializedData(UFOPlayer ufoplayer, SkillManager manager,int skillcnt)
     {
         UFOplayer = ufoplayer;
         skillManager = manager;
+        SkillCount = skillcnt;
     }
 
-    protected virtual void Start()
-    {
-       
-    }
-
-
-   public void SetSkillCount(int skillCount)
-        { this.SkillCount = skillCount; }
-
+  
 
     public virtual bool CanUseSkill()
     {

@@ -14,6 +14,8 @@ public class GenerationObjects : ScriptableObject
 
     public float[] spawnWeights;
 
+    public string GenerationName;
+
 
     private void OnValidate()
     {

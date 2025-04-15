@@ -54,6 +54,7 @@ public class GameState : MonoBehaviour
 
     public int StarCnt { get; private set; } = 0;
 
+
     private void Awake()
     {
         if (Instance == null)
@@ -87,7 +88,7 @@ public class GameState : MonoBehaviour
         objectManager.FOnBounusCompleted += CallBack_BonusClear;
 
         //보너스 목표 시대 변경되서 강제 갱신 바인딩
-        objectManager.FOnGenerationChanged += CallBack_ForceRenewalBonus;
+        objectManager.FOnGenerationChanged += CallBack_ChangeGeneration;
 
         //보너스 위젯 클리어 애니메이션 끝났을때
         PlayerHud.FOnAllBounusAnimEnded += objectManager.CallBack_RenewalBonusObject;
@@ -104,11 +105,12 @@ public class GameState : MonoBehaviour
         //스킬 세팅
         AllSkillManager.SetSkill(ufoplayer);
         //스킬 표시
-        foreach (SkillBase skilldata in AllSkillManager.AllSkillPrefabs)
+        foreach (SkillBase skilldata in AllSkillManager.ReadAllSkills)
         {
 
             PlayerHud.CreateSkillWidget(skilldata, AllSkillManager);
         }
+
         //스킬 바인딩
         AllSkillManager.FOnSkillActivated += PlayerHud.ActiveSkill;
 
@@ -117,6 +119,9 @@ public class GameState : MonoBehaviour
 
         //감지 위젯 플레이어 세팅
         PlayerHud.SetDetectStandardTarget(ufoplayer);
+
+        //현재 시대 이름 세팅
+        PlayerHud.ChangeGenerationNameText(objectManager.getCurrentGenerationName());   
 
         PlayerHud.SetTimeWidget(TotalTime,this);
         StartPlayTimer();
@@ -142,11 +147,11 @@ public class GameState : MonoBehaviour
         //ufoplayer.FOnExpGagueAdded -= PlayerHud.CallBack_AddEXPThermometerWidget;
     }
 
-    private void CallBack_ObjectSwallow(FallingObject fallingobject,int currentgeneration)
+    private void CallBack_ObjectSwallow(FallingObject fallingobject)
     {
 
         //Debug.Log("흡수함");
-        TotalScore += (int)(fallingobject.TimeCnt * 100.0f)*(1+currentgeneration);
+        TotalScore += fallingobject.Score;
         TotalTime += fallingobject.TimeCnt;
 
         PlayerHud.SetScoreText(TotalScore);
@@ -185,7 +190,13 @@ public class GameState : MonoBehaviour
         }
     }
 
- 
+    public void CallBacK_BossSwallow(BossObject bossObject)
+    {
+        CallBack_ObjectSwallow(bossObject);
+    }
+
+
+
     public void StartGameTimer()
     {
         GameTimeCoroutine = StartCoroutine(GameTimerCount());
@@ -267,11 +278,13 @@ public class GameState : MonoBehaviour
         }
     }
 
+
    
-    public void CallBack_ForceRenewalBonus(int currentgeneration)
+    public void CallBack_ChangeGeneration(int currentgeneration)
     {
         //세대 변경 됬을때 
-
+        string generationname = objectManager.getCurrentGenerationName();
+        PlayerHud.ChangeGenerationNameText(generationname);
         PlayerHud.OnForceRenewalBounusWidget();
     }
 
@@ -308,6 +321,7 @@ public class GameState : MonoBehaviour
         bIceActive = active;
 
         objectManager.PauseSpawnObjects(active);
+        objectManager.OnBombSpawn(active);
 
         StopGameTimer(active); 
     }
@@ -331,18 +345,44 @@ public class GameState : MonoBehaviour
       
     }
 
+    public void GamePause(bool active)
+    {
+        objectManager.PauseSpawnObjects(active);
+        AllObjectStopActive(active);
+        StopGameTimer(  active );
+        StopPlayTimer(  active );
+        objectManager.OnBombSpawn(active);
+    }
+    
+
     public void GameEnd()
     {
        
         AllObjectStopActive(true);
         objectManager.StopSpawnObjects();
-        objectManager.StopBombSpawn();
+        objectManager.OnBombSpawn(false);
         bIsGameEnd = true;
 
         ufoplayer.CallBack_StopMovement();
-        int converttime = Mathf.FloorToInt(TotalPlayTime);
-        PlayerHud.UpdateGameState(converttime, TotalScore);
+        int converttime = Mathf.RoundToInt(TotalPlayTime);
+        PlayerHud.UpdateGameState(converttime, TotalScore, StarCnt);
 
+        SaveUserData();
+    }
+
+    private void SaveUserData()
+    {
+        GameManager.Instance.userData.AddStarCnt(StarCnt);
+        GameManager.Instance.userData.UpdateBestScore(TotalScore);
+
+        //스킬 카운트 업데이트
+        for(int i=0;i<4;i++)
+        {
+            int cnt = AllSkillManager.ReadAllSkills[i].SkillCount;
+            GameManager.Instance.userData.UpdateSkillCnt(i, cnt);
+        }
+       
+        
         GameManager.Instance.SaveUserData();
     }
 

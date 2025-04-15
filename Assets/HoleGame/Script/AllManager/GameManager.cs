@@ -50,6 +50,7 @@ public class GameManager : MonoBehaviour
     public async void TestLoadData()
     {
         await InitData();
+        //Debug.Log( userData.SkillCnt[0]);
     }
 
 

@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class ExelPlayerData
 {
-    public int AddExp;
-    public float AbsorbPower;
+    public int Level;
+    public int MaxExp;
+   
 }

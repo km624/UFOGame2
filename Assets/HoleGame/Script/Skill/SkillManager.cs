@@ -7,6 +7,7 @@ public class SkillManager : MonoBehaviour
 {
     public List<SkillBase> AllSkillPrefabs  = new List<SkillBase>();
     private List<SkillBase> AllSkills = new List<SkillBase>();
+    public IReadOnlyList<SkillBase> ReadAllSkills => AllSkills;
     private UFOPlayer UFOPlayer;
 
     public event Action<int/*skillnum*/, int/*count*/> FOnSkillActivated;
@@ -16,16 +17,23 @@ public class SkillManager : MonoBehaviour
     public void SetSkill(UFOPlayer ufoPlayer)
     {
         UFOPlayer = ufoPlayer;
+        int index = 0;
         foreach (SkillBase  skillprefab in  AllSkillPrefabs)
         {
             GameObject skillObject = Instantiate(skillprefab.gameObject, transform);
             SkillBase skill = skillObject.GetComponent<SkillBase>();
             if (skill != null)
             {
-                skill.InitializedData(UFOPlayer,this);
+                int skillCnt = 2;
+                //유저 데이터 토대로 세팅
+                if (GameManager.Instance != null)
+                    skillCnt = GameManager.Instance.userData.SkillCnt[index];
+
+                skill.InitializedData(UFOPlayer,this, skillCnt);
                 AllSkills.Add(skill);
             }
 
+            index++;
         }
     }
 

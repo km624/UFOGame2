@@ -2,6 +2,7 @@ using DamageNumbersPro;
 using System;
 using System.Buffers.Text;
 using System.Collections.Generic;
+using TMPro;
 using Unity.Cinemachine;
 
 using UnityEngine;
@@ -15,6 +16,7 @@ public class UFOPlayer : MonoBehaviour, IDetctable
     [Header("레벨 스텟")]
     //private float LiftSpeed = 10f;  // 끌어당기는 힘
     public int CurrentLevel { get; private set; } = 1;
+    
     private int MaxLevel = 5;
 
     private float CurrentExpGauge;
@@ -32,12 +34,16 @@ public class UFOPlayer : MonoBehaviour, IDetctable
     private float fillSpeed = 3.0f;
     private float TargetfillPercent = 0.0f;
 
+    [SerializeField]
+    private List<ExelPlayerData> PlayerStatList = new List<ExelPlayerData>();
+
 
     [Header("UFO UI")]
     [SerializeField]
     private Image EXPGaugeBar;
     [SerializeField]
-    private Text LevelText;
+    //private Text LevelText;
+    private TMP_Text LevelText;
     [SerializeField]
     private DamageNumber numberPrefab;
 
@@ -59,10 +65,10 @@ public class UFOPlayer : MonoBehaviour, IDetctable
     private FallingTrigger trigger;
     [SerializeField]
     private PossibleTrigger possibleTrigger;
-    [SerializeField]
-    private GameObject AddRangeLevelWidget;
+    //[SerializeField]
+    //private GameObject AddRangeLevelWidget;
 
-   // public event Action<float /**/> FOnExpGagueAdded;
+   
    
 
     private float DefaultCameraDistance = 0.0f;
@@ -74,6 +80,14 @@ public class UFOPlayer : MonoBehaviour, IDetctable
 
     void Start()
     {
+        LoadPlayerStatList();
+        
+        InitUFO();
+
+    }
+
+    private void InitUFO()
+    {
         if (GameManager.Instance != null)
         {
             UFOData selectUFOdata = UFOLoadManager.Instance.selectUFOData;
@@ -81,28 +95,54 @@ public class UFOPlayer : MonoBehaviour, IDetctable
             {
                 SetUFOData(selectUFOdata);
             }
-           
+
         }
+        //default 값 설정
         if (CamerapositionComposer != null)
         {
             DefaultCameraDistance = CamerapositionComposer.CameraDistance;
-
         }
         if (UFORenderer != null)
         {
             defaultMaterial = UFORenderer.material;
         }
 
+        //레벨 세팅
         if (UFOBeam != null)
             UFOBeam.SetSwallowLevelSet(CurrentLevel);
 
-        if(trigger!=null)
+        if (trigger != null)
             trigger.SetCurrentLevel(CurrentLevel);
 
-        if(possibleTrigger!=null)
+        if (possibleTrigger != null)
             possibleTrigger.SetLevel(CurrentLevel);
 
+        EXPGaugeBar.fillAmount = 0.0f;
+
+        //레벨 표시
         UpdateSizeText(CurrentLevel);
+    }
+
+   
+    private void LoadPlayerStatList()
+    {
+        PlayerStatList = CsvLoader.LoadCSV<ExelPlayerData>("StatData/PlayerEXPList");
+
+        //MaxLevel = PlayerStatList.Count;
+
+        SetUFOLevelData(0);
+
+    }
+
+    private void SetUFOLevelData(int listnum)
+    {
+        if (listnum >= PlayerStatList.Count)
+        {
+            Debug.Log("데이터 없음");
+            return;
+        }
+        MaxExpGauge = PlayerStatList[listnum].MaxExp;
+        CurrentLevel = PlayerStatList[listnum].Level;
     }
 
 
@@ -152,7 +192,7 @@ public class UFOPlayer : MonoBehaviour, IDetctable
         ufoMovement.SetMoveActive(false);
     }
 
-    public void SkillUFOspeedUp(bool bactivate)
+    public void Skill_UFOspeedUp(bool bactivate)
     {
         if (ufoMovement != null)
         {
@@ -173,17 +213,21 @@ public class UFOPlayer : MonoBehaviour, IDetctable
         EXPGaugeBar.fillAmount = Mathf.Lerp(EXPGaugeBar.fillAmount, TargetfillPercent, Time.deltaTime * fillSpeed);
     }
 
-    public void AddEXPGauge(float gauge,float mass)
+    public void AddEXPGauge(float gauge , float mass)
     {
         SpawnGagueEffect(gauge);
 
         if (CurrentLevel >= MaxLevel) return;
 
-        float newGague = CalculateExpGain(CurrentLevel, mass);
-        //CurrentExpGauge += gauge;
-        CurrentExpGauge += newGague;
+        if (CurrentLevel >= PlayerStatList.Count) return;
+
+        CurrentExpGauge += gauge;
+
+        //float newGague = CalculateExpGain(CurrentLevel, mass);
+       
+        //CurrentExpGauge += newGague;
         //Debug.Log("UFOPLAYEr : " + newGague);
-        //FOnExpGagueAdded?.Invoke(newGague);
+       
 
         if (CurrentExpGauge >= MaxExpGauge)
         {
@@ -201,7 +245,7 @@ public class UFOPlayer : MonoBehaviour, IDetctable
 
             ChangeLevel(true);
 
-            //MaxExpGauge += AddMaxExp;
+          
         }
         TargetfillPercent = Mathf.Clamp01(CurrentExpGauge / MaxExpGauge);
 
@@ -230,7 +274,13 @@ public class UFOPlayer : MonoBehaviour, IDetctable
     {
 
         CurrentLevel += bLevelUp ? 1 : -1;
-      
+        
+        
+        CurrentLevel = Math.Clamp(CurrentLevel, 0, PlayerStatList.Count);
+
+
+        SetUFOLevelData(CurrentLevel - 1);  
+
         UFOBeam.SetSwallowLevelSet(CurrentLevel);
         trigger.SetCurrentLevel(CurrentLevel);
         possibleTrigger.SetLevel(CurrentLevel);
@@ -250,8 +300,10 @@ public class UFOPlayer : MonoBehaviour, IDetctable
 
     private void UpdateSizeText(int currentsizelevel)
     {
-       
-       LevelText.text = "레벨: " + currentsizelevel;
+       if(currentsizelevel == PlayerStatList.Count)
+            LevelText.text = "레벨: " + "MAX";
+       else
+            LevelText.text = "레벨: " + currentsizelevel.ToString();
         
     }
 

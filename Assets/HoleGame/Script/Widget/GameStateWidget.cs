@@ -7,10 +7,10 @@ public class GameStateWidget : MonoBehaviour
 {
     public TMP_Text PlayTimeText;
     public TMP_Text ScoreText;
-
+    public TMP_Text StarCntText;
     public LeanWindow GameStateModal;
     
-    public void SetGameState(int totalplaytime ,int totalscore)
+    public void SetGameState(int totalplaytime ,int totalscore ,int starcnt)
     {
 
         int min = totalplaytime / 60;
@@ -20,11 +20,11 @@ public class GameStateWidget : MonoBehaviour
         ScoreText.text = totalscore.ToString();
 
         //star 먼저 리셋
-     
+        StarCntText.text = starcnt.ToString();
 
         GameStateModal.TurnOn();
         
     }
-    
+
     
 }

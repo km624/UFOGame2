@@ -29,7 +29,7 @@ public class UFOLoadManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("ddd");
+           
             Destroy(gameObject);
         }
     }

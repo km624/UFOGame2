@@ -6,7 +6,7 @@ public class SkillGodMode : SkillBase
     public override void Activate()
     {
         GameState.Instance.Skill_SetIgnoreBomb(bProgressSkill);
-        UFOplayer.SkillUFOspeedUp(bProgressSkill);
+        UFOplayer.Skill_UFOspeedUp(bProgressSkill);
         UFOplayer.ChangeUFOMaterial(Godmodematerial);
     }
 
@@ -14,7 +14,7 @@ public class SkillGodMode : SkillBase
     public override void Deactivate()
     {
         GameState.Instance.Skill_SetIgnoreBomb(bProgressSkill);
-        UFOplayer.SkillUFOspeedUp(bProgressSkill);
+        UFOplayer.Skill_UFOspeedUp(bProgressSkill);
         UFOplayer.ChangeUFOMaterial(UFOplayer.defaultMaterial);
     }
 }

@@ -33,31 +33,7 @@ public class BeamTrigger : MonoBehaviour
 
     }
 
-  /*  private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.layer == 9)
-        {
-           
-            FallingObject FObject = other.GetComponent<FallingObject>();
-            if (FObject != null)
-            {
-                if (player->CurrentLevel <)
-                if (!Inrange.Contains(FObject))
-                {
-                    Inrange.Add(FObject);
-                    if (BeamCoroutine == null)
-                    {
-                        
-                        BeamCoroutine = StartCoroutine(DestroyClosestRoutine());
-                        
-                    }
-
-                }
-              
-            }
-         
-        }
-    }*/
+  
 
     private void OnTriggerStay(Collider other)
     {
@@ -68,8 +44,10 @@ public class BeamTrigger : MonoBehaviour
             FallingObject FObject = other.GetComponent<FallingObject>();
             if (FObject != null)
             {
-               // if (player.CurrentLevel < FObject.ObjectMass) return;
-                
+                //if (player.CurrentLevel < FObject.ObjectMass) return;
+                BossObject bossObject = other.GetComponent<BossObject>();
+                //보스 오브젝트면 빔 활성화 X
+                if (bossObject != null) return;
 
                 if (!Inrange.Contains(FObject))
                 {
@@ -204,7 +182,6 @@ public class BeamTrigger : MonoBehaviour
       
 
         obj.OnSwallow();
-
 
     }
 

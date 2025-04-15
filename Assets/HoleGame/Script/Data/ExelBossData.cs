@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class ExelBossData
 {
-    public float Mass;
+    public int CurrentGeneration;
     public float MoveDistance;
+    public int AddScore;
     public float Addtime;
 }

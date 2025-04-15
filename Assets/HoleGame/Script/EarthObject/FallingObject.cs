@@ -2,6 +2,7 @@
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
 
 
@@ -10,13 +11,17 @@ public class FallingObject : MonoBehaviour
     [Header("모습")]
     [SerializeField]
     private ShapeEnum Shape = ShapeEnum.Dino_Egg;
-    [Header("경험치량")]
-    [SerializeField]
+    
+   
     public float EXPCnt { get; private set; }  = 50.0f;
-    [SerializeField]
-    public float TimeCnt { get; private set; } = 0.5f;
 
     public float ObjectMass { get; private set; } = 1.0f;
+    
+    public float TimeCnt { get; private set; } = 0.5f;
+
+    public int Score { get; private set; } = 1;
+
+
 
 
     //[Header("클리어 목표")]
@@ -43,7 +48,7 @@ public class FallingObject : MonoBehaviour
 
     public UnityEvent<FallingObject> onSwallowed;
 
-    public bool bIsAttacked { get; private set; } = false;
+    //public bool bIsAttacked { get; private set; } = false;
 
     private Vector3 originalScale;
 
@@ -68,6 +73,7 @@ public class FallingObject : MonoBehaviour
     
         EXPCnt = data.EXPCnt;
         TimeCnt = data.TimeCnt;
+        Score = data.Score;
         bMovement = data.bMovement;
         ObjectMass =data.mass;
         float squishspeed = Mathf.Clamp(data.squishAmount, 0.2f, 0.5f);
@@ -81,9 +87,14 @@ public class FallingObject : MonoBehaviour
 
     public virtual void AddGenerationMass(int generation)
     {
+        if (ForceStatData == null)
+        {
+            ForceStatData = ScriptableObject.CreateInstance<EarthObjectStatData>();
+        }
+
         SetObjectData(ForceStatData);
 
-        ObjectMass += (4 * generation);
+       // ObjectMass += (4 * generation);
 
         LiftAbsorption lift = GetComponent<LiftAbsorption>();
         if (lift)
@@ -103,28 +114,7 @@ public class FallingObject : MonoBehaviour
        
     }
 
-    private void OnEnable()
-    {
-        if (ForceStatData == null)
-        {
-            ForceStatData = ScriptableObject.CreateInstance<EarthObjectStatData>();
-        }
-        
-
-       /* SetObjectData(ForceStatData);
-
-        LiftAbsorption lift = GetComponent<LiftAbsorption>();
-        if (lift)
-        {
-            lift.InitiaLiftAbsorption(originalScale, ObjectMass);
-        }
-
-       
-        transform.DOScale(originalScale, 1.0f)
-                 .SetEase(Ease.OutElastic).OnComplete(() => SelectMove());*/
-
-    }
-
+  
 
     public void OnSwallow()
     {
@@ -163,7 +153,7 @@ public class FallingObject : MonoBehaviour
         {
             if (Ice.activeSelf)
             {
-                Debug.Log("얼어있는중");
+                //Debug.Log("얼어있는중");
                 return;
             }
         }
