@@ -10,8 +10,13 @@ public class UFOData : ScriptableObject
 
     public Mesh AllStatUFOMesh;
     public Material AllStatUFOMaterial;
-    public int MoveSpeed = 10;
-    public float LiftSpeed = 10.0f;
-    public float BeamRange = 1.0f;
+
+    public int BaseMoveSpeed = 1;
+    public int BaseLiftSpeed = 1;
+    public int BaseBeamRange = 1;
+
+    public int MaxMoveSpeed = 1;
+    public int MaxLiftSpeed = 1;
+    public int MaxBeamRange = 1;
    
 }

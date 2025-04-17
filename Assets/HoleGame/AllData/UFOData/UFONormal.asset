@@ -10,11 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a08779f880e7cf943ab05e046a2d8b03, type: 3}
-  m_Name: UFO
+  m_Name: UFONormal
   m_EditorClassIdentifier: 
   UFOName: UFONormal
   UFOMesh: {fileID: 7810371007003685382, guid: a7cab91a16a3a5144b89cf9c085b9a88, type: 3}
   UFOMaterials:
   - {fileID: 2100000, guid: 133fc9c089cbf5a4f86caa4de1d40b07, type: 2}
-  MoveSpeed: 10
-  LiftSpeed: 10
+  AllStatUFOMesh: {fileID: 0}
+  AllStatUFOMaterial: {fileID: 0}
+  BaseMoveSpeed: 3
+  BaseLiftSpeed: 3
+  BaseBeamRange: 3
+  MaxMoveSpeed: 4
+  MaxLiftSpeed: 4
+  MaxBeamRange: 4

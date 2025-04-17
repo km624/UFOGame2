@@ -1,3 +1,4 @@
+
 using System;
 using System.Collections.Generic;
 
@@ -11,6 +12,9 @@ public class UserData
     public List<int> SkillCnt;
     public int BestScore;
     public int StarCnt;
+
+    //public List<UserUFOData> UserUFODataLAist = new List<UserUFOData>();
+    public SerialUFOList serialUFOList = new();
     //public List<int> stageClearTimes;
     //public List<int> stageStars;
 
@@ -21,10 +25,9 @@ public class UserData
         SkillCnt = new List<int> { 2, 3, 4, 5 };
         BestScore = 0;
         StarCnt = 0;
-        //currentClearIndex = -1;
-        // stageStars = new List<int>();
+        UserUFOData uFOData = new UserUFOData();
+        serialUFOList.AddUFO(uFOData);
 
-        //stageClearTimes = new List<int>();
     }
     public UserData(string userid)
     {
@@ -33,14 +36,27 @@ public class UserData
         SkillCnt = new List<int> { 2, 3, 4, 5 };
         BestScore = 0;
         StarCnt = 0;
-        //currentClearIndex = -1;
-        //stageStars = new List<int>();
-        //stageClearTimes = new List<int>();
+        UserUFOData uFOData = new UserUFOData();
+        serialUFOList.AddUFO(uFOData);
+    }
+
+    public void Initialize()
+    {
+        serialUFOList.InitializeFromList(); 
     }
 
     public void AddStarCnt(int cnt)
     {
         StarCnt += cnt;
+    }
+
+    public bool MinusStartCnt(int cnt)
+    {
+        if(cnt>StarCnt)
+            return false;
+
+        StarCnt -= cnt;
+        return true;
     }
 
     public void UpdateBestScore(int score)
@@ -61,4 +77,8 @@ public class UserData
         }
         SkillCnt[index] = newcnt;
     }
+
+
+
+    
 }

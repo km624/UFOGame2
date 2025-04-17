@@ -20,8 +20,8 @@ MonoBehaviour:
   bomb: {fileID: 472563596000138413, guid: 5c65c4cd2c542f9459d55d8b576ac375, type: 3}
   Boss: {fileID: 495717928946335468, guid: 7983f1f08bb920b4ca06c745aa5c3660, type: 3}
   spawnWeights:
-  - 0.5
-  - 0.3
+  - 0.9
   - 0.1
-  - 0.1
+  - 0
+  - 0
   GenerationName: "\uBC31\uC545\uAE30 \uC2DC\uB300"

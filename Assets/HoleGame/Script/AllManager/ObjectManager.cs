@@ -201,7 +201,7 @@ public class ObjectManager : MonoBehaviour
         CurrentGenration += 1;
 
         SetUpSpawnObjects(CurrentGenration);
-
+        SpawnBossAtRandomGridPosition();
         FOnGenerationChanged?.Invoke(CurrentGenration);
         Debug.Log(CurrentGenration + " : 현재 세대");
 

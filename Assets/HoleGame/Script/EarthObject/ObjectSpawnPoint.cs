@@ -76,6 +76,7 @@ public class ObjectSpawnPoint : MonoBehaviour
                     break;
                 }
                 FallingObject prefabToSpawn = currentGeneration.objects[prefabnum];
+               
                 EarthObjectStatData objectdata = GetEarthObjectStatData(objectManager.CurrentGenration, prefabnum);
                 if (prefabToSpawn != null)
                 {
@@ -156,7 +157,7 @@ public class ObjectSpawnPoint : MonoBehaviour
         if(calculatenum >= objectManager.ObjectStatList.Count)
             return null;
 
-        return objectManager.ObjectStatList[num];
+        return objectManager.ObjectStatList[calculatenum];
     }
 
     // 외부에서 스폰을 중지(일시정지) 또는 재개할 수 있도록 bIsStopSpawn의 상태를 설정하는 메서드

@@ -12,15 +12,13 @@ public class MainWidget : MonoBehaviour
     public LeanSwitch leanSwitch;
     public TransitionSettings transition;
 
-    public TMP_Text LevelText;
-
-    public StageSelectWidget stageSelectwidget;
-
     public Button PlayButton;
 
     public TMP_Text qualitytext;
 
     public GameObject SelectUFOModel;
+
+    public UFOAllWidget uFOAllWidget;
     void Start()
     {
        
@@ -75,15 +73,7 @@ public class MainWidget : MonoBehaviour
         }
     }
    
-    public void SetStageText(int selectStagenum)
-    {
-      
-        LevelText.text = "Stage" + selectStagenum;
-            
-       
-    }
-
-   
+  
 
    public void ChangeleanSwitch(int change,int select)
    {

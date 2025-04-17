@@ -5,13 +5,13 @@ public class SkillSpeedUp : SkillBase
 
     public override void Activate()
     {
-        UFOplayer.SkillUFOspeedUp(bProgressSkill);
+        UFOplayer.Skill_UFOspeedUp(bProgressSkill);
 
     }
 
 
     public override void Deactivate()
     {
-        UFOplayer.SkillUFOspeedUp(bProgressSkill);
+        UFOplayer.Skill_UFOspeedUp(bProgressSkill);
     }
 }

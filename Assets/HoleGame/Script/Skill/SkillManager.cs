@@ -63,21 +63,5 @@ public class SkillManager : MonoBehaviour
         }
     }
 
-  /*  public void Skill_Freeze(bool bActive)
-    {
-        GameState.Instance.SetStopGameTimer(bActive);
-    }*/
-
-   
-    /*public void Skill_LaserAttack(bool bActive)
-    {
-
-    }*/
-
-    /*public void Skill_GodMode(bool bActive)
-    {
-       GameState.Instance.SetIgnoreBomb(bActive);
-        UFOPlayer.SkillUFOspeedUp(bActive);
-    }*/
-
+  
 }

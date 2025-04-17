@@ -77,6 +77,21 @@ public class UFOPlayer : MonoBehaviour, IDetctable
 
     public Vector3 WorldPosition => transform.position;
 
+    //최소 스텟
+    private float MinMoveSpeed = 5f;
+    private float MinLiftSpeed = 10f;
+    private float MinBeamRange = 0.7f;
+    private float MinTextOffset = -1.9f;
+
+    
+    //배율
+    private float MoveSpeedTimes = 2.5f;
+    private float LiftSpeedTimes = 10.0f;
+    private float BeamRangeTimes = 0.15f;
+    private float TextOffsetTimes = -0.3f;
+
+
+
 
     void Start()
     {
@@ -176,14 +191,14 @@ public class UFOPlayer : MonoBehaviour, IDetctable
             }
         }
 
-        if (ufoMovement != null)
+       /* if (ufoMovement != null)
         {
             ufoMovement.SetSpeed(ufodata.MoveSpeed);
         }
         if (UFOBeam != null)
         {
             UFOBeam.SetInitLiftSpeed(ufodata.LiftSpeed);
-        }
+        }*/
 
     }
 
@@ -196,7 +211,7 @@ public class UFOPlayer : MonoBehaviour, IDetctable
     {
         if (ufoMovement != null)
         {
-            int newspeed = bactivate ? ufoMovement.HoleSpeed + 5 : ufoMovement.HoleSpeed - 5;
+            float newspeed = bactivate ? ufoMovement.GetHoleSpeed() + 5.0f : ufoMovement.GetHoleSpeed() - 5.0f;
             ufoMovement.SetSpeed(newspeed);
 
         }

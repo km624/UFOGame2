@@ -44,7 +44,9 @@ public class BeamTrigger : MonoBehaviour
             FallingObject FObject = other.GetComponent<FallingObject>();
             if (FObject != null)
             {
-                //if (player.CurrentLevel < FObject.ObjectMass) return;
+                //플레이어 보다 레벨 높으면 return
+                if (player.CurrentLevel < FObject.ObjectMass) return;
+
                 BossObject bossObject = other.GetComponent<BossObject>();
                 //보스 오브젝트면 빔 활성화 X
                 if (bossObject != null) return;
@@ -179,9 +181,11 @@ public class BeamTrigger : MonoBehaviour
     {
         Beamobject.SetActive(false);
         Inrange.Remove(obj);
-      
 
-        obj.OnSwallow();
+        if (obj.GetShapeEnum() == ShapeEnum.boomb)
+            Destroy(obj);
+        else
+            obj.OnSwallow();
 
     }
 

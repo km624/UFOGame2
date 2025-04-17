@@ -5,7 +5,10 @@ using UnityEngine.InputSystem;
 public class UFOMovement : MonoBehaviour
 {
     [Header("이동속도")]
-    public int HoleSpeed { get; private set; } = 10;
+    [SerializeField]
+    private float HoleSpeed  = 10.0f;
+    
+    public float GetHoleSpeed() { return HoleSpeed; }
 
     [Header("조이스틱")]
     public FloatingJoystick joystick;
@@ -73,7 +76,7 @@ public class UFOMovement : MonoBehaviour
         MoveActive = active;
     }
 
-    public void SetSpeed(int speed)
+    public void SetSpeed(float speed)
     {
         HoleSpeed = speed;
     }

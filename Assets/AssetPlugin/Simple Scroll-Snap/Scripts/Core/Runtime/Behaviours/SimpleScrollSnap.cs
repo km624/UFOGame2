@@ -438,7 +438,10 @@ namespace DanielLochner.Assets.SimpleScrollSnap
             // Starting Panel
             float xOffset = (movementType == MovementType.Free || movementAxis == MovementAxis.Horizontal) ? Viewport.rect.width  / 2f : 0f;
             float yOffset = (movementType == MovementType.Free || movementAxis == MovementAxis.Vertical)   ? Viewport.rect.height / 2f : 0f;
+           
+            //수정
             Vector2 offset = new Vector2(xOffset, yOffset);
+            //Vector2 offset = new Vector2(0, yOffset);
             prevAnchoredPosition = Content.anchoredPosition = -Panels[startingPanel].anchoredPosition + offset;
             SelectedPanel = CenteredPanel = startingPanel;
 
