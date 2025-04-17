@@ -11,6 +11,8 @@ public class UFOData : ScriptableObject
     public Mesh AllStatUFOMesh;
     public Material AllStatUFOMaterial;
 
+    public int UFOPrice;
+
     public int BaseMoveSpeed = 1;
     public int BaseLiftSpeed = 1;
     public int BaseBeamRange = 1;

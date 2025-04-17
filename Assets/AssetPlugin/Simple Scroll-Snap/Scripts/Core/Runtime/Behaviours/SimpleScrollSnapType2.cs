@@ -1494,7 +1494,7 @@ namespace DanielLochner.Assets.SimpleScrollSnap
                 {
                     startingPanel = CenteredPanel + 1;
                 }
-                Setup();
+               // Setup();
             }
         }
 
@@ -1503,6 +1503,7 @@ namespace DanielLochner.Assets.SimpleScrollSnap
             startingPanel = index;
             Setup();
         }
+
         public void RemoveFromFront()
         {
             Remove(0);

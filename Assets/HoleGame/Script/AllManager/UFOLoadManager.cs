@@ -16,7 +16,7 @@ public class UFOLoadManager : MonoBehaviour
     private UFOAllData AllUfodataList;
 
     // 캐시: 키는 appearanceID, 값은 로드된 SpaceshipAppearanceData
-    private Dictionary<string, UFOData> appearanceCache = new Dictionary<string, UFOData>();
+    //private Dictionary<string, UFOData> appearanceCache = new Dictionary<string, UFOData>();
 
     public UFOData selectUFOData { get; private set; }
 

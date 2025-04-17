@@ -24,7 +24,7 @@ public class UserData
         CurrentUFO = 0;
         SkillCnt = new List<int> { 2, 3, 4, 5 };
         BestScore = 0;
-        StarCnt = 0;
+        StarCnt = 50;
         UserUFOData uFOData = new UserUFOData();
         serialUFOList.AddUFO(uFOData);
 
@@ -35,7 +35,7 @@ public class UserData
         CurrentUFO = 0;
         SkillCnt = new List<int> { 2, 3, 4, 5 };
         BestScore = 0;
-        StarCnt = 0;
+        StarCnt = 50;
         UserUFOData uFOData = new UserUFOData();
         serialUFOList.AddUFO(uFOData);
     }
@@ -43,6 +43,11 @@ public class UserData
     public void Initialize()
     {
         serialUFOList.InitializeFromList(); 
+    }
+
+    public void SetCurrentUFO(int ufoindex)
+    {
+        CurrentUFO =ufoindex;
     }
 
     public void AddStarCnt(int cnt)

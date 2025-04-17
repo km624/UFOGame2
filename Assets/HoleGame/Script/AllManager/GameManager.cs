@@ -47,12 +47,7 @@ public class GameManager : MonoBehaviour
     {
 
     }
-    public async void TestLoadData()
-    {
-        await InitData();
-        //Debug.Log( userData.SkillCnt[0]);
-    }
-
+   
 
     public async Task InitData()
     {
@@ -111,6 +106,8 @@ public class GameManager : MonoBehaviour
 
         progress = targetValue; // 최종 값 고정
     }
+
+    
 
     public async void SaveUserData()
     {

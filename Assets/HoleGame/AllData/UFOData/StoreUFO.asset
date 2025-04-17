@@ -16,6 +16,12 @@ MonoBehaviour:
   UFOMesh: {fileID: 8547471881871753710, guid: 55a7154760840453cbf09a19f950e2f8, type: 3}
   UFOMaterials:
   - {fileID: -9103484930961366303, guid: 55a7154760840453cbf09a19f950e2f8, type: 3}
-  - {fileID: 8556262120643298411, guid: 55a7154760840453cbf09a19f950e2f8, type: 3}
-  MoveSpeed: 13
-  LiftSpeed: 7
+  AllStatUFOMesh: {fileID: 0}
+  AllStatUFOMaterial: {fileID: 0}
+  UFOPrice: 20
+  BaseMoveSpeed: 1
+  BaseLiftSpeed: 1
+  BaseBeamRange: 1
+  MaxMoveSpeed: 1
+  MaxLiftSpeed: 1
+  MaxBeamRange: 1

@@ -14,38 +14,43 @@ public class MainWidget : MonoBehaviour
 
     public Button PlayButton;
 
-    public TMP_Text qualitytext;
+    public UFOAllWidget ufoAllWidget;
 
-    public GameObject SelectUFOModel;
-
-    public UFOAllWidget uFOAllWidget;
+    public TMP_Text StarCntText;
     void Start()
     {
        
         if (GameManager.Instance != null)
         {
-            if (GameManager.Instance.userData != null)
+            if (GameManager.Instance.userData == null)
             {
-             
-            }
-            else
-            {
-                GameManager.Instance.TestLoadData();
-               
                 Debug.Log("Userdata없음");
-            }
+                
+                TestLoadData();
 
-            
-            
+              
+            }
+          
         }
 
         int currentLevel = QualitySettings.GetQualityLevel();
         string levelName = QualitySettings.names[currentLevel];
-        qualitytext.text = levelName;
-        //Debug.Log($"Quality Level: {levelName} ({currentLevel})");
+       
+        Debug.Log($"Quality Level: {levelName} ({currentLevel})");
     }
 
-    public void SetUFOModel(int selectnum ,int prevnum)
+    public async void TestLoadData()
+    {
+        if (GameManager.Instance != null)
+        {
+            await GameManager.Instance.InitData();
+
+            ufoAllWidget.InitializedUFOAllWidget();
+        }
+    }
+
+
+   /* public void SetUFOModel(int selectnum ,int prevnum)
     {
         if (UFOLoadManager.Instance != null)
         {
@@ -71,14 +76,33 @@ public class MainWidget : MonoBehaviour
                 UFOLoadManager.Instance.SetSelectUFODATA(selectnum);
             }
         }
-    }
+    }*/
    
-  
-
    public void ChangeleanSwitch(int change,int select)
    {
         leanSwitch.State = change;
    }
+
+    public void SetStarCntText(int cnt)
+    {
+        StarCntText.text= cnt.ToString();
+    }
+
+    public void CallBack_OnPurchased(bool bsucess , int currentcnt)
+    {
+        if(bsucess)
+        {
+            // 구매하는 애니메이션 실행
+
+            SetStarCntText(currentcnt);
+        }
+        else
+        {
+            //돈 없는 인포 창 띄위기
+            Debug.Log("구매 실패");
+        }
+        
+    }
 
    public void PlayGame()
    {

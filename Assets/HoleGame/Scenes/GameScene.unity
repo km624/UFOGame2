@@ -888,7 +888,7 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: 0.3420201, y: 0, z: 0, w: 0.9396927}
-  m_LocalPosition: {x: 0.055, y: 8.6010475, z: -8.805786}
+  m_LocalPosition: {x: 0.055, y: 11.15157, z: -13.1926775}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2236,7 +2236,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 30, y: 30}
+  m_SizeDelta: {x: 0.25, y: 0.25}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &757464412
 MonoBehaviour:
@@ -2916,7 +2916,7 @@ Transform:
   m_GameObject: {fileID: 969222673}
   serializedVersion: 2
   m_LocalRotation: {x: 0.3420201, y: 0, z: 0, w: 0.9396927}
-  m_LocalPosition: {x: 0.055, y: 8.6010475, z: -8.805786}
+  m_LocalPosition: {x: 0.055, y: 11.15157, z: -13.1926775}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2934,7 +2934,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 886251e9a18ece04ea8e61686c173e1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CameraDistance: 10
+  CameraDistance: 15
   DeadZoneDepth: 0
   Composition:
     ScreenPosition: {x: 0, y: -0.15}
@@ -2943,7 +2943,7 @@ MonoBehaviour:
       Size: {x: 0.52, y: 0.3}
     HardLimits:
       Enabled: 1
-      Size: {x: 0.8, y: 0.7}
+      Size: {x: 0.62, y: 0.61}
       Offset: {x: 0, y: 0.13}
   CenterOnActivate: 1
   TargetOffset: {x: 0, y: 0, z: 0}
@@ -4200,6 +4200,7 @@ RectTransform:
   m_Children:
   - {fileID: 935763720}
   - {fileID: 265665436}
+  - {fileID: 1952029264}
   m_Father: {fileID: 3303979491534047557}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -5192,7 +5193,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 69bcd44d73f48c144bf0ada6f6fb641e, type: 2}
+  - {fileID: 2100000, guid: eca7107b131416244bf3352e1f7e4f79, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5231,7 +5232,7 @@ Transform:
   m_GameObject: {fileID: 1849934179}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -1, z: 0}
+  m_LocalPosition: {x: 0, y: -1.53, z: 0}
   m_LocalScale: {x: 20, y: 1, z: 20}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5443,7 +5444,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1952029264
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5457,13 +5458,13 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 757464411}
-  m_Father: {fileID: 3601241744380133313}
+  m_Father: {fileID: 1663172963}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 1}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -25, y: -300}
-  m_SizeDelta: {x: 250, y: 250}
-  m_Pivot: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 3.1, y: 3.1}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1952029265
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5492,7 +5493,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.9433962, g: 0.048949808, b: 0.048949808, a: 1}
+  m_Color: {r: 0.055359192, g: 0.94509804, b: 0.04705882, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -7042,7 +7043,6 @@ RectTransform:
   - {fileID: 1764340320}
   - {fileID: 2061661853}
   - {fileID: 3476071126012896082}
-  - {fileID: 1952029264}
   - {fileID: 7436300245046814746}
   - {fileID: 4802233167557989380}
   - {fileID: 1042170028}
@@ -7627,7 +7627,7 @@ MonoBehaviour:
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 1080, y: 1920}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 1
+  m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
