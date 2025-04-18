@@ -1358,7 +1358,7 @@ namespace DanielLochner.Assets.SimpleScrollSnap
             float yOffset = 0f;
             Vector2 offset = new Vector2(xOffset, yOffset);
 
-            Vector2 targetPosition = -Panels[CenteredPanel].anchoredPosition + offset;
+            Vector2 targetPosition = - Panels[CenteredPanel].anchoredPosition + offset;
             Content.anchoredPosition = Vector2.Lerp(
                 Content.anchoredPosition,
                 targetPosition,
@@ -1500,6 +1500,7 @@ namespace DanielLochner.Assets.SimpleScrollSnap
 
         public void SetStartingPanel(int index)
         {
+           
             startingPanel = index;
             Setup();
         }

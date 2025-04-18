@@ -14,8 +14,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   UFOName: UFOStore
   UFOMesh: {fileID: 8547471881871753710, guid: 55a7154760840453cbf09a19f950e2f8, type: 3}
-  UFOMaterials:
-  - {fileID: -9103484930961366303, guid: 55a7154760840453cbf09a19f950e2f8, type: 3}
+  UFOColorDataList:
+  - IConColor:
+      serializedVersion: 2
+      rgba: 4292081073
+    Materials:
+    - {fileID: -9103484930961366303, guid: 55a7154760840453cbf09a19f950e2f8, type: 3}
+    - {fileID: 8556262120643298411, guid: 55a7154760840453cbf09a19f950e2f8, type: 3}
+    ColorPrice: 0
+  - IConColor:
+      serializedVersion: 2
+      rgba: 4280815613
+    Materials:
+    - {fileID: 2100000, guid: 77cd6dc0c2b746d43bc2076ce54a928a, type: 2}
+    - {fileID: 2100000, guid: 74bd119c204b8e1488559718e177b7e2, type: 2}
+    ColorPrice: 10
   AllStatUFOMesh: {fileID: 0}
   AllStatUFOMaterial: {fileID: 0}
   UFOPrice: 20

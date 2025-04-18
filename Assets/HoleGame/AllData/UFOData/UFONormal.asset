@@ -14,10 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   UFOName: UFONormal
   UFOMesh: {fileID: 7810371007003685382, guid: a7cab91a16a3a5144b89cf9c085b9a88, type: 3}
-  UFOMaterials:
-  - {fileID: 2100000, guid: 133fc9c089cbf5a4f86caa4de1d40b07, type: 2}
+  UFOColorDataList:
+  - IConColor:
+      serializedVersion: 2
+      rgba: 4294488833
+    Materials:
+    - {fileID: 2100000, guid: 133fc9c089cbf5a4f86caa4de1d40b07, type: 2}
+    ColorPrice: 0
   AllStatUFOMesh: {fileID: 0}
   AllStatUFOMaterial: {fileID: 0}
+  UFOPrice: 0
   BaseMoveSpeed: 3
   BaseLiftSpeed: 3
   BaseBeamRange: 3

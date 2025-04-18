@@ -6,19 +6,13 @@ public class UFOData : ScriptableObject
 {
     public string UFOName;
     public Mesh UFOMesh;
-    public List<Material> UFOMaterials = new List<Material>();
+    public List<UFOColorData> UFOColorDataList = new List<UFOColorData>();
 
     public Mesh AllStatUFOMesh;
     public Material AllStatUFOMaterial;
 
     public int UFOPrice;
 
-    public int BaseMoveSpeed = 1;
-    public int BaseLiftSpeed = 1;
-    public int BaseBeamRange = 1;
+    public List<UFOStatData> StatList = new();
 
-    public int MaxMoveSpeed = 1;
-    public int MaxLiftSpeed = 1;
-    public int MaxBeamRange = 1;
-   
 }

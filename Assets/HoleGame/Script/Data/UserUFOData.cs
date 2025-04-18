@@ -1,53 +1,59 @@
 using System.Collections.Generic;
+using System.Linq;
 //using UnityEngine;
 
 [System.Serializable]
 public class UserUFOData
 {
-    public string UFOName;             
+    public string UFOName;
     //public bool IsUnlocked;          
-    public int ReinforceMoveSpeed;       
-    public int ReinforceLiftSpeed;
-    public int ReinforceBeamRange;
-
-    public int MaxReinforceMoveSpeed;
-    public int MaxReinforceLiftSpeed;
-    public int MaxReinforceBeamRange;
+    public List<UFOStatData> StatReinforceList = new();
 
     public List<int> OwnedColorIndexes = new(); 
     public int CurrentColorIndex = 0;
 
-    //public bool AllStat = false;
-
-    public UserUFOData()
+   
+    /*public UserUFOData()
     {
         UFOName = "UFONormal";
 
-        ReinforceMoveSpeed = 0;
-        ReinforceLiftSpeed = 0;
-        ReinforceBeamRange = 0;
-
-        MaxReinforceMoveSpeed = 1;
-        MaxReinforceLiftSpeed = 1;
-        MaxReinforceBeamRange = 1;
+        StatReinforceList = new List<StatReinforceData>
+        {
+            new() {
+                StatType = UFOStatEnum.MoveSpeed,
+                ReinforceValue = 0,
+                MaxReinforceValue = 1
+            },
+            new() {
+                StatType = UFOStatEnum.LiftSpeed,
+                ReinforceValue = 0,
+                MaxReinforceValue = 1
+            },
+            new() {
+                StatType = UFOStatEnum.BeamRange,
+                ReinforceValue = 0,
+                MaxReinforceValue = 1
+            }
+        };
 
         OwnedColorIndexes.Add(0);
 
         CurrentColorIndex = 0;
 
         //AllStat = false;
-    }
+    }*/
     public UserUFOData(UFOData ufoData)
     {
-        UFOName = ufoData.name;
+        UFOName = ufoData.UFOName;
 
-        ReinforceMoveSpeed = 0;
-        ReinforceLiftSpeed = 0;
-        ReinforceBeamRange = 0;
+        StatReinforceList = new List<UFOStatData>();
 
-        MaxReinforceMoveSpeed = ufoData.MaxMoveSpeed - ufoData.BaseMoveSpeed;
-        MaxReinforceLiftSpeed = ufoData.MaxLiftSpeed - ufoData.BaseLiftSpeed;
-        MaxReinforceBeamRange = ufoData.MaxBeamRange - ufoData.BaseBeamRange;
+      foreach(var stat in ufoData.StatList)
+        {
+            StatReinforceList.Add(stat);
+            StatReinforceList.Add(stat);
+            StatReinforceList.Add(stat);
+        }
 
 
         OwnedColorIndexes.Add(0);
@@ -59,23 +65,35 @@ public class UserUFOData
 
     public void AddColor(int colorIndex)
     {
+        if (!OwnedColorIndexes.Contains(colorIndex))
+        {
+            OwnedColorIndexes.Add(colorIndex);
+        }
         CurrentColorIndex = colorIndex;
-        
-        OwnedColorIndexes.Add(colorIndex);
 
+    }
+
+    public int GetReinforceValue(UFOStatEnum type)
+    {
+        return StatReinforceList.Find(s => s.StatType == type)?.BaseValue ?? 0;
+    }
+
+    public void AddReinforce(UFOStatEnum type)
+    {
+        var stat = StatReinforceList.Find(s => s.StatType == type);
+        if (stat != null && stat.BaseValue < stat.MaxValue)
+        {
+            stat.BaseValue++;
+        }
     }
 
     public bool AllStat()
     {
-        return ReinforceMoveSpeed >= MaxReinforceMoveSpeed &&
-          ReinforceLiftSpeed >= MaxReinforceLiftSpeed &&
-          ReinforceBeamRange >= MaxReinforceBeamRange;
-
+        return StatReinforceList.All(s => s.BaseValue >= s.MaxValue);
     }
 
 
 
-    
 }
 
 

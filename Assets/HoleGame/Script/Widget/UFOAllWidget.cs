@@ -9,11 +9,13 @@ public class UFOAllWidget : MonoBehaviour
 {
     [SerializeField]private MainWidget mainWidget;
 
-    [SerializeField] private RectTransform UFOSelectWidgetTransform;
     [SerializeField] private RectTransform UFOAllWidgetTransform;
+    //[SerializeField] private RectTransform UFOSlideButtonTransform;
+    //[SerializeField] private RectTransform UFOAllWidgetTransform;
     
     [SerializeField] private GameObject PreviewUFO;
-    
+
+
     [SerializeField] private float slideDuration = 0.6f;
    
     private Vector2 shownPosition;
@@ -21,10 +23,12 @@ public class UFOAllWidget : MonoBehaviour
     private bool isVisible = false;
 
     [SerializeField] private SelectUFOWidget selectUFOWidget;
-    [SerializeField] private SelectPalletWidget selectPalletWidget;
+    [SerializeField] private SelectPaletteWidget selectPaletteWidget;
     [SerializeField] private ReinForceWidget reinForceWidget;
 
     [SerializeField] private Color MTlockedColor = new Color32(34, 34, 34, 255);
+
+    private int selecetUFOindex = -1;
 
     void Start()
     {
@@ -37,14 +41,19 @@ public class UFOAllWidget : MonoBehaviour
             HidePanel();
         else
             ShowPanel();
+
+        Debug.Log("Click");
     }
     private void ShowPanel()
     {
 
         // 블록 끄고 → 끝나면 켜기
         //SetInteractable(false);
-        Vector2 shownPos = new Vector2(-800f, 50f);
-        UFOSelectWidgetTransform.DOAnchorPos(shownPos, slideDuration)
+
+        Vector2 shownPos = new Vector2(0, 50f);
+       
+  
+        UFOAllWidgetTransform.DOAnchorPos(shownPos, slideDuration)
             .SetEase(Ease.InBack)
             .OnComplete(() =>
             {
@@ -57,8 +66,8 @@ public class UFOAllWidget : MonoBehaviour
     {
         // 블록 끄고 → 끝나면 비활성화
         // SetInteractable(false);
-        Vector2 hiddenPos = new Vector2(0f, 50f);
-        UFOSelectWidgetTransform.DOAnchorPos(hiddenPos, slideDuration)
+        Vector2 hiddenPos = new Vector2(800f, 50f);
+        UFOAllWidgetTransform.DOAnchorPos(hiddenPos, slideDuration)
             .SetEase(Ease.OutBack)
             .OnComplete(() =>
             {
@@ -94,72 +103,104 @@ public class UFOAllWidget : MonoBehaviour
             return;
         }
 
-        int currentindex = GameManager.Instance.userData.CurrentUFO;
+       int currentUFOindex = GameManager.Instance.userData.CurrentUFO;
 
-        //미리 프리뷰 세팅
-        CallBAck_ChangePreviewUFOType(currentindex, true);
-
+        
         //UFO 선택 란 생성
-        CreateSelectWidget();
+        CreateSelectWidget(currentUFOindex);
+
+        CallBAck_ChangePreviewUFOType(currentUFOindex, true);
+
     }
 
-    private void CreateSelectWidget()
+    private void CreateSelectWidget(int currnetUFOIndex)
     {
-        
+        //UFO 종류 위젯 세팅
+        //int currentUFOindex = GameManager.Instance.userData.CurrentUFO;
+        IReadOnlyList<UFOData> ufoDataList = UFOLoadManager.Instance.LoadedUFODataList;
+        UFOData currentUFOdata = ufoDataList[currnetUFOIndex];
 
         IReadOnlyDictionary<string, UserUFOData> ufomap =  GameManager.Instance.userData.serialUFOList.UFOMap;
-        selectUFOWidget.InitializeSelectWidget(this, UFOLoadManager.Instance.LoadedUFODataList, 
-            ufomap, GameManager.Instance.userData.CurrentUFO);
+        selectUFOWidget.InitializeSelectWidget(this, ufoDataList,
+            ufomap, currnetUFOIndex);
 
         //구매했을때 바인딩
         selectUFOWidget.FOnUFOPurchased += mainWidget.CallBack_OnPurchased;
+        selectPaletteWidget.FOnColorPurchased += mainWidget.CallBack_OnPurchased;
 
 
     }
 
     public void CallBAck_ChangePreviewUFOType(int ufoindex, bool bunlock)
     {
-        UFOData selectUFOdata = UFOLoadManager.Instance.LoadedUFODataList[ufoindex];
-
+        
+       UFOData currentUFOdata = UFOLoadManager.Instance.LoadedUFODataList[ufoindex];
+    
         MeshFilter meshFilter = PreviewUFO.GetComponent<MeshFilter>();
         if (meshFilter != null)
         {
-            meshFilter.mesh = selectUFOdata.UFOMesh;
+            meshFilter.mesh = currentUFOdata.UFOMesh;
         }
 
-       
         MeshRenderer renderer = PreviewUFO.GetComponent<MeshRenderer>();
+        
         if (renderer != null)
         {
-            Material mat = null;
+            Material[] mats = null;
 
-            //언록되지 않을때 
-            if (!bunlock)
+            if (!bunlock) // 언락 안 된 경우
             {
-                mat = new Material(selectUFOdata.UFOMaterials[0]);
-                mat.color = MTlockedColor;
+                int count = currentUFOdata.UFOColorDataList[0].Materials.Count;
+                mats = new Material[count];
+                for (int i = 0; i < count; i++)
+                {
+                    mats[i] = new Material(currentUFOdata.UFOColorDataList[0].Materials[i]); // 복사
+                    mats[i].color = MTlockedColor;
+                }
             }
-            //언록 됬어있다면 선택한 컬러로 설정
+            else // 언락된 경우
+            {
+                UserUFOData userufo = GameManager.Instance.userData.serialUFOList.Get(currentUFOdata.UFOName);
+                if (userufo != null)
+                {
+                    int colorIndex = userufo.CurrentColorIndex;
+
+                    var colorSet = currentUFOdata.UFOColorDataList[colorIndex]; 
+                    int count = colorSet.Materials.Count;
+                    mats = new Material[count];
+                    for (int i = 0; i < count; i++)
+                    {
+                        mats[i] = new Material(colorSet.Materials[i]); // 복사본
+                    }
+                }
+            }
+
+            // 머터리얼 배열 통째로 적용
+            renderer.materials = mats;
+
+            SaveSelectUFO(ufoindex);
+
+            // UFO 새로 선택하면 위젯 갱신
+            if(selecetUFOindex != ufoindex)
+            {
+                selecetUFOindex = ufoindex;
+                RenewalWidget(selecetUFOindex, bunlock);
+            }
+            //구매해서 다시 프리뷰 세팅했다는 뜻
+            //색깔 , 강화 위젯 활성화
             else
             {
-                UserUFOData userufo = GameManager.Instance.userData.serialUFOList.Get(selectUFOdata.name);
-                if(userufo!=null)
-                {
-                    int colorindex = userufo.CurrentColorIndex;
-                    mat = new Material(selectUFOdata.UFOMaterials[colorindex]);
-                }
-              
+                selectPaletteWidget.OnSelectPaletteWdiget(bunlock);
+                Debug.Log("색깔 , 강화 가능");
             }
-            renderer.material = mat;
-
-            SetSelectUFO(ufoindex);
+              
         }
 
-        Debug.Log("Change : " + ufoindex + "  " + selectUFOdata);
+            Debug.Log("Set : " + selecetUFOindex + "  " + currentUFOdata);
 
     }
 
-    public void SetSelectUFO(int selectindex)
+    public void SaveSelectUFO(int selectindex)
     {
         if (GameManager.Instance.userData == null)
         {
@@ -170,6 +211,83 @@ public class UFOAllWidget : MonoBehaviour
          UserData userdata = GameManager.Instance.userData;
         userdata.SetCurrentUFO(selectindex);
     }
+
+    private void RenewalWidget(int UFOindex, bool bUnlock)
+    {
+
+        selectPaletteWidget.CallBack_ClearPalettetWidget();
+
+        //구독은 해지
+        //selectPaletteWidget.FOnColorPurchased -= mainWidget.CallBack_OnPurchased;
+
+        //기본 데이터 참조
+        IReadOnlyList<UFOData> ufoDataList = UFOLoadManager.Instance.LoadedUFODataList;
+        IReadOnlyDictionary<string, UserUFOData> ufomap = GameManager.Instance.userData.serialUFOList.UFOMap;
+        UFOData currentUFOdata = ufoDataList[UFOindex];
+
+        //컬러 위젯 세팅
+        IReadOnlyList<UFOColorData> currentUFOColorList = currentUFOdata.UFOColorDataList;
+        IReadOnlyList<int> OwnUserColorList = null;
+        int selectcolorindex = 0;
+        if (bUnlock)
+        {
+            OwnUserColorList = ufomap[currentUFOdata.UFOName].OwnedColorIndexes;
+            selectcolorindex = ufomap[currentUFOdata.UFOName].CurrentColorIndex;
+        }
+
+        selectPaletteWidget.InitializeSelectWidget(this, UFOindex, currentUFOColorList, OwnUserColorList, selectcolorindex);
+
+        //selectPaletteWidget.FOnColorPurchased += mainWidget.CallBack_OnPurchased;
+
+        //캔버스 그룹 비활성화
+        selectPaletteWidget.OnSelectPaletteWdiget(bUnlock);
+
+        Debug.Log("새로 생성");
+
+    }
+
+    public void CallBack_ChangeColor(int colorindex,bool bunclock)
+    {
+        int currentUFOIndex = GameManager.Instance.userData.CurrentUFO;
+        UFOData currentUFOdata = UFOLoadManager.Instance.LoadedUFODataList[currentUFOIndex];
+
+
+        MeshRenderer renderer = PreviewUFO.GetComponent<MeshRenderer>();
+
+        if (renderer != null)
+        {
+            Material[] mats = null;
+
+
+            var colorSet = currentUFOdata.UFOColorDataList[colorindex];
+            int count = colorSet.Materials.Count;
+
+            mats = new Material[count];
+            for (int i = 0; i < count; i++)
+            {
+                mats[i] = new Material(colorSet.Materials[i]); // 복사본
+            }
+
+            // 머터리얼 배열 통째로 적용
+            renderer.materials = mats;
+            
+            if(bunclock)
+                SaveSelectColor(colorindex, currentUFOdata);
+
+        }
+    }
+    private void SaveSelectColor(int selectindex, UFOData selectufodata)
+    {
+        if (GameManager.Instance.userData == null)
+        {
+            Debug.Log("UserData 없음");
+            return;
+        }
+
+        UserUFOData userufodata = GameManager.Instance.userData.serialUFOList.Get(selectufodata.UFOName);
+        userufodata.CurrentColorIndex = selectindex;
+    }
+
 
 
 

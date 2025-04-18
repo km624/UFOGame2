@@ -184,10 +184,10 @@ public class UFOPlayer : MonoBehaviour, IDetctable
         MeshRenderer meshRenderer = ufoModel.GetComponent<MeshRenderer>();
         if (meshRenderer != null)
         {
-            if (ufodata.UFOMaterials != null && ufodata.UFOMaterials.Count > 0)
+            if (ufodata.UFOColorDataList != null && ufodata.UFOColorDataList.Count > 0)
             {
 
-                meshRenderer.materials = ufodata.UFOMaterials.ToArray();
+                //meshRenderer.materials = ufodata.UFOColorDataList[0].Materials.ToArray();
             }
         }
 

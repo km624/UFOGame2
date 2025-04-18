@@ -14,6 +14,7 @@ public class UFOButtonWidget : MonoBehaviour
     private int ufoPrice;
 
     private Color LockColor = new Color32(64, 64, 64, 255);
+    private Color UnlockColor = new Color32(255,255, 255, 255); 
     private bool bIsUnlocked;
     
 
@@ -43,7 +44,7 @@ public class UFOButtonWidget : MonoBehaviour
     public void OnClickSelectBtn()
     {
 
-        UfoSelectbutton.interactable = true;
+        UfoSelectbutton.interactable = false;
         selectUFOWidget.SelectUFOType(ufoindex,bIsUnlocked);
         
         if(!bIsUnlocked)
@@ -52,6 +53,7 @@ public class UFOButtonWidget : MonoBehaviour
 
     public void UnSelect()
     {
+       
         UfoSelectbutton.interactable = true;
         UfoPurchasebutton.gameObject.SetActive(false);
     }
@@ -64,6 +66,7 @@ public class UFOButtonWidget : MonoBehaviour
     public void UnlockUFO()
     {
         bIsUnlocked = true;
+        UFOIcon.color = UnlockColor;
         UfoPurchasebutton.gameObject.SetActive(false);
     }
     

@@ -1,12 +1,5 @@
 fileFormatVersion: 2
-guid: 44cdafe20c28a4276a8ef25566bab908
-AssetOrigin:
-  serializedVersion: 1
-  productId: 235001
-  packageName: UI Particle Image
-  packageVersion: 1.2.2
-  assetPath: Assets/AssetKits/ParticleImage/Demo/Sprites/Rounded.png
-  uploadId: 620919
+guid: 82276654ce1f9944fa9639c9d6c8af28
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -52,11 +45,11 @@ TextureImporter:
   compressionQuality: 50
   spriteMode: 1
   spriteExtrude: 1
-  spriteMeshType: 1
+  spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 100
-  spriteBorder: {x: 26, y: 0, z: 26, w: 0}
+  spriteBorder: {x: 26, y: 26, z: 26, w: 26}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
   alphaIsTransparency: 1

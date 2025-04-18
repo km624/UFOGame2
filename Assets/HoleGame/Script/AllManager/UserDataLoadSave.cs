@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -15,8 +16,22 @@ public class UserDataLoadSave : IUserDataInterface
         string path = GetSavePath(userId);
         if (!File.Exists(path))
         {
-           
-            return new UserData(userId);
+            UserData newUserData = new UserData(userId);
+
+            //기본 UFO 유저 데이터 추가 로직
+            if (UFOLoadManager.Instance != null)
+            {
+                if(UFOLoadManager.Instance.LoadedUFODataList.Count ==0)
+                {
+                    Debug.Log("UFO 세팅 못함");
+                }
+                UFOData baseufodata = UFOLoadManager.Instance.LoadedUFODataList[0];
+
+                UserUFOData baseuserufodata = new UserUFOData(baseufodata);
+                newUserData.serialUFOList.AddUFO(baseuserufodata);
+                return newUserData;
+            }
+
         }
 
        
@@ -24,6 +39,9 @@ public class UserDataLoadSave : IUserDataInterface
 
       
         UserData data = JsonUtility.FromJson<UserData>(json);
+
+        //UFO 외형 직렬화
+        data.InitializeUserData();
 
         Debug.Log("기존데이터 로드");
         return data;

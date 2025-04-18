@@ -10,7 +10,7 @@ public class SerialUFOList
     public IReadOnlyList<UserUFOData> UFOList => ufoList;
     public IReadOnlyDictionary<string, UserUFOData> UFOMap => ufoMap;
 
-    public void InitializeFromList()
+    public void InitializeFromUFOList()
     {
         ufoMap.Clear();
         foreach (var ufo in ufoList)
@@ -26,6 +26,7 @@ public class SerialUFOList
         {
             ufoList.Add(newUFO);
             ufoMap[newUFO.UFOName] = newUFO;
+            Debug.Log(newUFO.UFOName + " Ãß°¡");
         }
     }
 

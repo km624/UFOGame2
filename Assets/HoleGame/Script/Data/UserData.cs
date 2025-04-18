@@ -25,8 +25,8 @@ public class UserData
         SkillCnt = new List<int> { 2, 3, 4, 5 };
         BestScore = 0;
         StarCnt = 50;
-        UserUFOData uFOData = new UserUFOData();
-        serialUFOList.AddUFO(uFOData);
+        //UserUFOData uFOData = new UserUFOData();
+        //serialUFOList.AddUFO(uFOData);
 
     }
     public UserData(string userid)
@@ -36,18 +36,18 @@ public class UserData
         SkillCnt = new List<int> { 2, 3, 4, 5 };
         BestScore = 0;
         StarCnt = 50;
-        UserUFOData uFOData = new UserUFOData();
-        serialUFOList.AddUFO(uFOData);
+        //UserUFOData uFOData = new UserUFOData();
+       // serialUFOList.AddUFO(uFOData);
     }
 
-    public void Initialize()
+    public void InitializeUserData()
     {
-        serialUFOList.InitializeFromList(); 
+        serialUFOList.InitializeFromUFOList(); 
     }
 
     public void SetCurrentUFO(int ufoindex)
     {
-        CurrentUFO =ufoindex;
+        CurrentUFO = ufoindex;
     }
 
     public void AddStarCnt(int cnt)
@@ -55,13 +55,21 @@ public class UserData
         StarCnt += cnt;
     }
 
-    public bool MinusStartCnt(int cnt)
+    public int MinusStartCnt(int cnt)
     {
         if(cnt>StarCnt)
-            return false;
+            return -1;
 
         StarCnt -= cnt;
-        return true;
+        return StarCnt;
+    }
+
+    public bool CheckStarCnt(int cnt)
+    {
+        if (cnt > StarCnt)
+            return false;
+        else 
+            return true;
     }
 
     public void UpdateBestScore(int score)

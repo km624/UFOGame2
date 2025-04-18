@@ -45,38 +45,12 @@ public class MainWidget : MonoBehaviour
         {
             await GameManager.Instance.InitData();
 
+            SetStarCntText(GameManager.Instance.userData.StarCnt);
+
             ufoAllWidget.InitializedUFOAllWidget();
         }
     }
 
-
-   /* public void SetUFOModel(int selectnum ,int prevnum)
-    {
-        if (UFOLoadManager.Instance != null)
-        {
-            if (UFOLoadManager.Instance.LoadedUFODataList.Count == 0) return;
-            UFOData ufodata  = UFOLoadManager.Instance.LoadedUFODataList[selectnum];
-            if(ufodata != null)
-            {
-                MeshFilter meshFilter = SelectUFOModel.GetComponent<MeshFilter>();
-                if (meshFilter != null)
-                {
-                    meshFilter.mesh = ufodata.UFOMesh;
-                }
-                MeshRenderer meshRenderer = SelectUFOModel.GetComponent<MeshRenderer>();
-                if (meshRenderer != null)
-                {
-                    if (ufodata.UFOMaterials != null && ufodata.UFOMaterials.Count > 0)
-                    {
-
-                        meshRenderer.materials = ufodata.UFOMaterials.ToArray();
-                    }
-                }
-
-                UFOLoadManager.Instance.SetSelectUFODATA(selectnum);
-            }
-        }
-    }*/
    
    public void ChangeleanSwitch(int change,int select)
    {

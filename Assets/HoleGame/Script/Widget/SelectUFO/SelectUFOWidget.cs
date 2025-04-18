@@ -22,10 +22,6 @@ public class SelectUFOWidget : MonoBehaviour
     
     public event Action<bool/*bsuccess*/,int/*currentstarcnt*/> FOnUFOPurchased;
 
-
-    
-  
-
     public void InitializeSelectWidget(UFOAllWidget ufowidget, IReadOnlyList<UFOData> ufoList, 
         IReadOnlyDictionary<string, UserUFOData> userufo,int selectindex)
     {
@@ -79,21 +75,36 @@ public class SelectUFOWidget : MonoBehaviour
     {
         for(int i = 0;i<UFOBtnWidgetList.Count;i++)
         {
-            if(index == i)continue;
+            if(index == i) continue;
 
             UFOBtnWidgetList[i].UnSelect();
         }
         FOnUFOSelected?.Invoke(index , bunlock);
-        //ufoallWidget.ChangePreviewUFOType(index, bunlock);
+       
     }
 
     public void PurchaseUFO(int index,int price)
     {
+        bool bsuccess = GameManager.Instance.userData.CheckStarCnt(price);
+       
+        int newcnt = GameManager.Instance.userData.MinusStartCnt(price);
+       
+        FOnUFOPurchased.Invoke(bsuccess, newcnt);
+        if (bsuccess)
+        {
+            //userdata의 해당 ufo 추가
+            UFOData pruchaseUFOData = UFOLoadManager.Instance.LoadedUFODataList[index];
+            UserUFOData newuserUFOData = new UserUFOData(pruchaseUFOData);
+            GameManager.Instance.userData.serialUFOList.AddUFO(newuserUFOData);
 
-        bool bsuccess = false;
+            //구매 성공하면 버튼 해금
+            UFOBtnWidgetList[index].UnlockUFO();
+            //UFO 선택한 로직 실행
+            UFOBtnWidgetList[index].OnClickSelectBtn();
 
 
-        FOnUFOPurchased.Invoke(bsuccess,price);
+        }
+
     }
 
     
