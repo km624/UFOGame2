@@ -156,7 +156,7 @@ public class GameState : MonoBehaviour
 
         PlayerHud.SetScoreText(TotalScore);
 
-        ufoplayer.AddEXPGauge(fallingobject.EXPCnt, fallingobject.ObjectMass);
+        ufoplayer.AddEXPGauge(fallingobject.TimeCnt, fallingobject.ObjectMass);
       
     }
 
@@ -175,10 +175,10 @@ public class GameState : MonoBehaviour
          
         }
     }
-    private void CallBack_BombSwallow()
+    private void CallBack_BombSwallow(float minustime)
     {
        
-        TotalTime -= 10.0f;
+        TotalTime -= minustime;
         Camerashake.ShakeCamera();
     }
 
@@ -286,6 +286,8 @@ public class GameState : MonoBehaviour
         string generationname = objectManager.getCurrentGenerationName();
         PlayerHud.ChangeGenerationNameText(generationname);
         PlayerHud.OnForceRenewalBounusWidget();
+
+        ufoplayer.MaxLevelLimitUp();
     }
 
     public void CallBack_StarSpawned(IDetctable targetstar)

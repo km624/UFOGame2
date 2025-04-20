@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Data.SqlTypes;
+using System.Collections.Generic;
 public class ObjectSpawnPoint : MonoBehaviour
 {
     private Vector3 CurrentSpawnPoint;
@@ -68,8 +69,9 @@ public class ObjectSpawnPoint : MonoBehaviour
  
             if (currentGeneration != null)
             {
+               
                 // 가중치 기반으로 FallingObject 프리팹 선택
-                int prefabnum = SelectPrefabByWeight(currentGeneration);
+                int prefabnum = SelectPrefabByWeight(currentGeneration, objectManager.ObjectStatList);
                 if (prefabnum < 0)
                 {
                     Debug.Log("데이터 없음");
@@ -77,7 +79,8 @@ public class ObjectSpawnPoint : MonoBehaviour
                 }
                 FallingObject prefabToSpawn = currentGeneration.objects[prefabnum];
                
-                EarthObjectStatData objectdata = GetEarthObjectStatData(objectManager.CurrentGenration, prefabnum);
+                //.EarthObjectStatData objectdata = GetEarthObjectStatData(objectManager.CurrentGenration, prefabnum);
+                EarthObjectStatData objectdata = objectManager.ObjectStatList[prefabnum];
                 if (prefabToSpawn != null)
                 {
                     GameObject spawnObject = Instantiate(prefabToSpawn.gameObject, transform.position, transform.rotation);
@@ -116,9 +119,10 @@ public class ObjectSpawnPoint : MonoBehaviour
     }
 
     // 가중치 기반으로 currentGeneration 내의 FallingObject 중 하나를 랜덤으로 선택
-    private int SelectPrefabByWeight(GenerationObjects generation)
+    private int SelectPrefabByWeight(GenerationObjects generation ,IReadOnlyList<EarthObjectStatData> earthObjectDatas)
     {
-        if (generation.objects.Count == 0 || generation.spawnWeights == null || generation.spawnWeights.Length != generation.objects.Count)
+        //if (generation.objects.Count == 0 || generation.spawnWeights == null || generation.spawnWeights.Length != generation.objects.Count)
+        if (generation.objects.Count == 0 || earthObjectDatas.Count -1 == generation.objects.Count)
         {
             Debug.LogWarning("Spawn weights count does not match objects count or objects list is empty.");
             return -1;
@@ -126,18 +130,18 @@ public class ObjectSpawnPoint : MonoBehaviour
 
         // 총 가중치 합산
         float totalWeight = 0f;
-        for (int i = 0; i < generation.spawnWeights.Length; i++)
+        for (int i = 0; i < earthObjectDatas.Count; i++)
         {
-            totalWeight += generation.spawnWeights[i];
+            totalWeight += earthObjectDatas[i].SpawnWeight;
         }
-
+       
         // 0부터 totalWeight 사이의 랜덤 값 선택
         float randomValue = Random.Range(0f, totalWeight);
         float cumulativeWeight = 0f;
-
+        //Debug.Log("randomValue : " + randomValue);
         for (int i = 0; i < generation.objects.Count; i++)
         {
-            cumulativeWeight += generation.spawnWeights[i];
+            cumulativeWeight += earthObjectDatas[i].SpawnWeight;
             if (randomValue <= cumulativeWeight)
             {
                 //return generation.objects[i];
@@ -147,19 +151,22 @@ public class ObjectSpawnPoint : MonoBehaviour
 
         // 혹시 이상 상황이 발생하면 fallback
         //return generation.objects[generation.objects.Count - 1];
-        return -1;
+        return 0;
     }
 
-    private EarthObjectStatData GetEarthObjectStatData(int generation , int num)
+   /* private EarthObjectStatData GetEarthObjectStatData(int generation , int num)
     {
-        int calculatenum = num + generation*4;
 
-        if(calculatenum >= objectManager.ObjectStatList.Count)
-            return null;
+       ExelEarthObjectData stattime = objectManager.ObjecstStatTime;
+        
+        if (stattime == null) return null;
+      
+        
 
-        return objectManager.ObjectStatList[calculatenum];
+
+        return objectManager.ObjectStatList[num];
     }
-
+*/
     // 외부에서 스폰을 중지(일시정지) 또는 재개할 수 있도록 bIsStopSpawn의 상태를 설정하는 메서드
     public void SetPauseState(bool isPaused)
     {

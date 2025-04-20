@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+
 using System.Linq;
-//using UnityEngine;
+using UnityEngine;
+
 
 [System.Serializable]
 public class UserUFOData
@@ -51,9 +53,10 @@ public class UserUFOData
       foreach(var stat in ufoData.StatList)
         {
             StatReinforceList.Add(stat);
-            StatReinforceList.Add(stat);
-            StatReinforceList.Add(stat);
+            //Debug.Log(stat.BaseValue);
         }
+       
+     
 
 
         OwnedColorIndexes.Add(0);
@@ -78,12 +81,21 @@ public class UserUFOData
         return StatReinforceList.Find(s => s.StatType == type)?.BaseValue ?? 0;
     }
 
-    public void AddReinforce(UFOStatEnum type)
+    /*public void AddReinforce(UFOStatEnum type)
     {
         var stat = StatReinforceList.Find(s => s.StatType == type);
         if (stat != null && stat.BaseValue < stat.MaxValue)
         {
             stat.BaseValue++;
+        }
+    }*/
+
+    public void SetReinforce(UFOStatEnum type, int statcnt)
+    {
+        var stat = StatReinforceList.Find(s => s.StatType == type);
+        if (stat != null && stat.BaseValue < stat.MaxValue)
+        {
+            stat.BaseValue = statcnt;
         }
     }
 

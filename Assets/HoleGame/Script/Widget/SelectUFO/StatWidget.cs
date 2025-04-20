@@ -12,7 +12,7 @@ public class StatWidget : MonoBehaviour
     private int PreviewStat;
     private int MaxStat;
 
-    private int StatCnt = 5;
+    private float StatCnt = 5.0f;
 
     [SerializeField] private List<Image> BoxFrameList = new List<Image>();
     [SerializeField] private TMP_Text statText;
@@ -31,12 +31,13 @@ public class StatWidget : MonoBehaviour
         PreviewStat = CurrentStat;
         MaxStat = maxStat;
 
-        for(int i = 0; i < MaxStat; i++)
+        for (int i = 0; i < MaxStat; i++)
         {
             BoxFrameList[i].gameObject.SetActive(true);
         }
 
-        StatProgressBar.fillAmount = CurrentStat/5;
+        
+        StatProgressBar.fillAmount = CurrentStat/ StatCnt;
         StatPreviewBar.fillAmount = StatProgressBar.fillAmount;
 
     }
@@ -53,10 +54,13 @@ public class StatWidget : MonoBehaviour
         ChangePreviewStat(PreviewStat);
     }
 
-    public void OnApplyStat()
+    public void ApplyStat()
     {
-
+        CurrentStat = PreviewStat;
+        StatProgressBar.fillAmount = CurrentStat / StatCnt;
+       
     }
+
 
     public void OnCancelStat()
     {
@@ -65,11 +69,28 @@ public class StatWidget : MonoBehaviour
 
     private void ChangePreviewStat(int newstat)
     {
-        if(newstat>=CurrentStat)
+        if(MaxStat < newstat)
+        {
+            PreviewStat = MaxStat;
+            return;
+        }
+           
+        if(CurrentStat > newstat)
+        {
+            PreviewStat = CurrentStat;
+            return;
+        }
+           
+
+        if (newstat>=CurrentStat)
         {
             PreviewStat = newstat;
-            StatPreviewBar.fillAmount = PreviewStat / 5;
+
+           // Debug.Log(PreviewStat);
+            StatPreviewBar.fillAmount = PreviewStat / StatCnt;
         }
+
+        reinForceWidget.OnChangePreviewStat(StatType, PreviewStat);
     }
 
 

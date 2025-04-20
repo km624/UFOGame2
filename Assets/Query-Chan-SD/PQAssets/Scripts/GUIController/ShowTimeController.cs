@@ -4,9 +4,9 @@ using System.Collections;
 
 public class ShowTimeController : MonoBehaviour {
 
-	[SerializeField]
+	/*[SerializeField]
 	string NextSceneName = "";
-	
+	*/
 	[SerializeField]
 	string NextSceneButtonLabel = "";
 

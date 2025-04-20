@@ -22,10 +22,9 @@ public class UFOPlayer : MonoBehaviour, IDetctable
     private float CurrentExpGauge;
     [Header("초기 경험치량")]
     [SerializeField]
-   // private float MaxExpGauge = 25.0f;
     private float MaxExpGauge = 100.0f;
 
-    float baseExpPerMass = 50.0f;
+    float baseExpPerMass = 100.0f;
 
    //[Header("레벨에 따른 최대 경험치 추가량")]
     //[SerializeField]
@@ -34,8 +33,14 @@ public class UFOPlayer : MonoBehaviour, IDetctable
     private float fillSpeed = 3.0f;
     private float TargetfillPercent = 0.0f;
 
-    [SerializeField]
-    private List<ExelPlayerData> PlayerStatList = new List<ExelPlayerData>();
+   
+    //private List<ExelPlayerData> PlayerStatList = new List<ExelPlayerData>();
+
+    //private List<ExelUFOStatData> UFOBaseStatList = new List<ExelUFOStatData>();
+    private ExelUFOStatData UFOBaseStatList;
+
+    //private List<ExelUFOStatData> UFOStatTimeList = new List<ExelUFOStatData>();
+    private ExelUFOStatData UFOStatTimeList;
 
 
     [Header("UFO UI")]
@@ -65,8 +70,7 @@ public class UFOPlayer : MonoBehaviour, IDetctable
     private FallingTrigger trigger;
     [SerializeField]
     private PossibleTrigger possibleTrigger;
-    //[SerializeField]
-    //private GameObject AddRangeLevelWidget;
+   
 
    
    
@@ -77,7 +81,7 @@ public class UFOPlayer : MonoBehaviour, IDetctable
 
     public Vector3 WorldPosition => transform.position;
 
-    //최소 스텟
+    /*//최소 스텟
     private float MinMoveSpeed = 5f;
     private float MinLiftSpeed = 10f;
     private float MinBeamRange = 0.7f;
@@ -89,13 +93,13 @@ public class UFOPlayer : MonoBehaviour, IDetctable
     private float LiftSpeedTimes = 10.0f;
     private float BeamRangeTimes = 0.15f;
     private float TextOffsetTimes = -0.3f;
-
+*/
 
 
 
     void Start()
     {
-        LoadPlayerStatList();
+       LoadPlayerStatList();
         
         InitUFO();
 
@@ -105,10 +109,12 @@ public class UFOPlayer : MonoBehaviour, IDetctable
     {
         if (GameManager.Instance != null)
         {
-            UFOData selectUFOdata = UFOLoadManager.Instance.selectUFOData;
+            int selectUFOIndex = GameManager.Instance.userData.CurrentUFO;
+            UFOData selectUFOdata = UFOLoadManager.Instance.LoadedUFODataList[selectUFOIndex];
             if (selectUFOdata != null)
             {
-                SetUFOData(selectUFOdata);
+                UserUFOData userufodata = GameManager.Instance.userData.serialUFOList.Get(selectUFOdata.UFOName);
+                SetUFOData(selectUFOdata , userufodata);
             }
 
         }
@@ -139,26 +145,29 @@ public class UFOPlayer : MonoBehaviour, IDetctable
     }
 
    
-    private void LoadPlayerStatList()
+   private void LoadPlayerStatList()
     {
-        PlayerStatList = CsvLoader.LoadCSV<ExelPlayerData>("StatData/PlayerEXPList");
+       // PlayerStatList = CsvLoader.LoadCSV<ExelPlayerData>("StatData/CSVPlayerEXPList");
+
+        UFOBaseStatList = CsvLoader.LoadSingleCSV <ExelUFOStatData>("StatData/CSVUFOBaseStat");
+        UFOStatTimeList = CsvLoader.LoadSingleCSV <ExelUFOStatData>("StatData/CSVUFOStatTime");
 
         //MaxLevel = PlayerStatList.Count;
 
-        SetUFOLevelData(0);
+        //SetUFOLevelData(0);
 
     }
 
-    private void SetUFOLevelData(int listnum)
+   /* private void SetUFOLevelData(int listnum)
     {
         if (listnum >= PlayerStatList.Count)
         {
             Debug.Log("데이터 없음");
             return;
         }
-        MaxExpGauge = PlayerStatList[listnum].MaxExp;
-        CurrentLevel = PlayerStatList[listnum].Level;
-    }
+        //MaxExpGauge = PlayerStatList[listnum].MaxExp;
+        //CurrentLevel = PlayerStatList[listnum].Level;
+    }*/
 
 
     void FixedUpdate()
@@ -173,7 +182,7 @@ public class UFOPlayer : MonoBehaviour, IDetctable
         UFORenderer.material = defaultMaterial;
     }
 
-    public void SetUFOData(UFOData ufodata)
+    public void SetUFOData(UFOData ufodata,UserUFOData userUFOdata)
     {
 
         MeshFilter meshFilter = ufoModel.GetComponent<MeshFilter>();
@@ -186,19 +195,43 @@ public class UFOPlayer : MonoBehaviour, IDetctable
         {
             if (ufodata.UFOColorDataList != null && ufodata.UFOColorDataList.Count > 0)
             {
-
-                //meshRenderer.materials = ufodata.UFOColorDataList[0].Materials.ToArray();
+                int selectcolor = userUFOdata.CurrentColorIndex;
+                meshRenderer.materials = ufodata.UFOColorDataList[selectcolor].Materials.ToArray();
             }
         }
+        if (UFOBaseStatList!=null && UFOStatTimeList!=null)
+        {
+            if (ufoMovement != null)
+            {
+                int movevalue = userUFOdata.GetReinforceValue(UFOStatEnum.MoveSpeed) - 1;
+                float newspeed = UFOBaseStatList.Movespeed +  movevalue * UFOStatTimeList.Movespeed;
 
-       /* if (ufoMovement != null)
-        {
-            ufoMovement.SetSpeed(ufodata.MoveSpeed);
+                Debug.Log("UFOSpeed : " + newspeed);
+                ufoMovement.SetSpeed(newspeed);
+            }
+            if (UFOBeam != null)
+            {
+                int liftvalue = userUFOdata.GetReinforceValue(UFOStatEnum.LiftSpeed) -1;
+                float newlift = UFOBaseStatList.LiftSpeed + liftvalue * UFOStatTimeList.LiftSpeed;
+                Debug.Log("UFOLiftspeed : " + newlift);
+                UFOBeam.SetInitLiftSpeed(newlift);
+
+                int rangevalue = userUFOdata.GetReinforceValue(UFOStatEnum.BeamRange) - 1;
+                float newrange = UFOBaseStatList.BeamRange + rangevalue * UFOStatTimeList.BeamRange;
+                Debug.Log("Beamrange : " + newrange);
+                UFOBeam.SetBeamRange(newrange);
+
+                if(LevelText != null)
+                {
+                    int textoffsetvalue = userUFOdata.GetReinforceValue(UFOStatEnum.BeamRange) - 1;
+                    float newoffset = UFOBaseStatList.TextOffset + rangevalue * UFOStatTimeList.TextOffset;
+                    Vector3 pos = LevelText.transform.position;
+                    pos.y += newoffset;
+                    LevelText.transform.position = pos;
+                }
+
+            }
         }
-        if (UFOBeam != null)
-        {
-            UFOBeam.SetInitLiftSpeed(ufodata.LiftSpeed);
-        }*/
 
     }
 
@@ -230,17 +263,18 @@ public class UFOPlayer : MonoBehaviour, IDetctable
 
     public void AddEXPGauge(float gauge , float mass)
     {
+        //Debug.Log("Taime : " + gauge);
         SpawnGagueEffect(gauge);
 
         if (CurrentLevel >= MaxLevel) return;
 
-        if (CurrentLevel >= PlayerStatList.Count) return;
+        //if (CurrentLevel >= PlayerStatList.Count) return;
 
-        CurrentExpGauge += gauge;
+        //CurrentExpGauge += gauge;
 
-        //float newGague = CalculateExpGain(CurrentLevel, mass);
-       
-        //CurrentExpGauge += newGague;
+        float newGague = CalculateExpGain(CurrentLevel, mass);
+        
+        CurrentExpGauge += newGague;
         //Debug.Log("UFOPLAYEr : " + newGague);
        
 
@@ -270,6 +304,9 @@ public class UFOPlayer : MonoBehaviour, IDetctable
     {
 
         float exp = baseExpPerMass * absorbedMass / Mathf.Pow(2f, level - 1);
+
+        if (absorbedMass == MaxLevel)
+            exp = 0.0f;
         return exp;
     }
 
@@ -291,10 +328,10 @@ public class UFOPlayer : MonoBehaviour, IDetctable
         CurrentLevel += bLevelUp ? 1 : -1;
         
         
-        CurrentLevel = Math.Clamp(CurrentLevel, 0, PlayerStatList.Count);
+        //CurrentLevel = Math.Clamp(CurrentLevel, 0, PlayerStatList.Count);
 
 
-        SetUFOLevelData(CurrentLevel - 1);  
+       // SetUFOLevelData(CurrentLevel - 1);  
 
         UFOBeam.SetSwallowLevelSet(CurrentLevel);
         trigger.SetCurrentLevel(CurrentLevel);
@@ -305,19 +342,20 @@ public class UFOPlayer : MonoBehaviour, IDetctable
 
     public void MaxLevelLimitUp()
     {
-        MaxLevel += 4;
+        MaxLevel  += 4;
     }
 
     public void SetCurrentBoss(BossObject boss)
     {
+        Debug.Log("보스 세팅 : " +  boss.name);
         UFOBeam.SetCurrentBoss(boss);
     }
 
     private void UpdateSizeText(int currentsizelevel)
     {
-       if(currentsizelevel == PlayerStatList.Count)
+      /* if(currentsizelevel == PlayerStatList.Count)
             LevelText.text = "레벨: " + "MAX";
-       else
+       else*/
             LevelText.text = "레벨: " + currentsizelevel.ToString();
         
     }

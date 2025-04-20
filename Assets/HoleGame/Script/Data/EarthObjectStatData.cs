@@ -24,5 +24,8 @@ public class EarthObjectStatData : ScriptableObject
    [Header("질량")]
     public float mass = 1.0f;
 
+    [Header("질량")]
+    public float SpawnWeight = 0.0f;
+
 
 }

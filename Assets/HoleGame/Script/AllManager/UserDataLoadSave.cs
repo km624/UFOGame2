@@ -21,7 +21,7 @@ public class UserDataLoadSave : IUserDataInterface
             //기본 UFO 유저 데이터 추가 로직
             if (UFOLoadManager.Instance != null)
             {
-                if(UFOLoadManager.Instance.LoadedUFODataList.Count ==0)
+                if(UFOLoadManager.Instance.LoadedUFODataList.Count == 0)
                 {
                     Debug.Log("UFO 세팅 못함");
                 }
@@ -62,6 +62,7 @@ public class UserDataLoadSave : IUserDataInterface
                 using (StreamWriter writer = new StreamWriter(stream))
                 {
                     writer.Write(json);
+                   
                 }
                 //Debug.Log(data.stageClearTimes[0]);
                // Debug.Log("데이터 저장 성공: " + path);

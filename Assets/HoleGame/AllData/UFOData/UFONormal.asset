@@ -24,9 +24,13 @@ MonoBehaviour:
   AllStatUFOMesh: {fileID: 0}
   AllStatUFOMaterial: {fileID: 0}
   UFOPrice: 0
-  BaseMoveSpeed: 3
-  BaseLiftSpeed: 3
-  BaseBeamRange: 3
-  MaxMoveSpeed: 4
-  MaxLiftSpeed: 4
-  MaxBeamRange: 4
+  StatList:
+  - StatType: 0
+    BaseValue: 3
+    MaxValue: 4
+  - StatType: 1
+    BaseValue: 3
+    MaxValue: 4
+  - StatType: 2
+    BaseValue: 3
+    MaxValue: 4

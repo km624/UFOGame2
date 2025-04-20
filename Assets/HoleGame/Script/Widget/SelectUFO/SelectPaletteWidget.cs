@@ -111,7 +111,7 @@ public class SelectPaletteWidget : MonoBehaviour
 
         if (bsuccess)
         {
-           UFOData currentUFOData = UFOLoadManager.Instance.LoadedUFODataList[Currentufoindex];
+            UFOData currentUFOData = UFOLoadManager.Instance.LoadedUFODataList[Currentufoindex];
             UserUFOData userufodata = GameManager.Instance.userData.serialUFOList.Get(currentUFOData.UFOName);
             userufodata.AddColor(index);
 

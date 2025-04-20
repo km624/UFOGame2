@@ -58,8 +58,24 @@ public class FallingObject : MonoBehaviour
 
     public void SetStatData(EarthObjectStatData data)
     {
-        ForceStatData =  data;
+        //ForceStatData =  data;
+        EarthObjectStatData clone = ScriptableObject.CreateInstance<EarthObjectStatData>();
 
+        clone.EXPCnt = data.EXPCnt;
+        clone.Score = data.Score;
+        clone.TimeCnt = data.TimeCnt;
+        clone.bMovement = data.bMovement;
+        clone.jumpDistance = data.jumpDistance;
+        clone.squishAmount = data.squishAmount;
+        clone.mass = data.mass;
+        clone.SpawnWeight = data.SpawnWeight;
+
+        ForceStatData = clone;
+    }
+
+    public void SetBomb()
+    {
+        Shape = ShapeEnum.boomb;
     }
 
     public EarthObjectStatData GetForceData() { return ForceStatData; }

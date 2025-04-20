@@ -47,6 +47,15 @@ public class HoleScript : MonoBehaviour
     }
 
 
+    public void SetBeamRange(float range)
+    {
+        Vector3 scale = transform.localScale;
+        scale.x = range;
+        scale.z = range;
+        transform.localScale = scale;
+    }
+
+
    /* private void OnTriggerEnter(Collider other)
     {
 
@@ -146,7 +155,7 @@ public class HoleScript : MonoBehaviour
         float delta = objectLevel - ufoLevel;
 
         float rawSpeed = Mathf.Pow(LiftSpeed, 1f - delta); // 감쇠 수식
-        float clampedSpeed = Mathf.Clamp(rawSpeed, 0.1f, LiftSpeed*3); // 범위 제한
+        float clampedSpeed = Mathf.Clamp(rawSpeed, 0.1f, 50.0f); // 범위 제한
 
         return clampedSpeed;
     }

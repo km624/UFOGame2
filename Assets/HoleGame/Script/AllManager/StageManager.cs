@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 public class StageManager : MonoBehaviour
 {
-    [SerializeField]
+    /*[SerializeField]
     private AllStageData stageDataList;
 
     private int currentstageindex=-1;
@@ -113,7 +113,7 @@ public class StageManager : MonoBehaviour
 
     // 예: 스테이지를 클리어했을 때
     public void OnStageClear(int stageindex ,int clearTime,int star)
-    {
+    {*/
         /*int index = stageindex;
 
         if (index < 0 || index >= userData.stageClearTimes.Count)
@@ -151,7 +151,7 @@ public class StageManager : MonoBehaviour
         }*/
 
 
-    }
+}
 
    
-}
+

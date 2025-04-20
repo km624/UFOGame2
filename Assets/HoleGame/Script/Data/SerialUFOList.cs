@@ -26,7 +26,7 @@ public class SerialUFOList
         {
             ufoList.Add(newUFO);
             ufoMap[newUFO.UFOName] = newUFO;
-            Debug.Log(newUFO.UFOName + " 추가");
+            //Debug.Log(newUFO.UFOName + " 추가");
         }
     }
 

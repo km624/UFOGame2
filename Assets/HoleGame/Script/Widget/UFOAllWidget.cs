@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.Android.Gradle.Manifest;
 using UnityEditor;
 using UnityEngine;
+using static Unity.Burst.Intrinsics.X86;
 
 public class UFOAllWidget : MonoBehaviour
 {
@@ -42,7 +43,7 @@ public class UFOAllWidget : MonoBehaviour
         else
             ShowPanel();
 
-        Debug.Log("Click");
+       
     }
     private void ShowPanel()
     {
@@ -66,6 +67,14 @@ public class UFOAllWidget : MonoBehaviour
     {
         // 블록 끄고 → 끝나면 비활성화
         // SetInteractable(false);
+       
+        int currentufo = GameManager.Instance.userData.CurrentUFO;
+
+        //판넬 닺힐때 강제 리셋
+        CallBAck_ChangePreviewUFOType(currentufo, true);
+        RenewalWidget(currentufo,true);
+
+
         Vector2 hiddenPos = new Vector2(800f, 50f);
         UFOAllWidgetTransform.DOAnchorPos(hiddenPos, slideDuration)
             .SetEase(Ease.OutBack)
@@ -127,6 +136,7 @@ public class UFOAllWidget : MonoBehaviour
         //구매했을때 바인딩
         selectUFOWidget.FOnUFOPurchased += mainWidget.CallBack_OnPurchased;
         selectPaletteWidget.FOnColorPurchased += mainWidget.CallBack_OnPurchased;
+        reinForceWidget.FOnReinforceApplied += mainWidget.CallBack_OnPurchased;
 
 
     }
@@ -173,12 +183,14 @@ public class UFOAllWidget : MonoBehaviour
                         mats[i] = new Material(colorSet.Materials[i]); // 복사본
                     }
                 }
+
+                SaveSelectUFO(ufoindex);
             }
 
             // 머터리얼 배열 통째로 적용
             renderer.materials = mats;
 
-            SaveSelectUFO(ufoindex);
+            
 
             // UFO 새로 선택하면 위젯 갱신
             if(selecetUFOindex != ufoindex)
@@ -190,7 +202,7 @@ public class UFOAllWidget : MonoBehaviour
             //색깔 , 강화 위젯 활성화
             else
             {
-                selectPaletteWidget.OnSelectPaletteWdiget(bunlock);
+                OnEnableSelectWidget(bunlock);
                 Debug.Log("색깔 , 강화 가능");
             }
               
@@ -210,42 +222,10 @@ public class UFOAllWidget : MonoBehaviour
 
          UserData userdata = GameManager.Instance.userData;
         userdata.SetCurrentUFO(selectindex);
+
+        GameManager.Instance.SaveUserData();
     }
-
-    private void RenewalWidget(int UFOindex, bool bUnlock)
-    {
-
-        selectPaletteWidget.CallBack_ClearPalettetWidget();
-
-        //구독은 해지
-        //selectPaletteWidget.FOnColorPurchased -= mainWidget.CallBack_OnPurchased;
-
-        //기본 데이터 참조
-        IReadOnlyList<UFOData> ufoDataList = UFOLoadManager.Instance.LoadedUFODataList;
-        IReadOnlyDictionary<string, UserUFOData> ufomap = GameManager.Instance.userData.serialUFOList.UFOMap;
-        UFOData currentUFOdata = ufoDataList[UFOindex];
-
-        //컬러 위젯 세팅
-        IReadOnlyList<UFOColorData> currentUFOColorList = currentUFOdata.UFOColorDataList;
-        IReadOnlyList<int> OwnUserColorList = null;
-        int selectcolorindex = 0;
-        if (bUnlock)
-        {
-            OwnUserColorList = ufomap[currentUFOdata.UFOName].OwnedColorIndexes;
-            selectcolorindex = ufomap[currentUFOdata.UFOName].CurrentColorIndex;
-        }
-
-        selectPaletteWidget.InitializeSelectWidget(this, UFOindex, currentUFOColorList, OwnUserColorList, selectcolorindex);
-
-        //selectPaletteWidget.FOnColorPurchased += mainWidget.CallBack_OnPurchased;
-
-        //캔버스 그룹 비활성화
-        selectPaletteWidget.OnSelectPaletteWdiget(bUnlock);
-
-        Debug.Log("새로 생성");
-
-    }
-
+    
     public void CallBack_ChangeColor(int colorindex,bool bunclock)
     {
         int currentUFOIndex = GameManager.Instance.userData.CurrentUFO;
@@ -286,8 +266,56 @@ public class UFOAllWidget : MonoBehaviour
 
         UserUFOData userufodata = GameManager.Instance.userData.serialUFOList.Get(selectufodata.UFOName);
         userufodata.CurrentColorIndex = selectindex;
+
+        GameManager.Instance.SaveUserData();
     }
 
+    private void RenewalWidget(int UFOindex, bool bUnlock)
+    {
+
+        //기본 데이터 참조
+        IReadOnlyList<UFOData> ufoDataList = UFOLoadManager.Instance.LoadedUFODataList;
+        IReadOnlyDictionary<string, UserUFOData> ufomap = GameManager.Instance.userData.serialUFOList.UFOMap;
+        UFOData currentUFOdata = ufoDataList[UFOindex];
+
+        //컬러 위젯 세팅
+        IReadOnlyList<UFOColorData> currentUFOColorList = currentUFOdata.UFOColorDataList;
+        IReadOnlyList<int> OwnUserColorList = null;
+        int selectcolorindex = 0;
+        if (bUnlock && ufomap.ContainsKey(currentUFOdata.UFOName))
+        {
+            OwnUserColorList = ufomap[currentUFOdata.UFOName].OwnedColorIndexes;
+            selectcolorindex = ufomap[currentUFOdata.UFOName].CurrentColorIndex;
+        }
+        selectPaletteWidget.CallBack_ClearPalettetWidget();
+
+        selectPaletteWidget.InitializeSelectWidget(this, UFOindex, currentUFOColorList, OwnUserColorList, selectcolorindex);
+
+
+        //UFO 스텟 세팅
+        IReadOnlyList<UFOStatData> statdatalist = currentUFOdata.StatList;
+       
+        if (bUnlock && ufomap.ContainsKey(currentUFOdata.UFOName))
+        {
+            statdatalist = ufomap[currentUFOdata.UFOName].StatReinforceList;
+            
+        }
+
+        reinForceWidget.ClearStat();
+
+        reinForceWidget.InitializeStatWidgetList(this, currentUFOdata.UFOName, statdatalist);
+
+        OnEnableSelectWidget(bUnlock);
+
+        Debug.Log("새로 생성 : " + Time.time);
+
+    }
+
+    public void OnEnableSelectWidget(bool bunlock)
+    {
+        selectPaletteWidget.OnSelectPaletteWdiget(bunlock);
+        reinForceWidget.OnSelectPaletteWdiget(bunlock);
+    }
 
 
 

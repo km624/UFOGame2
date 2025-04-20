@@ -13,19 +13,27 @@ public class ObjectManager : MonoBehaviour
 
     [SerializeField]
     private List<ObjectSpawnPoint> objectspawnPoints = new List<ObjectSpawnPoint>();
+   
     [SerializeField]
     private List<GenerationObjects> generationList = new List<GenerationObjects>();
 
-   
+    private GenerationObjects CurrentGenerationData = null;
+    public int CurrentGenration { get; private set; } = 0;
+
+
+    private List<ExelEarthObjectData> ExelEarthObjectStatList = new List<ExelEarthObjectData>();
     private List<EarthObjectStatData> objectStatList = new List<EarthObjectStatData>();
     public IReadOnlyList<EarthObjectStatData> ObjectStatList => objectStatList;
 
-    private List<EarthObjectStatData> bossStatList  = new List<EarthObjectStatData>();
-    public IReadOnlyList<EarthObjectStatData> BossStatList => bossStatList;
+    public ExelEarthObjectData ObjecstStatTime { get; private set; } = null;
+
+    private EarthObjectStatData bossStat = null;
+
+    private ExelBombStatData ExelBombstat = null;
+    public EarthObjectStatData BombStatData { get; private set; } = null;
+    public ExelBombStatData BombStatTime { get; private set; } = null;
 
 
-
-    public int CurrentGenration { get; private set; } = 0;
 
   
     public event Action<int /*currentgeneraetion*/> FOnGenerationChanged;
@@ -48,7 +56,7 @@ public class ObjectManager : MonoBehaviour
     private float BombSpawnHeight=1.0f;
     [SerializeField] 
     private int BombPostionInterval = 1; 
-    [SerializeField]
+    //[SerializeField]
     float BombSpawnTime = 5.0f;
 
     [Header("스폰시간")]
@@ -61,7 +69,7 @@ public class ObjectManager : MonoBehaviour
 
     public event Action<FallingObject> FOnObjectSwallowed;
     public event Action<Vector3 /*아이콘 생성 위치*/, ShapeEnum> FOnBonusSwallowed;
-    public event Action FOnBomnbSwallowed;
+    public event Action<float /*minustime*/> FOnBomnbSwallowed;
     
 
     private Dictionary<ShapeEnum, int> BonusObjectsOrgin = new Dictionary<ShapeEnum, int>();
@@ -114,46 +122,19 @@ public class ObjectManager : MonoBehaviour
     //CSV 오브젝트 ,보스 스텟 파일 로드
     public void LoadStatList()
     {
+
        
-        List<ExelBossData> ExelBossStatList = new List<ExelBossData>();
-        List<ExelEarthObjectData> ExelEarthObjectStatList = new List<ExelEarthObjectData>();
+        ExelEarthObjectStatList = CsvLoader.LoadCSV<ExelEarthObjectData>("StatData/CSVEarthObjectList");
 
-        ExelBossStatList = CsvLoader.LoadCSV<ExelBossData>("StatData/BossStatList");
-        ExelEarthObjectStatList = CsvLoader.LoadCSV<ExelEarthObjectData>("StatData/EarthObjectList");
+        ObjecstStatTime = CsvLoader.LoadSingleCSV<ExelEarthObjectData>("StatData/CSVEarthObjectTime");
+       
+
+        ExelBombstat = CsvLoader.LoadSingleCSV<ExelBombStatData>("StatData/CSVBombStat");
+
+        BombStatTime = CsvLoader.LoadSingleCSV<ExelBombStatData>("StatData/CSVBombStatTime");
 
 
-        EarthObjectStatData earthobjectdata= ScriptableObject.CreateInstance<EarthObjectStatData>();
-
-        int generation = 0;
-       foreach (var BossStat in ExelBossStatList)
-       {
-            EarthObjectStatData bossobjectdata = ScriptableObject.CreateInstance<EarthObjectStatData>();
-
-            bossobjectdata.bMovement = true;
-            bossobjectdata.mass = 5.0f + generation * 4.0f;
-            bossobjectdata.jumpDistance = BossStat.MoveDistance;
-            bossobjectdata.Score = BossStat.AddScore;
-            bossobjectdata.TimeCnt = BossStat.Addtime;
-
-            bossStatList.Add(bossobjectdata);
-            
-            generation++;   
-        }
-
-        foreach (var objectStat in ExelEarthObjectStatList)
-        {
-            EarthObjectStatData earthojectdata = ScriptableObject.CreateInstance<EarthObjectStatData>();
-
-            earthojectdata.bMovement = true;
-            earthojectdata.mass = objectStat.Mass;
-            earthojectdata.jumpDistance = objectStat.MoveDistance;
-            earthojectdata.Score = objectStat.AddScore;
-            earthojectdata.TimeCnt = objectStat.AddTime;
-            earthojectdata.EXPCnt = objectStat.AddExp;
-
-            objectStatList.Add(earthojectdata);
-  
-        }
+        StatRenewalGeneration(CurrentGenration);
 
     }
 
@@ -177,13 +158,13 @@ public class ObjectManager : MonoBehaviour
     #region 오브젝트 생성 , 관리
     public void SetUpSpawnObjects(int currentgeneration)
     {
-        GenerationObjects gen = (generationList.Count > 0) ? generationList[currentgeneration] : null;
+        CurrentGenerationData = (generationList.Count > 0) ? generationList[currentgeneration] : null;
         //FOnGenerationDataSeted?.Invoke(gen);
         foreach (var spawnPoint in objectspawnPoints)
         {
-            if (gen != null)
+            if (CurrentGenerationData != null)
             {
-                spawnPoint.SetGeneration(gen, this,SpawnTime,variation);
+                spawnPoint.SetGeneration(CurrentGenerationData, this,SpawnTime,variation);
                 spawnPoint.SpawnPrefab();
             }
             
@@ -194,18 +175,76 @@ public class ObjectManager : MonoBehaviour
     {
         if (generationList.Count <= CurrentGenration + 1)
         {
-            //Debug.Log("다음 세대 없음");
+            Debug.Log("다음 세대 없음");
             return; 
         }
 
         CurrentGenration += 1;
+        
+        //세대 스텟 배율 대로 새로 세팅
+        StatRenewalGeneration(CurrentGenration);
 
+        //스폰 포인트에 현재 세대 세팅
         SetUpSpawnObjects(CurrentGenration);
+
         SpawnBossAtRandomGridPosition();
+
         FOnGenerationChanged?.Invoke(CurrentGenration);
         Debug.Log(CurrentGenration + " : 현재 세대");
 
 
+    }
+
+    private void StatRenewalGeneration(int currentgeneration)
+    {
+        objectStatList.Clear();
+
+        //오브젝트 세팅
+        for (int i = 0; i < ExelEarthObjectStatList.Count; i++)
+        {
+            EarthObjectStatData earthojectdata = ScriptableObject.CreateInstance<EarthObjectStatData>();
+
+            earthojectdata.bMovement = true;
+            earthojectdata.mass = ExelEarthObjectStatList[i].Mass + (currentgeneration * ObjecstStatTime.Mass);
+            earthojectdata.jumpDistance = ExelEarthObjectStatList[i].MoveDistance + (currentgeneration * ObjecstStatTime.MoveDistance);
+            
+            float baseScore = ExelEarthObjectStatList[i].AddScore;
+            float scoreRate = ObjecstStatTime.AddScore;
+
+            float baseTime = ExelEarthObjectStatList[i].AddTime;
+            float timeRate = ObjecstStatTime.AddTime;
+
+            earthojectdata.Score = Mathf.RoundToInt(baseScore * Mathf.Pow(scoreRate, currentgeneration));
+            earthojectdata.TimeCnt = baseTime * Mathf.Pow(timeRate, currentgeneration);
+
+            earthojectdata.EXPCnt = ExelEarthObjectStatList[i].AddExp + (currentgeneration * ObjecstStatTime.AddExp);
+            earthojectdata.SpawnWeight = ExelEarthObjectStatList[i].SpawnWeight + (currentgeneration * ObjecstStatTime.SpawnWeight);
+            if (i == ExelEarthObjectStatList.Count - 1)
+            {
+                earthojectdata.EXPCnt = 0;
+               
+
+                bossStat = earthojectdata;
+            }  
+            else
+                objectStatList.Add(earthojectdata);
+        }
+
+        //폭탄 세팅
+        EarthObjectStatData bombdata = ScriptableObject.CreateInstance<EarthObjectStatData>();
+        bombdata.bMovement = false;
+        bombdata.mass = ExelBombstat.Mass + (currentgeneration * BombStatTime.Mass);
+        bombdata.jumpDistance = 0;
+        bombdata.Score = 0;
+        bombdata.TimeCnt = ExelBombstat.MinusTime + (currentgeneration * BombStatTime.MinusTime);
+        bombdata.EXPCnt = 0;
+        bombdata.SpawnWeight = 0;
+        
+        BombSpawnTime = ExelBombstat.SpawnInterval + (currentgeneration * BombStatTime.SpawnInterval);
+
+        BombStatData = bombdata;
+
+        Debug.Log(currentgeneration + " 세대 스텟 세팅 완료");
     }
     public void StartSpawnObjects()
     {
@@ -241,8 +280,6 @@ public class ObjectManager : MonoBehaviour
         }
     }
 
-   
-
     public void RegisterSpawnedObject(FallingObject spawnedObj)
     {
         // TotalObjectCnt++;
@@ -257,7 +294,7 @@ public class ObjectManager : MonoBehaviour
             //TotalObjectCnt--;
             if (destroyShape == ShapeEnum.boomb)
             {
-                FOnBomnbSwallowed?.Invoke();
+                FOnBomnbSwallowed?.Invoke(destroyoBj.TimeCnt);
             }
             else
             {
@@ -480,12 +517,15 @@ public class ObjectManager : MonoBehaviour
         Vector3 spawnPosition = new Vector3(SpawnLocation.x, BombSpawnHeight, SpawnLocation.y);
         GameObject bombobj = Instantiate(spawnbomb.gameObject, spawnPosition, Quaternion.identity);
        
-        FallingObject falling = bombobj.GetComponent<FallingObject>();
-        if (falling != null)
+        FallingObject bombfall = bombobj.GetComponent<FallingObject>();
+        if (bombfall != null)
         {
-            falling.AddGenerationMass(CurrentGenration);
-            falling.onSwallowed.AddListener(RemoveSpawnedObject);
+            bombfall.SetStatData(BombStatData);
+            bombfall.SetBomb();
+            bombfall.AddGenerationMass(CurrentGenration);
+            bombfall.onSwallowed.AddListener(RemoveSpawnedObject);
         }
+
     }
 
     private Vector2 RandomSpawnRange()
@@ -518,13 +558,14 @@ public class ObjectManager : MonoBehaviour
 
         Vector3 spawnPosition = new Vector3(SpawnLocation.x, 0.0f, SpawnLocation.y);
         GameObject bossobj = Instantiate(bossprefab.gameObject, spawnPosition, Quaternion.identity);
-        EarthObjectStatData bossstatdata = null;
-        if (CurrentGenration < BossStatList.Count)
-            bossstatdata = BossStatList[CurrentGenration];
+        //EarthObjectStatData bossstatdata = null;
+        //if (CurrentGenration < BossStatList.Count)
+         //bossstatdata = bossstatdata;
+
         BossObject boss = bossobj.GetComponent<BossObject>();
         if (boss != null)
         {
-            boss.SetStatData(bossstatdata);
+            boss.SetStatData(bossStat);
             boss.AddGenerationMass(CurrentGenration);
             boss.FOnBossSwallowed += CallBacK_BossSwallow;
             currentBoss = boss;
@@ -538,12 +579,13 @@ public class ObjectManager : MonoBehaviour
     {
         if(bossObject!=null)
         {
-            ChangeGeneration();
 
             //보스 시간 , 점수 추가
             FOnObjectSwallowed(bossObject);
             //임시 소리
-            gameState.OnUfoSwallowSound();
+            //gameState.OnUfoSwallowSound();
+           
+            ChangeGeneration();
 
             Destroy(bossObject.gameObject);
         }

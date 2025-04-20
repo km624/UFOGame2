@@ -12,12 +12,13 @@ public class GenerationObjects : ScriptableObject
 
     public BossObject Boss = null;
 
-    public float[] spawnWeights;
+    //public float[] spawnWeights;
 
     public string GenerationName;
+}
 
 
-    private void OnValidate()
+   /* private void OnValidate()
     {
         // objects 리스트가 null이 아니고, spawnWeights 배열의 길이가 리스트 개수와 다를 경우 처리
         if (objects != null)
@@ -40,4 +41,4 @@ public class GenerationObjects : ScriptableObject
             }
         }
     }
-}
+}*/

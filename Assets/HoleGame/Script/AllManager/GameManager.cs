@@ -76,7 +76,7 @@ public class GameManager : MonoBehaviour
 
         // [1] 유저 데이터 로드
         await UFOLoadManager.Instance.LoadAppearanceData();
-        UFOLoadManager.Instance.SetSelectUFODATA(userData.CurrentUFO);
+        
         progress = 0.3f;  // 30%
        
         // 페이크 딜레이
@@ -115,6 +115,7 @@ public class GameManager : MonoBehaviour
     public async void SaveUserData()
     {
        await userDatasaveload.SavePlayerDataAsync(userData);
+        Debug.Log("저장완료 : " + Time.time);
     }
 
   

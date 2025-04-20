@@ -1,4 +1,4 @@
-using UnityEngine;
+
 
 [System.Serializable]
 public class ExelEarthObjectData
@@ -8,4 +8,5 @@ public class ExelEarthObjectData
     public int AddScore;
     public float AddTime;
     public float AddExp;
+    public float SpawnWeight;
 }
