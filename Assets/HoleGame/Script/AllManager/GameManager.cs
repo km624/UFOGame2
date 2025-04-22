@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
     public  UserData userData { get; private set; }
     public IUserDataInterface userDatasaveload { get; private set; }
 
-    
+    public VibrationManager vibrationManager { get; private set; }
 
     private void Awake()
     {
@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
+            vibrationManager = GetComponent<VibrationManager>();
             DontDestroyOnLoad(gameObject); 
         }
         else

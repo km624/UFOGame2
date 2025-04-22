@@ -271,9 +271,10 @@ public class UFOPlayer : MonoBehaviour, IDetctable
         //if (CurrentLevel >= PlayerStatList.Count) return;
 
         //CurrentExpGauge += gauge;
-
+        Debug.Log(" 내 레벨 : " + CurrentLevel + " 질량 : "+ mass);
         float newGague = CalculateExpGain(CurrentLevel, mass);
-        
+
+        Debug.Log("겅혐치 : " + newGague);
         CurrentExpGauge += newGague;
         //Debug.Log("UFOPLAYEr : " + newGague);
        
@@ -303,10 +304,17 @@ public class UFOPlayer : MonoBehaviour, IDetctable
     public float CalculateExpGain(int level, float absorbedMass)
     {
 
-        float exp = baseExpPerMass * absorbedMass / Mathf.Pow(2f, level - 1);
-
         if (absorbedMass == MaxLevel)
-            exp = 0.0f;
+            return 0f;
+
+        float levelDiff = level - absorbedMass;
+
+        // 지수 감소: 2차이
+        float expMultiplier = Mathf.Pow(0.5f, levelDiff);
+
+        // 2n-n = 증가 효과도 포함됨
+        float exp = baseExpPerMass * expMultiplier;
+
         return exp;
     }
 

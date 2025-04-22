@@ -1,10 +1,9 @@
-using DanielLochner.Assets.SimpleScrollSnap;
+
 using DG.Tweening;
 using System.Collections.Generic;
-using Unity.Android.Gradle.Manifest;
-using UnityEditor;
+
 using UnityEngine;
-using static Unity.Burst.Intrinsics.X86;
+
 
 public class UFOAllWidget : MonoBehaviour
 {

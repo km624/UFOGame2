@@ -121,7 +121,7 @@ public class GameState : MonoBehaviour
         PlayerHud.SetDetectStandardTarget(ufoplayer);
 
         //현재 시대 이름 세팅
-        PlayerHud.ChangeGenerationNameText(objectManager.getCurrentGenerationName());   
+       
 
         PlayerHud.SetTimeWidget(TotalTime,this);
         StartPlayTimer();
@@ -130,7 +130,8 @@ public class GameState : MonoBehaviour
 
         objectManager.InitObjectManager(this);
 
-       
+        //현재 시대 이름 세팅
+        PlayerHud.ChangeGenerationNameText(objectManager.getCurrentGenerationName());
 
     }
 
@@ -160,19 +161,17 @@ public class GameState : MonoBehaviour
       
     }
 
-    private void CallBack_BonusClear(Dictionary<ShapeEnum, int> allbouns , int currentgeneration)
+    private void CallBack_BonusClear(Dictionary<float, int> allbouns)
     {
         //Debug.Log("보너스 점수 추가 ");
         foreach (var item in allbouns)
         {
-            for(int i = 0; i < item.Value;i++)
-            {
-                float timecnt = objectManager.SearchShapeData(item.Key, currentgeneration);
+           
+            int score = objectManager.GetBounusScoreData(item.Key);
+            score *= item.Value;
+            TotalScore += score;
+            //Debug.Log("점수 추가 : " + score);
 
-                TotalScore += (int)(timecnt * 100.0f) * (1 + currentgeneration) * 2;
-               
-            }
-         
         }
     }
     private void CallBack_BombSwallow(float minustime)

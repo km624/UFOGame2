@@ -14,12 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_GroupName: Default Local Group
   m_GUID: 3fdb169d94b1bd545b6d8061f4c66204
-  m_SerializeEntries:
-  - m_GUID: 2aa1e5847512335418d1dcdef0d4fed4
-    m_Address: Assets/HoleGame/AllData/UFOData/StoreUFO.asset
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
+  m_SerializeEntries: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: c6990955080994a46ab2e8ca546c8f45, type: 2}
   m_SchemaSet:

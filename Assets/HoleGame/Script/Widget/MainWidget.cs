@@ -5,6 +5,7 @@ using Lean.Gui;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.ProBuilder.MeshOperations;
 
 
 public class MainWidget : MonoBehaviour
@@ -22,16 +23,21 @@ public class MainWidget : MonoBehaviour
        
         if (GameManager.Instance != null)
         {
-            if (GameManager.Instance.userData == null)
+            if (GameManager.Instance.userData != null)
+            {
+                SetStarCntText(GameManager.Instance.userData.StarCnt);
+
+                ufoAllWidget.InitializedUFOAllWidget();
+            }
+            else
             {
                 Debug.Log("Userdata¾øÀ½");
                 
-                TestLoadData();
-
-              
+                TestLoadData();  
             }
           
         }
+     
 
         int currentLevel = QualitySettings.GetQualityLevel();
         string levelName = QualitySettings.names[currentLevel];

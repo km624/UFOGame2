@@ -15,6 +15,11 @@ MonoBehaviour:
   m_GroupName: UFODatas
   m_GUID: 36bd89b899de4a045a48d330ec0d8287
   m_SerializeEntries:
+  - m_GUID: 2aa1e5847512335418d1dcdef0d4fed4
+    m_Address: Assets/HoleGame/AllData/UFOData/StoreUFO.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: bb5da4c585c54e647ad864fc75ad6983
     m_Address: Assets/HoleGame/UFOData/UFO.asset
     m_ReadOnly: 0

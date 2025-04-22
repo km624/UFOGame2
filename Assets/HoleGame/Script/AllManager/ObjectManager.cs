@@ -1,8 +1,7 @@
-
+ï»¿
 using System;
 using System.Collections;
 using System.Collections.Generic;
-
 using UnityEngine;
 
 using Random = UnityEngine.Random;
@@ -11,6 +10,9 @@ public class ObjectManager : MonoBehaviour
 {
     private GameState gameState;
 
+
+    [SerializeField]
+    private GameObject AllObjectSpawnPoints=null;
     [SerializeField]
     private List<ObjectSpawnPoint> objectspawnPoints = new List<ObjectSpawnPoint>();
    
@@ -41,17 +43,17 @@ public class ObjectManager : MonoBehaviour
 
     private BossObject currentBoss = null;
 
-    [Header("ÀüÃ¼ ¿ÀºêÁ§Æ® ¼ö")]
+    [Header("ì „ì²´ ì˜¤ë¸Œì íŠ¸ ìˆ˜")]
     [SerializeField]
     private int MaxObjectCnt  = 50;
 
-    [Header("¸Ê ¹üÀ§")]
+    [Header("ë§µ ë²”ìœ„")]
     [SerializeField]
     private Renderer SpawnRange;
 
     Bounds RangeBounds;
     
-    [Header("ÆøÅº")]
+    [Header("í­íƒ„")]
     [SerializeField]
     private float BombSpawnHeight=1.0f;
     [SerializeField] 
@@ -59,7 +61,7 @@ public class ObjectManager : MonoBehaviour
     //[SerializeField]
     float BombSpawnTime = 5.0f;
 
-    [Header("½ºÆù½Ã°£")]
+    [Header("ìŠ¤í°ì‹œê°„")]
     [SerializeField]
     private float SpawnTime = 5.0f;
     [SerializeField]
@@ -68,28 +70,26 @@ public class ObjectManager : MonoBehaviour
     private Coroutine BombCoroutine;
 
     public event Action<FallingObject> FOnObjectSwallowed;
-    public event Action<Vector3 /*¾ÆÀÌÄÜ »ı¼º À§Ä¡*/, ShapeEnum> FOnBonusSwallowed;
+    public event Action<Vector3 /*ì•„ì´ì½˜ ìƒì„± ìœ„ì¹˜*/, ShapeEnum> FOnBonusSwallowed;
     public event Action<float /*minustime*/> FOnBomnbSwallowed;
     
 
-    private Dictionary<ShapeEnum, int> BonusObjectsOrgin = new Dictionary<ShapeEnum, int>();
+    //private Dictionary<ShapeEnum, int> BonusObjectsOrgin = new Dictionary<ShapeEnum, int>();
+    private Dictionary<float/*objectsmass*/, int> BonusObjectsOrgin = new Dictionary<float, int>();
     private Dictionary<ShapeEnum, int> BonusObjectsCnt = new Dictionary<ShapeEnum, int>();
     public event Action< ShapeEnum, int /*count*/> FOnBounsWidgetCreated;
-    public event Action<Dictionary<ShapeEnum,int>/*BonusObjectsOrgin*/, int/*CurrentGenration*/> FOnBounusCompleted;
+    public event Action<Dictionary<float,int>/*BonusObjectsOrgin*/> FOnBounusCompleted;
 
     
     public int GetMaxObjectCnt() { return MaxObjectCnt; }
 
     public string getCurrentGenerationName() 
     {
-        return generationList[CurrentGenration].GenerationName;
+        return CurrentGenerationData.GenerationName;
     }
     
-    [Header("º¸³Ê½º")]
-   /* [SerializeField]
-    private int bonusObjectsMinCount = 2;
-    [SerializeField]
-    private int bonusObjectsMaxCount = 4;*/
+    [Header("ë³´ë„ˆìŠ¤")]
+  
 
     [SerializeField]
     private int bonusMinCount = 1;
@@ -97,7 +97,7 @@ public class ObjectManager : MonoBehaviour
     private int bonusMaxCount = 5;
 
     
-    [Header("ÀçÈ­ ¿ÀºêÁ§Æ®")]
+    [Header("ì¬í™” ì˜¤ë¸Œì íŠ¸")]
     [SerializeField]
     private StarObject starobjectprefab;
 
@@ -111,15 +111,28 @@ public class ObjectManager : MonoBehaviour
 
         LoadStatList();
 
+        CollectSpawnPoints();
+
+        SetUpSpawnObjects(CurrentGenration);
 
         CreateBonusObjects();
-        SetUpSpawnObjects(CurrentGenration);
         StartSpawnObjects();
         StartBombSapwn();
         SpawnBossAtRandomGridPosition();
     }
 
-    //CSV ¿ÀºêÁ§Æ® ,º¸½º ½ºÅİ ÆÄÀÏ ·Îµå
+    private void CollectSpawnPoints()
+    {
+        objectspawnPoints.Clear();
+        // IncludeInactive=true ë¡œ ë¹„í™œì„±í™”ëœ ìì‹ë„ ìˆ˜ì§‘
+        var points = AllObjectSpawnPoints.GetComponentsInChildren<ObjectSpawnPoint>(includeInactive: true);
+        foreach (var p in points)
+            // ìê¸° ìì‹ ì— ë¶™ì–´ ìˆìœ¼ë©´ ì œì™¸í•˜ê³ , ìì‹ë§Œ
+            if (p.transform != this.transform)
+                objectspawnPoints.Add(p);
+    }
+
+    //CSV ì˜¤ë¸Œì íŠ¸ ,ë³´ìŠ¤ ìŠ¤í…Ÿ íŒŒì¼ ë¡œë“œ
     public void LoadStatList()
     {
 
@@ -139,27 +152,42 @@ public class ObjectManager : MonoBehaviour
     }
 
 
-    //¹«Á¶°Ç ¹Ù²ã¾ßÇÔ
-    public float SearchShapeData(ShapeEnum shape,int generation)
+    //ë¬´ì¡°ê±´ ë°”ê¿”ì•¼í•¨
+    public int GetBounusScoreData(float objectmass)
     {
-        if (generationList.Count <= generation) return 0.0f;
        
-        foreach(var objectdata in generationList[generation].objects)
-        {
-            if(objectdata.GetShapeEnum()== shape)
-            {
-                return objectdata.GetForceData().TimeCnt;
-            }
-        }
+        int index = ((int)objectmass - 1) % (objectStatList.Count - 1);
+        Debug.Log( "ë³´ë„ˆìŠ¤ ë‹¬ì„± ì´ë¦„: " + CurrentGenerationData.objects[index].name);
+        Debug.Log(CurrentGenration + " ë²ˆì§¸ ì‹œëŒ€ì˜ " + index + " ë²ˆì§¸ ìŠ¤í…Ÿì˜ Score : " + objectStatList[index].Score);
 
-        return 0.0f;
+        return objectStatList[index].Score;
     }
 
-    #region ¿ÀºêÁ§Æ® »ı¼º , °ü¸®
+    #region ì˜¤ë¸Œì íŠ¸ ìƒì„± , ê´€ë¦¬
     public void SetUpSpawnObjects(int currentgeneration)
     {
-        CurrentGenerationData = (generationList.Count > 0) ? generationList[currentgeneration] : null;
-        //FOnGenerationDataSeted?.Invoke(gen);
+        // CurrentGenerationData = (generationList.Count > 0) ? generationList[currentgeneration] : null;
+       
+        // ê¸°ë³¸ ì„¸ëŒ€ ì„¤ì • (ì •ìƒ ë²”ìœ„)
+        if (generationList.Count > currentgeneration)
+        {
+            CurrentGenerationData = generationList[currentgeneration];
+        }
+        else
+        {
+            //ë²”ìœ„ ì´ˆê³¼ ì‹œ ëœë¤ìœ¼ë¡œ í•˜ë‚˜ ê³ ë¥´ë˜, ì¤‘ë³µ ë°©ì§€
+            if (generationList.Count > 1)
+            {
+                // ì„ì‹œ ë¦¬ìŠ¤íŠ¸ì—ì„œ í˜„ì¬ ì„¸ëŒ€ ì œì™¸
+                List<GenerationObjects> pool = new List<GenerationObjects>(generationList);
+                pool.Remove(CurrentGenerationData);
+
+                CurrentGenerationData = pool[Random.Range(0, pool.Count)];
+                Debug.Log("ì‹œëŒ€ ë°˜ë³µ : " + CurrentGenerationData.GenerationName);
+            }
+           
+        }
+       
         foreach (var spawnPoint in objectspawnPoints)
         {
             if (CurrentGenerationData != null)
@@ -173,24 +201,24 @@ public class ObjectManager : MonoBehaviour
 
     public void ChangeGeneration()
     {
-        if (generationList.Count <= CurrentGenration + 1)
+       /* if (generationList.Count <= CurrentGenration + 1)
         {
-            Debug.Log("´ÙÀ½ ¼¼´ë ¾øÀ½");
+            Debug.Log("ë‹¤ìŒ ì„¸ëŒ€ ì—†ìŒ");
             return; 
-        }
+        }*/
 
         CurrentGenration += 1;
         
-        //¼¼´ë ½ºÅİ ¹èÀ² ´ë·Î »õ·Î ¼¼ÆÃ
+        //ì„¸ëŒ€ ìŠ¤í…Ÿ ë°°ìœ¨ ëŒ€ë¡œ ìƒˆë¡œ ì„¸íŒ…
         StatRenewalGeneration(CurrentGenration);
 
-        //½ºÆù Æ÷ÀÎÆ®¿¡ ÇöÀç ¼¼´ë ¼¼ÆÃ
+        //ìŠ¤í° í¬ì¸íŠ¸ì— í˜„ì¬ ì„¸ëŒ€ ì„¸íŒ…
         SetUpSpawnObjects(CurrentGenration);
 
         SpawnBossAtRandomGridPosition();
 
         FOnGenerationChanged?.Invoke(CurrentGenration);
-        Debug.Log(CurrentGenration + " : ÇöÀç ¼¼´ë");
+        Debug.Log(CurrentGenration + " : í˜„ì¬ ì„¸ëŒ€");
 
 
     }
@@ -199,7 +227,7 @@ public class ObjectManager : MonoBehaviour
     {
         objectStatList.Clear();
 
-        //¿ÀºêÁ§Æ® ¼¼ÆÃ
+        //ì˜¤ë¸Œì íŠ¸ ì„¸íŒ…
         for (int i = 0; i < ExelEarthObjectStatList.Count; i++)
         {
             EarthObjectStatData earthojectdata = ScriptableObject.CreateInstance<EarthObjectStatData>();
@@ -230,7 +258,7 @@ public class ObjectManager : MonoBehaviour
                 objectStatList.Add(earthojectdata);
         }
 
-        //ÆøÅº ¼¼ÆÃ
+        //í­íƒ„ ì„¸íŒ…
         EarthObjectStatData bombdata = ScriptableObject.CreateInstance<EarthObjectStatData>();
         bombdata.bMovement = false;
         bombdata.mass = ExelBombstat.Mass + (currentgeneration * BombStatTime.Mass);
@@ -244,7 +272,7 @@ public class ObjectManager : MonoBehaviour
 
         BombStatData = bombdata;
 
-        Debug.Log(currentgeneration + " ¼¼´ë ½ºÅİ ¼¼ÆÃ ¿Ï·á");
+        Debug.Log(currentgeneration + " ì„¸ëŒ€ ìŠ¤í…Ÿ ì„¸íŒ… ì™„ë£Œ");
     }
     public void StartSpawnObjects()
     {
@@ -269,7 +297,7 @@ public class ObjectManager : MonoBehaviour
         }
     }
 
-    //¾Æ¿¹ ¸ØÃß±â , ´Ù½Ã ½ÃÀÛ ¸øÇÔ
+    //ì•„ì˜ˆ ë©ˆì¶”ê¸° , ë‹¤ì‹œ ì‹œì‘ ëª»í•¨
     public void StopSpawnObjects()
     {
         foreach (var spawnPoint in objectspawnPoints)
@@ -331,71 +359,24 @@ public class ObjectManager : MonoBehaviour
 
     #endregion
 
-    #region º¸³Ê½º ¿ÀºêÁ§Æ® »ı¼º , °ü¸®
+    #region ë³´ë„ˆìŠ¤ ì˜¤ë¸Œì íŠ¸ ìƒì„± , ê´€ë¦¬
 
-    /*private void CreateBonusObjects()
-    {
-        // generationList Ã¼Å©: ºñ¾îÀÖ°Å³ª CurrentGenration ÀÎµ¦½º ÃÊ°ú½Ã °æ°í ÈÄ null ¹İÈ¯
-        if (generationList == null || generationList.Count <= CurrentGenration)
-        {
-            Debug.LogWarning("Generation list is empty or CurrentGenration index is out of range!");
-            return;
-        }
-
-        // ÇöÀç GenerationObjects ÂüÁ¶
-        GenerationObjects currentGen = generationList[CurrentGenration];
-
-        // objects ¸®½ºÆ®°¡ ºñ¾ú´ÂÁö È®ÀÎ
-        if (currentGen.objects == null || currentGen.objects.Count == 0)
-        {
-            Debug.LogWarning("No objects found in the current GenerationObjects!");
-            return;
-        }
-
-        // ÃÖ´ë ¼±ÅÃ °¡´ÉÇÑ °³¼ö: 5¿Í ¸®½ºÆ® °³¼ö Áß ÀÛÀº °ª
-        int maxSelectable = Mathf.Clamp(bonusObjectsMaxCount, 1, currentGen.objects.Count);                                                                  
-        int minSelectable = Mathf.Clamp(bonusObjectsMinCount, 1, maxSelectable);
-        // ¼±ÅÃÇÒ ¿ÀºêÁ§Æ®ÀÇ °³¼ö: ÃÖ¼Ò 2°³ºÎÅÍ maxSelectable °³ »çÀÌ (maxSelectable + 1Àº Random.RangeÀÇ »óÇÑ ¹ÌÆ÷ÇÔ Æ¯¼º ¶§¹®)
-        int countToSelect = UnityEngine.Random.Range(minSelectable, maxSelectable + 1);
-
-        //Debug.Log("·£´ı : " + countToSelect);
-        // objects ¸®½ºÆ®¸¦ º¹»çÇÑ ÈÄ ¹«ÀÛÀ§ ¼ø¼­·Î ¼ÅÇÃ
-        List<FallingObject> tempList = new List<FallingObject>(currentGen.objects);
-        for (int i = 0; i < tempList.Count; i++)
-        {
-            int randomIndex = UnityEngine.Random.Range(i, tempList.Count);
-            FallingObject temp = tempList[i];
-            tempList[i] = tempList[randomIndex];
-            tempList[randomIndex] = temp;
-        }
-
-        // ¼¯ÀÎ ¸®½ºÆ®¿¡¼­ ¾ÕÂÊºÎÅÍ countToSelect °³Ã¼¸¦ ¼±ÅÃ
-       
-        for (int i = 0; i < countToSelect; i++)
-        {
-            int randomCount = UnityEngine.Random.Range(bonusMinCount, bonusMaxCount+1); // 2ºÎÅÍ 5±îÁö (6 ¹ÌÆ÷ÇÔ)
-
-
-            BonusObjectsOrgin.Add(tempList[i].GetShapeEnum(), randomCount);
-            BonusObjectsCnt.Add(tempList[i].GetShapeEnum(), randomCount);
-            FOnBounsWidgetCreated?.Invoke(tempList[i].GetShapeEnum(), randomCount);
-        }
-
-    }*/
+    
     private void CreateBonusObjects()
     {
 
-        // generationList Ã¼Å©: ºñ¾îÀÖ°Å³ª CurrentGenration ÀÎµ¦½º ÃÊ°ú½Ã °æ°í ÈÄ null ¹İÈ¯
-        if (generationList == null || generationList.Count <= CurrentGenration)
+        // generationList ì²´í¬: ë¹„ì–´ìˆê±°ë‚˜ CurrentGenration ì¸ë±ìŠ¤ ì´ˆê³¼ì‹œ ê²½ê³  í›„ null ë°˜í™˜
+      /*  if (generationList == null || generationList.Count <= CurrentGenration)
         {
             Debug.LogWarning("Generation list is empty or CurrentGenration index is out of range!");
             return;
-        }
+        }*/
 
-        // ÇöÀç GenerationObjects ÂüÁ¶
-        GenerationObjects currentGen = generationList[CurrentGenration];
+        // í˜„ì¬ GenerationObjects ì°¸ì¡°
+        //GenerationObjects currentGen = generationList[CurrentGenration];
+        GenerationObjects currentGen = CurrentGenerationData;
 
-        // objects ¸®½ºÆ®°¡ ºñ¾ú´ÂÁö È®ÀÎ
+        // objects ë¦¬ìŠ¤íŠ¸ê°€ ë¹„ì—ˆëŠ”ì§€ í™•ì¸
         if (currentGen.objects == null || currentGen.objects.Count == 0)
         {
             Debug.LogWarning("No objects found in the current GenerationObjects!");
@@ -408,7 +389,7 @@ public class ObjectManager : MonoBehaviour
 
         List<FallingObject> limitedList = currentGen.objects.GetRange(0, usableCount);
 
-        // ¼ÅÇÃ
+        // ì…”í”Œ
 
         for (int i = 0; i < limitedList.Count; i++)
         {
@@ -420,10 +401,10 @@ public class ObjectManager : MonoBehaviour
 
         for (int i = 0; i < countToSelect; i++)
         {
-            int randomCount = UnityEngine.Random.Range(bonusMinCount, bonusMaxCount + 1); // 2ºÎÅÍ 5±îÁö (6 ¹ÌÆ÷ÇÔ)
+            int randomCount = UnityEngine.Random.Range(bonusMinCount, bonusMaxCount + 1); // 2ë¶€í„° 5ê¹Œì§€ (6 ë¯¸í¬í•¨)
 
 
-            BonusObjectsOrgin.Add(limitedList[i].GetShapeEnum(), randomCount);
+            BonusObjectsOrgin.Add(limitedList[i].ObjectMass, randomCount);
             BonusObjectsCnt.Add(limitedList[i].GetShapeEnum(), randomCount);
             FOnBounsWidgetCreated?.Invoke(limitedList[i].GetShapeEnum(), randomCount);
         }
@@ -450,28 +431,28 @@ public class ObjectManager : MonoBehaviour
     {
         if (!bonusclear)
         {
-            //Àü¿¡ ÀÖ´ø º¸³Ê½º Å¬¸®¾î Á¡¼ö Ãß°¡
-            FOnBounusCompleted?.Invoke(BonusObjectsOrgin, CurrentGenration);
+            //ì „ì— ìˆë˜ ë³´ë„ˆìŠ¤ í´ë¦¬ì–´ ì ìˆ˜ ì¶”ê°€
+            FOnBounusCompleted?.Invoke(BonusObjectsOrgin);
         }
         else
         {
-            Debug.Log("°­Á¦ À§Á¬ ÃÊ±âÈ­ ÇØ¼­ º¸³Ê½º Å¬¸®¾î Á¡¼ö ¾Èµé¾î°¨");
+            Debug.Log("ê°•ì œ ìœ„ì ¯ ì´ˆê¸°í™” í•´ì„œ ë³´ë„ˆìŠ¤ í´ë¦¬ì–´ ì ìˆ˜ ì•ˆë“¤ì–´ê°");
         }
 
-        //ÃÊ±âÈ­
+        //ì´ˆê¸°í™”
         BonusObjectsOrgin.Clear();
         BonusObjectsCnt.Clear();
 
-        //º°(ÀçÈ­) »ı¼º
+        //ë³„(ì¬í™”) ìƒì„±
         SpawnStarAtRandomGridPosition();
 
-        //º¸³Ê½º ¸ñÇ¥ Àç»ı¼º
+        //ë³´ë„ˆìŠ¤ ëª©í‘œ ì¬ìƒì„±
         CreateBonusObjects();
     }
 
     #endregion
 
-    #region ÆøÅº
+    #region í­íƒ„
 
     public void OnBombSpawn(bool active)
     {
@@ -508,7 +489,8 @@ public class ObjectManager : MonoBehaviour
 
     private void SpawnBombAtRandomGridPosition()
     {
-        FallingObject spawnbomb = generationList[CurrentGenration].bomb;
+        //FallingObject spawnbomb = generationList[CurrentGenration].bomb;
+        FallingObject spawnbomb = CurrentGenerationData.bomb;
         if (spawnbomb == null) return;
 
         Vector2 SpawnLocation = RandomSpawnRange();
@@ -532,13 +514,13 @@ public class ObjectManager : MonoBehaviour
     {
        
        RangeBounds = SpawnRange.bounds;
-        // PlaneÀÇ Bounds¿¡¼­ x, z ÁÂÇ¥ÀÇ ÃÖ¼Ò/ÃÖ´ë°ªÀ» Á¤¼ö ´ÜÀ§·Î ±¸ÇÕ´Ï´Ù.
+        // Planeì˜ Boundsì—ì„œ x, z ì¢Œí‘œì˜ ìµœì†Œ/ìµœëŒ€ê°’ì„ ì •ìˆ˜ ë‹¨ìœ„ë¡œ êµ¬í•©ë‹ˆë‹¤.
         int minX = Mathf.CeilToInt(RangeBounds.min.x);
         int maxX = Mathf.FloorToInt(RangeBounds.max.x);
         int minZ = Mathf.CeilToInt(RangeBounds.min.z);
         int maxZ = Mathf.FloorToInt(RangeBounds.max.z);
 
-        // ·£´ıÇÏ°Ô Á¤¼ö ÁÂÇ¥ »ı¼º (max´Â Æ÷ÇÔ½ÃÅ°±â À§ÇØ +1)
+        // ëœë¤í•˜ê²Œ ì •ìˆ˜ ì¢Œí‘œ ìƒì„± (maxëŠ” í¬í•¨ì‹œí‚¤ê¸° ìœ„í•´ +1)
         int randomX = Random.Range(minX, maxX + BombPostionInterval);
         int randomZ = Random.Range(minZ, maxZ + BombPostionInterval);
 
@@ -546,11 +528,12 @@ public class ObjectManager : MonoBehaviour
     }
     #endregion
 
-    #region º¸½º
+    #region ë³´ìŠ¤
     
     void SpawnBossAtRandomGridPosition()
     {
-        BossObject bossprefab = generationList[CurrentGenration].Boss;
+        //BossObject bossprefab = generationList[CurrentGenration].Boss;
+        BossObject bossprefab = CurrentGenerationData.Boss;
         if (bossprefab == null) return;
 
         Vector2 SpawnLocation = RandomSpawnRange();
@@ -580,9 +563,9 @@ public class ObjectManager : MonoBehaviour
         if(bossObject!=null)
         {
 
-            //º¸½º ½Ã°£ , Á¡¼ö Ãß°¡
+            //ë³´ìŠ¤ ì‹œê°„ , ì ìˆ˜ ì¶”ê°€
             FOnObjectSwallowed(bossObject);
-            //ÀÓ½Ã ¼Ò¸®
+            //ì„ì‹œ ì†Œë¦¬
             //gameState.OnUfoSwallowSound();
            
             ChangeGeneration();
@@ -593,7 +576,7 @@ public class ObjectManager : MonoBehaviour
 
     #endregion
 
-    #region º°
+    #region ë³„
     void SpawnStarAtRandomGridPosition()
     {
        
@@ -611,7 +594,7 @@ public class ObjectManager : MonoBehaviour
             star.AddGenerationMass(0);
             star.FOnStarSwallowed += gameState.CallBack_StartSwallowed;
 
-            //star spawn ÀÌº¥Æ® ¹ß»ı
+            //star spawn ì´ë²¤íŠ¸ ë°œìƒ
             FOnStartSpawned?.Invoke(star);
         }
     }
