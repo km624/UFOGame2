@@ -92,6 +92,8 @@ public class ReinForceWidget : MonoBehaviour
 
             TotalPrcie += statPrcie * cnt;
         }
+        
+        Debug.Log(TotalPrcie);
     }
 
     private void ChangeTotalPrcieText(int totalprice)
@@ -103,10 +105,11 @@ public class ReinForceWidget : MonoBehaviour
     public void OnClickApply()
     {
         UserUFOData userufodata = GameManager.Instance.userData.serialUFOList.Get(UFOName);
-        GameManager.Instance.userData.MinusStartCnt(TotalPrcie);
-
+       int currentcnt =  GameManager.Instance.userData.MinusStartCnt(TotalPrcie);
+        ChangeTotalPrcieText(currentcnt);
+        
         TotalPrcie = 0;
-        ChangeTotalPrcieText(TotalPrcie);
+        
 
         foreach (var preview in PreviewStatDic)
         {

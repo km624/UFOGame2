@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 
 
+
 [Serializable]
 public class UserData
 {
@@ -12,11 +13,10 @@ public class UserData
     public List<int> SkillCnt;
     public int BestScore;
     public int StarCnt;
-
-    //public List<UserUFOData> UserUFODataLAist = new List<UserUFOData>();
+   
     public SerialUFOList serialUFOList = new();
-    //public List<int> stageClearTimes;
-    //public List<int> stageStars;
+    
+    public UserSettingData userSettingData = new(); 
 
     public UserData()
     {
@@ -24,9 +24,8 @@ public class UserData
         CurrentUFO = 0;
         SkillCnt = new List<int> { 2, 3, 4, 5 };
         BestScore = 0;
-        StarCnt = 50;
-        //UserUFOData uFOData = new UserUFOData();
-        //serialUFOList.AddUFO(uFOData);
+        StarCnt = 100;
+        userSettingData = new UserSettingData();
 
     }
     public UserData(string userid)
@@ -35,9 +34,9 @@ public class UserData
         CurrentUFO = 0;
         SkillCnt = new List<int> { 2, 3, 4, 5 };
         BestScore = 0;
-        StarCnt = 50;
-        //UserUFOData uFOData = new UserUFOData();
-       // serialUFOList.AddUFO(uFOData);
+        StarCnt = 100;
+        userSettingData = new UserSettingData();
+
     }
 
     public void InitializeUserData()

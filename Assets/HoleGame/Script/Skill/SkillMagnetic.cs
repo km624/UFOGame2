@@ -18,10 +18,14 @@ public class SkillMagnetic : SkillBase
         MagneticTrigger trigger = InstantMagnetic.GetComponent<MagneticTrigger>();
         if (trigger != null)
         {
-            trigger.SetMindcontrolData(UFOplayer.transform, MinMindControlTime, mindcontrolIcon);
+            trigger.SetMindcontrolData(UFOplayer.transform, MinMindControlTime, mindcontrolIcon,remainingTime);
         }
         InstantMagnetic.transform.localPosition = new Vector3(0, -3, 0);
-        UFOplayer.ChangeCameraDistance(15.0f);
+        UFOplayer.ChangeCameraDistance(18.0f);
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.soundManager.PlaySfxLoop(SoundEnum.Skill_MindControl,0.6f);
+        }
     }
 
 
@@ -29,5 +33,9 @@ public class SkillMagnetic : SkillBase
     {
         DestroyImmediate(InstantMagnetic, true);
         UFOplayer.ResetCameraDistance();
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.soundManager.StopSfxLoop();
+        }
     }
 }

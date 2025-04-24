@@ -67,6 +67,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 117b446e97fe88c4f91e073f887a23bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  myParticlelist:
+  - {fileID: 1857981665914468512}
+  - {fileID: 2540061656825762777}
 --- !u!1001 &5763123714716921922
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -241,9 +244,19 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 7746541233099010452}
   m_SourcePrefab: {fileID: 100100000, guid: 4a9b2c220617b704f83cc494ec5dc3b2, type: 3}
+--- !u!198 &1857981665914468512 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 6211125795773073634, guid: 4a9b2c220617b704f83cc494ec5dc3b2, type: 3}
+  m_PrefabInstance: {fileID: 5763123714716921922}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2338213349157145396 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8037160467862551414, guid: 4a9b2c220617b704f83cc494ec5dc3b2, type: 3}
+  m_PrefabInstance: {fileID: 5763123714716921922}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &2540061656825762777 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 7834758006639453083, guid: 4a9b2c220617b704f83cc494ec5dc3b2, type: 3}
   m_PrefabInstance: {fileID: 5763123714716921922}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &2540061656825762781 stripped

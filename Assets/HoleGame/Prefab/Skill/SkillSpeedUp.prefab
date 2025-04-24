@@ -44,6 +44,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2f8101e7e9e23542a3f5a9250c14c92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SkillCount: 2
   SkillIcon: {fileID: 21300000, guid: eedd69fa178333343b1357add9ef447a, type: 3}
-  SkillDuration: 5
+  SkillDuration: 10

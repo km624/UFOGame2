@@ -28,15 +28,16 @@ public class SkillBeam : SkillBase
         BeamTrigger trigger = BeamRangeInstant.GetComponent<BeamTrigger>();
         if (trigger != null)
         {
-            trigger.SetBeamData(GunInstant.transform, ShootInterval, BeamInstant, UFOplayer);
+            trigger.SetBeamData(GunInstant.transform, ShootInterval, BeamInstant, UFOplayer,remainingTime);
         }
        
-        UFOplayer.ChangeCameraDistance(15.0f);
+        UFOplayer.ChangeCameraDistance(18.0f);
     }
-
+  
 
     public override void Deactivate()
     {
+        
         DestroyImmediate(GunInstant, true);
         DestroyImmediate(BeamRangeInstant, true);
         DestroyImmediate(BeamInstant, true);

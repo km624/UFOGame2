@@ -40,5 +40,5 @@ MonoBehaviour:
     BaseValue: 2
     MaxValue: 4
   - StatType: 2
-    BaseValue: 2
-    MaxValue: 5
+    BaseValue: 1
+    MaxValue: 3

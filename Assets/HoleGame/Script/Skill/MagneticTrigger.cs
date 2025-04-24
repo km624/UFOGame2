@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 
 using UnityEngine;
-using static UnityEngine.LightAnchor;
 
 public class MagneticTrigger : MonoBehaviour
 {
@@ -10,11 +9,25 @@ public class MagneticTrigger : MonoBehaviour
     private float MindControlTime = 0.0f;
     private Sprite StateIcon;
 
-    public void SetMindcontrolData(Transform Ufotransform, float time,Sprite icon )
+    public List<ParticleSystem> myParticlelist = new List<ParticleSystem>();
+
+    private float EffectDuringTime;
+    private void SetParticleLifetime(float lifetime)
+    {
+        foreach (var particle in myParticlelist)
+        {
+            var main = particle.main;
+            main.startLifetime = lifetime;
+        }
+
+    }
+    public void SetMindcontrolData(Transform Ufotransform, float time,Sprite icon,float effecttime )
     {
         UFOtransform = Ufotransform;
         MindControlTime = time;
         StateIcon = icon;
+        EffectDuringTime = effecttime;
+        SetParticleLifetime(EffectDuringTime);
     }
 
     //List<ObjectMovement> MagneticObjects = new List<ObjectMovement>();
@@ -22,6 +35,9 @@ public class MagneticTrigger : MonoBehaviour
     {
         if (other.gameObject.layer == 9)
         {
+            BossObject boss =  other.GetComponent<BossObject>();
+            if (boss == null) return;
+
             FallingObject FObject = other.GetComponent<FallingObject>();
             if (FObject != null)
             {
@@ -34,6 +50,8 @@ public class MagneticTrigger : MonoBehaviour
     {
         if (other.gameObject.layer==9) 
         {
+            if (other.GetComponent<BossObject>() is not BossObject boss) return;
+
             ObjectMovement movement = other.GetComponent<ObjectMovement>();
             if (movement != null && movement.enabled)
             {

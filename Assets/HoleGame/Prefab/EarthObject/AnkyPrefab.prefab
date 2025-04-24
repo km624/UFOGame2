@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 1933662014994917383}
   - component: {fileID: 1577519956132438151}
   - component: {fileID: 8378226724650569295}
-  - component: {fileID: 5510522621781481264}
+  - component: {fileID: 470460159557430559}
   m_Layer: 6
   m_Name: AnkyPrefab
   m_TagString: FallingObject
@@ -187,7 +187,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59c1a429540318045b3f565a38015a18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!65 &5510522621781481264
+--- !u!65 &470460159557430559
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -206,8 +206,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.7570617, y: 1.0228134, z: 1.4336696}
-  m_Center: {x: 0, y: 0.5124729, z: 0.19}
+  m_Size: {x: 0.60348827, y: 0.547036, z: 1.3588772}
+  m_Center: {x: 0, y: 0.26842615, z: -0.057881232}
 --- !u!1 &4113537780372406410
 GameObject:
   m_ObjectHideFlags: 0

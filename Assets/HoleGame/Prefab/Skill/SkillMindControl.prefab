@@ -44,9 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9482ddb7b46d4646b50a160ff50725a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SkillCount: 3
   SkillIcon: {fileID: 21300000, guid: 2f0a1053688712349a0443b59a474527, type: 3}
-  SkillDuration: 5
+  SkillDuration: 7.5
   Magnetic: {fileID: 5176688843641479565, guid: 7720af5ad8e5ec742a4517e88c0666ef, type: 3}
   mindcontrolIcon: {fileID: 21300000, guid: fa78bcd8e9cbead41a4b5c6e0bd93ad7, type: 3}
   MinMindControlTime: 10

@@ -26,11 +26,11 @@ MonoBehaviour:
   UFOPrice: 0
   StatList:
   - StatType: 0
-    BaseValue: 3
+    BaseValue: 2
     MaxValue: 4
   - StatType: 1
-    BaseValue: 3
+    BaseValue: 2
     MaxValue: 4
   - StatType: 2
-    BaseValue: 3
+    BaseValue: 2
     MaxValue: 4

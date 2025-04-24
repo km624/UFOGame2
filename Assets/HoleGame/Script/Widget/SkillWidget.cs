@@ -2,8 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
-using System;
-using UnityEngine.Audio;
+
 
 public class SkillWidget : MonoBehaviour
 {
@@ -18,9 +17,10 @@ public class SkillWidget : MonoBehaviour
 
     private float SkillCoolTime;
 
-    public AudioSource audiosource;
+    //public AudioSource audiosource;
 
     Coroutine skillcooltime;
+    private float remainingCoolTime;
     public void SetSkillWidget(SkillManager manager,  Sprite skillIcon, int skillcount, float cooltime,int skillnum)
     {
         skillmanager = manager;
@@ -29,16 +29,7 @@ public class SkillWidget : MonoBehaviour
         SkillCoolTime = cooltime;
         SkillNum = skillnum;
     }
-    void Start()
-    {
-        
-    }
-
    
-    void Update()
-    {
-        
-    }
 
     public void SkillClick()
     {
@@ -49,39 +40,59 @@ public class SkillWidget : MonoBehaviour
 
     public void ActivateSkillWidget(int skillcount)
     {
-        audiosource.Play();
-        SkillCountText.text = skillcount.ToString();   
-        skillcooltime =  StartCoroutine(SkillStartCoolTime());
-        
+        //audiosource.Play();
+        SkillCountText.text = skillcount.ToString();
+        remainingCoolTime = SkillCoolTime;
+
         SkillCoolTimeAnimation.SetAnimationDuration(SkillCoolTime);
         SkillCoolTimeAnimation.StartAnimation();
         SkillCoolTimeAnimation.SetAnimationStopState(true);
+
+        if (skillcooltime != null)
+            StopCoroutine(skillcooltime);
+        skillcooltime = StartCoroutine(SkillStartCoolTime());
     }
 
-    public void StopSkillCooltime()
+    // 스킬 위젯 일시정지
+    public void PauseSkillCooltime()
     {
-        StopCoroutine(skillcooltime);
+        if (skillcooltime != null)
+        {
+            StopCoroutine(skillcooltime);
+            skillcooltime = null;
+        }
+        // audiosource.Pause(); // 오디오도 중지
+        SkillCoolTimeAnimation.PauseAnimation();
     }
 
+    // 스킬 위젯 다시 재개
+    public void ResumeSkillCooltime()
+    {
+        if (skillcooltime == null && remainingCoolTime > 0f)
+        {
+            skillcooltime = StartCoroutine(SkillStartCoolTime());
+            //audiosource.UnPause(); // 오디오 재개
+            SkillCoolTimeAnimation.ResumeAnimation();
+        }
+    }
+
+    // 실제 타이머 Coroutine (Pause/Resume 대응)
     IEnumerator SkillStartCoolTime()
     {
-        float elapsedTime = 0f;
-        SkillCoolTimeImage.fillAmount = 1f; 
+        SkillCoolTimeImage.fillAmount = remainingCoolTime / SkillCoolTime;
 
-        while (elapsedTime < SkillCoolTime)
+        while (remainingCoolTime > 0f)
         {
-            elapsedTime += Time.deltaTime;
-            SkillCoolTimeImage.fillAmount = 1 - (elapsedTime / SkillCoolTime); 
+            remainingCoolTime -= Time.unscaledDeltaTime; // 일시정지와 무관
+            SkillCoolTimeImage.fillAmount = remainingCoolTime / SkillCoolTime;
             yield return null;
         }
 
-        audiosource.Stop();
+        //audiosource.Stop();
         SkillCoolTimeImage.fillAmount = 0f;
         SkillCoolTimeAnimation.SetAnimationStopState(false);
-        //Debug.Log(DateTime.Now.Minute +  "스킬 끝 위젯");
     }
 
-   
 }
     
 

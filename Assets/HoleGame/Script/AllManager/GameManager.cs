@@ -1,9 +1,7 @@
 //using System.Net.NetworkInformation;
 using UnityEngine;
-using UnityEngine.AI;
 using System.Threading.Tasks;
-using System;
-using System.Linq;
+
 
 public class GameManager : MonoBehaviour
 {
@@ -23,6 +21,8 @@ public class GameManager : MonoBehaviour
 
     public VibrationManager vibrationManager { get; private set; }
 
+    public SoundManager soundManager { get; private set; }
+
     private void Awake()
     {
         // ΩÃ±€≈Ê ¿ŒΩ∫≈œΩ∫ º≥¡§
@@ -30,6 +30,8 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
             vibrationManager = GetComponent<VibrationManager>();
+            soundManager = GetComponent<SoundManager>();
+
             DontDestroyOnLoad(gameObject); 
         }
         else

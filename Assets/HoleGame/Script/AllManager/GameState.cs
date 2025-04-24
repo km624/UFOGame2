@@ -1,9 +1,7 @@
-using Lean.Gui;
-using Lean.Transition.Method;
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
-
 using UnityEngine;
 
 
@@ -43,7 +41,7 @@ public class GameState : MonoBehaviour
     private int TotalScore = 0;
    
     private bool bIgnoredbomb = false;
-    private bool bIceActive = false;
+    //private bool bIceActive = false;
     
     private bool bIsGameEnd = false; 
 
@@ -319,12 +317,15 @@ public class GameState : MonoBehaviour
     }
     public void Skill_SetIceActive(bool active)
     {
-        bIceActive = active;
+        //bIceActive = active;
 
         objectManager.PauseSpawnObjects(active);
         objectManager.OnBombSpawn(active);
 
-        StopGameTimer(active); 
+        StopGameTimer(active);
+        
+        
+       objectManager.IceActive(active);
     }
 
  
@@ -341,30 +342,46 @@ public class GameState : MonoBehaviour
         }
         objectManager.AllObjectStopActive(active);
        
-        if (bIceActive)
-            objectManager.IceActive(active);
+       
       
     }
 
     public void GamePause(bool active)
     {
+        //OnSoundPause(active);
+        ufoplayer.CallBack_StopMovement(active);
+        GameManager.Instance.vibrationManager.OnPauseVibration(active);
+        AllSkillManager.PauseSkillActive(active);
         objectManager.PauseSpawnObjects(active);
         AllObjectStopActive(active);
-        StopGameTimer(  active );
-        StopPlayTimer(  active );
-        objectManager.OnBombSpawn(active);
+        StopGameTimer( active );
+        StopPlayTimer( active );
+        objectManager.OnBombSpawn(!active);
+        PlayerHud.OnPauseSkillWidget(active);
+       
     }
     
+    public void OnSoundPause(bool active)
+    {
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.soundManager.OnSoundPauseActive(active);
+        }
+    }
 
     public void GameEnd()
     {
-       
-        AllObjectStopActive(true);
-        objectManager.StopSpawnObjects();
-        objectManager.OnBombSpawn(false);
-        bIsGameEnd = true;
+        /*  GameManager.Instance.vibrationManager.OnPauseVibration(true);
+          AllSkillManager.PauseSkillActive(true);
+          AllObjectStopActive(true);
+          objectManager.StopSpawnObjects();
+          objectManager.OnBombSpawn(false);*/
 
-        ufoplayer.CallBack_StopMovement();
+        //ufoplayer.CallBack_StopMovement(true);
+
+        GamePause(true);
+
+        bIsGameEnd = true;
         int converttime = Mathf.RoundToInt(TotalPlayTime);
         PlayerHud.UpdateGameState(converttime, TotalScore, StarCnt);
 

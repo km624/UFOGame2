@@ -27,9 +27,10 @@ public class SkillManager : MonoBehaviour
                 int skillCnt = 2;
                 //유저 데이터 토대로 세팅
                 if (GameManager.Instance != null)
+                    if(GameManager.Instance.userData!=null)
                     skillCnt = GameManager.Instance.userData.SkillCnt[index];
 
-                skill.InitializedData(UFOPlayer,this, skillCnt);
+                skill.Initialize(UFOPlayer,this, skillCnt);
                 AllSkills.Add(skill);
             }
 
@@ -62,6 +63,28 @@ public class SkillManager : MonoBehaviour
 
         }
     }
+    
+    public void PauseSkillActive(bool active)
+    {
+        if(active)
+        {
+            PauseAllSkills();
+        }
+        else
+        {
+            ResumeAllSkills();
+        }
+    }
 
-  
+    private void PauseAllSkills()
+    {
+        foreach (var s in AllSkills) s.PauseSkill();
+    }
+
+    private void ResumeAllSkills()
+    {
+        foreach (var s in AllSkills) s.ResumeSkill();
+    }
+
+
 }

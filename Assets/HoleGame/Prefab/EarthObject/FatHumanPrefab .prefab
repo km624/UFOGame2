@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 1958875057396320640}
   - component: {fileID: 5717506054135916116}
   - component: {fileID: 5492066247542282792}
-  - component: {fileID: 7904552586816147286}
+  - component: {fileID: 5958468196813666256}
   m_Layer: 6
   m_Name: 'FatHumanPrefab '
   m_TagString: FallingObject
@@ -187,7 +187,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59c1a429540318045b3f565a38015a18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!65 &7904552586816147286
+--- !u!65 &5958468196813666256
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -206,8 +206,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.65075266, y: 0.88364553, z: 0.62766486}
-  m_Center: {x: 0.0021933615, y: 0.44416803, z: 0.02549094}
+  m_Size: {x: 0.3827957, y: 0.51979154, z: 0.36921462}
+  m_Center: {x: -0.0012902096, y: 0.26127532, z: -0.014994666}
 --- !u!1 &6644917805080142553
 GameObject:
   m_ObjectHideFlags: 0

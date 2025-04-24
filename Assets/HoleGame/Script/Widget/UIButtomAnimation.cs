@@ -14,6 +14,8 @@ public class UIButtomAnimation : MonoBehaviour
     public float elasticity = 0.6f;       // 탄성 (0 = 딱딱하게, 1 = 탄성 높게)
     private bool StopAnimation = false;
 
+    Sequence skillsequence;
+
     void Start()
     {
         rectTransform = GetComponent<RectTransform>();
@@ -25,24 +27,35 @@ public class UIButtomAnimation : MonoBehaviour
 
     public void SetAnimationDuration(float dura)
     {
-        duration= dura;
+        duration = dura;
     }
    public void SetAnimationStopState(bool stop)
     {
         StopAnimation = stop;
     }
+
+    public void PauseAnimation()
+    {
+        skillsequence?.Pause();
+    }
+
+    // 애니메이션 재개
+    public void ResumeAnimation()
+    {
+        skillsequence?.Play();
+    }
     public void StartAnimation()
     {
         if (StopAnimation) return;
         // DOTween 애니메이션 시퀀스 생성
-        Sequence sequence = DOTween.Sequence();
+        skillsequence = DOTween.Sequence();
 
         // 1. 클릭 시 버튼이 작아졌다가 커지는 애니메이션 
-        sequence.Append(rectTransform.DOScale(originalScale * 0.7f, 0.1f).SetEase(Ease.OutQuad)); // 살짝 줄어듦
-        sequence.Append(rectTransform.DOScale(originalScale * 1.4f, 0.1f).SetEase(Ease.OutBack));  // 확 커짐
+        skillsequence.Append(rectTransform.DOScale(originalScale * 0.7f, 0.1f).SetEase(Ease.OutQuad)); // 살짝 줄어듦
+        skillsequence.Append(rectTransform.DOScale(originalScale * 1.4f, 0.1f).SetEase(Ease.OutBack));  // 확 커짐
 
         // 2. 흔들리면서 원래 크기로 돌아가기
-        sequence.Append(rectTransform.DOShakeScale(duration, strength, vibrato, elasticity, true))
+        skillsequence.Append(rectTransform.DOShakeScale(duration, strength, vibrato, elasticity, true))
                 .Append(rectTransform.DOScale(originalScale, 0.3f).SetEase(Ease.OutElastic));
     }
 }

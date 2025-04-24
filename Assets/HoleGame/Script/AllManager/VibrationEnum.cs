@@ -4,7 +4,8 @@ public enum VibrationEnum
 {
     ButtonClick,
     AbsorbObject,
+    LiftLoop,    
     UFOHit,
     LevelUp,
-    Custom
+    None
 }

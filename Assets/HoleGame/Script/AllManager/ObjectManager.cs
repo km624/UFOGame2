@@ -34,9 +34,6 @@ public class ObjectManager : MonoBehaviour
     private ExelBombStatData ExelBombstat = null;
     public EarthObjectStatData BombStatData { get; private set; } = null;
     public ExelBombStatData BombStatTime { get; private set; } = null;
-
-
-
   
     public event Action<int /*currentgeneraetion*/> FOnGenerationChanged;
     public List<FallingObject> AllSpawnObjects { get; private set; } = new List<FallingObject>();
@@ -68,6 +65,9 @@ public class ObjectManager : MonoBehaviour
     private float variation = 1.0f;
 
     private Coroutine BombCoroutine;
+
+ 
+ 
 
     public event Action<FallingObject> FOnObjectSwallowed;
     public event Action<Vector3 /*아이콘 생성 위치*/, ShapeEnum> FOnBonusSwallowed;
@@ -103,7 +103,9 @@ public class ObjectManager : MonoBehaviour
 
     public event Action<IDetctable> FOnStartSpawned;
 
-
+    [Header("맵")]
+    [SerializeField]
+    private MapChange mapChange;
 
     public void InitObjectManager(GameState state)
     {
@@ -112,8 +114,8 @@ public class ObjectManager : MonoBehaviour
         LoadStatList();
 
         CollectSpawnPoints();
-
-        SetUpSpawnObjects(CurrentGenration);
+        
+        SetUpGeneration(CurrentGenration);
 
         CreateBonusObjects();
         StartSpawnObjects();
@@ -157,14 +159,14 @@ public class ObjectManager : MonoBehaviour
     {
        
         int index = ((int)objectmass - 1) % (objectStatList.Count - 1);
-        Debug.Log( "보너스 달성 이름: " + CurrentGenerationData.objects[index].name);
-        Debug.Log(CurrentGenration + " 번째 시대의 " + index + " 번째 스텟의 Score : " + objectStatList[index].Score);
+        //Debug.Log( "보너스 달성 이름: " + CurrentGenerationData.objects[index].name);
+        //Debug.Log(CurrentGenration + " 번째 시대의 " + index + " 번째 스텟의 Score : " + objectStatList[index].Score);
 
         return objectStatList[index].Score;
     }
 
     #region 오브젝트 생성 , 관리
-    public void SetUpSpawnObjects(int currentgeneration)
+    public void SetUpGeneration(int currentgeneration)
     {
         // CurrentGenerationData = (generationList.Count > 0) ? generationList[currentgeneration] : null;
        
@@ -187,6 +189,7 @@ public class ObjectManager : MonoBehaviour
             }
            
         }
+        mapChange.ChangeMap(CurrentGenerationData);
        
         foreach (var spawnPoint in objectspawnPoints)
         {
@@ -213,7 +216,7 @@ public class ObjectManager : MonoBehaviour
         StatRenewalGeneration(CurrentGenration);
 
         //스폰 포인트에 현재 세대 세팅
-        SetUpSpawnObjects(CurrentGenration);
+        SetUpGeneration(CurrentGenration);
 
         SpawnBossAtRandomGridPosition();
 
@@ -603,7 +606,7 @@ public class ObjectManager : MonoBehaviour
 
     public void AllObjectStopActive(bool active)
     {
-
+        //Debug.Log(active);
         foreach (var fallingobject in AllSpawnObjects)
         {
 

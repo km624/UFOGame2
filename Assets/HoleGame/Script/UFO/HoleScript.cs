@@ -91,6 +91,13 @@ public class HoleScript : MonoBehaviour
             absorption?.ResetScale();
             absorptionCache.Remove(other);
          
+           // if(absorptionCache.Count<=0)
+            //{
+                if(GameManager.Instance!=null)
+                {
+                    GameManager.Instance.vibrationManager.StopLiftLoopVibration();  
+                }
+            //}
             //other.gameObject.layer = NormalLayer;
            
         }
@@ -112,7 +119,11 @@ public class HoleScript : MonoBehaviour
             {
                 other.gameObject.layer = LiftUpLayer;
             }
-           
+
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.vibrationManager.StartLiftLoopVibration();
+            }
 
             if (!absorptionCache.TryGetValue(other, out var absorption))
             {

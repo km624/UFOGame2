@@ -1,7 +1,9 @@
 using DamageNumbersPro;
+using NUnit.Framework.Internal;
 using System;
 using System.Buffers.Text;
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
 using TMPro;
 using Unity.Cinemachine;
 
@@ -24,7 +26,7 @@ public class UFOPlayer : MonoBehaviour, IDetctable
     [SerializeField]
     private float MaxExpGauge = 100.0f;
 
-    float baseExpPerMass = 100.0f;
+    float baseExpPerMass = 10.0f;
 
    //[Header("레벨에 따른 최대 경험치 추가량")]
     //[SerializeField]
@@ -51,9 +53,6 @@ public class UFOPlayer : MonoBehaviour, IDetctable
     private TMP_Text LevelText;
     [SerializeField]
     private DamageNumber numberPrefab;
-
-    [Header("UFO Sound")]
-    public AudioSource AddGaugeSound;
 
     [Header(" 개발자 ")]
     [SerializeField]
@@ -109,12 +108,16 @@ public class UFOPlayer : MonoBehaviour, IDetctable
     {
         if (GameManager.Instance != null)
         {
-            int selectUFOIndex = GameManager.Instance.userData.CurrentUFO;
-            UFOData selectUFOdata = UFOLoadManager.Instance.LoadedUFODataList[selectUFOIndex];
-            if (selectUFOdata != null)
+            if (GameManager.Instance.userData != null)
             {
-                UserUFOData userufodata = GameManager.Instance.userData.serialUFOList.Get(selectUFOdata.UFOName);
-                SetUFOData(selectUFOdata , userufodata);
+
+                int selectUFOIndex = GameManager.Instance.userData.CurrentUFO;
+                UFOData selectUFOdata = UFOLoadManager.Instance.LoadedUFODataList[selectUFOIndex];
+                if (selectUFOdata != null)
+                {
+                    UserUFOData userufodata = GameManager.Instance.userData.serialUFOList.Get(selectUFOdata.UFOName);
+                    SetUFOData(selectUFOdata, userufodata);
+                }
             }
 
         }
@@ -225,9 +228,9 @@ public class UFOPlayer : MonoBehaviour, IDetctable
                 {
                     int textoffsetvalue = userUFOdata.GetReinforceValue(UFOStatEnum.BeamRange) - 1;
                     float newoffset = UFOBaseStatList.TextOffset + rangevalue * UFOStatTimeList.TextOffset;
-                    Vector3 pos = LevelText.transform.position;
+                    Vector3 pos = Vector3.zero;
                     pos.y += newoffset;
-                    LevelText.transform.position = pos;
+                    LevelText.transform.localPosition = pos;
                 }
 
             }
@@ -235,9 +238,9 @@ public class UFOPlayer : MonoBehaviour, IDetctable
 
     }
 
-    public void CallBack_StopMovement()
+    public void CallBack_StopMovement(bool active)
     {
-        ufoMovement.SetMoveActive(false);
+        ufoMovement.SetMoveActive(!active);
     }
 
     public void Skill_UFOspeedUp(bool bactivate)
@@ -271,10 +274,10 @@ public class UFOPlayer : MonoBehaviour, IDetctable
         //if (CurrentLevel >= PlayerStatList.Count) return;
 
         //CurrentExpGauge += gauge;
-        Debug.Log(" 내 레벨 : " + CurrentLevel + " 질량 : "+ mass);
+        //Debug.Log(" 내 레벨 : " + CurrentLevel + " 질량 : "+ mass);
         float newGague = CalculateExpGain(CurrentLevel, mass);
 
-        Debug.Log("겅혐치 : " + newGague);
+        //Debug.Log("겅혐치 : " + newGague);
         CurrentExpGauge += newGague;
         //Debug.Log("UFOPLAYEr : " + newGague);
        
@@ -321,25 +324,32 @@ public class UFOPlayer : MonoBehaviour, IDetctable
 
     void SpawnGagueEffect(float gauge)
     {
-        AddGaugeSound.Play();
-        DamageNumber damageNumber = numberPrefab.Spawn(transform.position, gauge);
+        GameManager.Instance.soundManager.PlaySfx(SoundEnum.Swallowed);
+        //AddGaugeSound.Play();
+        // DamageNumber damageNumber = 
+        string gaugestring = "+" + string.Format("{0:N1}", gauge);
+        numberPrefab.Spawn(transform.position, gaugestring);
     }
 
     public void SwallowSound()
     {
-        AddGaugeSound.Play();
+        GameManager.Instance.soundManager.PlaySfx(SoundEnum.Swallowed);
     }
 
     public void ChangeLevel(bool bLevelUp)
     {
 
         CurrentLevel += bLevelUp ? 1 : -1;
-        
-        
-        //CurrentLevel = Math.Clamp(CurrentLevel, 0, PlayerStatList.Count);
 
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.vibrationManager.Play(VibrationEnum.LevelUp);
+            
+            GameManager.Instance.soundManager.PlaySfx(SoundEnum.LevelUp, 0.3f);
+        }
 
-       // SetUFOLevelData(CurrentLevel - 1);  
+        Vector3 newpos = transform.position + Vector3.up*1; 
+        numberPrefab.Spawn(newpos, "Level Up");
 
         UFOBeam.SetSwallowLevelSet(CurrentLevel);
         trigger.SetCurrentLevel(CurrentLevel);

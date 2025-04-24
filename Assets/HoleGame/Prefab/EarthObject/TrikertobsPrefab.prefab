@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 776031426404784272}
   - component: {fileID: 2064045316520021121}
   - component: {fileID: 3582679826939810797}
-  - component: {fileID: 2853392044560371844}
+  - component: {fileID: -2275332074443471769}
   m_Layer: 6
   m_Name: TrikertobsPrefab
   m_TagString: FallingObject
@@ -34,7 +34,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.4, y: 1.4, z: 1.4}
+  m_LocalScale: {x: 1.1, y: 1.1, z: 1.1}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 8176405840925320465}
@@ -187,7 +187,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59c1a429540318045b3f565a38015a18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!65 &2853392044560371844
+--- !u!65 &-2275332074443471769
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -206,8 +206,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.7570617, y: 1.0228134, z: 1.4336696}
-  m_Center: {x: 0, y: 0.5124729, z: 0.19}
+  m_Size: {x: 0.45423695, y: 0.61368805, z: 0.8602017}
+  m_Center: {x: 0, y: 0.30748376, z: 0.14285089}
 --- !u!1 &2655062078209620073
 GameObject:
   m_ObjectHideFlags: 0

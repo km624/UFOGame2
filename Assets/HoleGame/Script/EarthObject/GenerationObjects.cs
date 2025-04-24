@@ -12,9 +12,10 @@ public class GenerationObjects : ScriptableObject
 
     public BossObject Boss = null;
 
-    //public float[] spawnWeights;
-
+    //public float[] spawnWeights
     public string GenerationName;
+
+    public Material MapMaterial;
 }
 
 

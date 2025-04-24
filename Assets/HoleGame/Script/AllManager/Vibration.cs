@@ -53,7 +53,7 @@ public class Vibration : MonoBehaviour {
 
     public static void CreateOneShot(long milliseconds, int amplitude) {
 
-        Debug.Log("Vibe");
+       
         if (isAndroid()) {
             //If Android 8.0 (API 26+) or never use the new vibrationeffects
             if (getSDKInt() >= 26) {
@@ -137,6 +137,8 @@ public class Vibration : MonoBehaviour {
     public static void Cancel() {
         if (isAndroid())
             vibrator.Call("cancel");
+
+       
     }
 
     private static int getSDKInt() {

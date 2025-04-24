@@ -83,6 +83,7 @@ public class ObjectMovement : MonoBehaviour
     }
     private void OnEnable()
     {
+        //Debug.Log("JimpOnenable");
         if(defaultScale!=Vector3.zero)
             JumpActivate(true);
 
@@ -99,16 +100,16 @@ public class ObjectMovement : MonoBehaviour
     {
         if (!bActiveJump)
         {
-
-            
-            StopCoroutine(jumpRoutine);
+            //Debug.Log("SToJumpp");
+            if(jumpRoutine!=null)
+                StopCoroutine(jumpRoutine);
             jumpSeq?.Kill();
             jumpRoutine = null;
 
         }
         else
         {
-           
+           // Debug.Log("StartJump");
             jumpRoutine = StartCoroutine(JumpLoop());
         }
 

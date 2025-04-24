@@ -16,6 +16,8 @@ public class ButtonEffect : MonoBehaviour,IPointerDownHandler, IPointerUpHandler
     private Vector3 originalScale;
     private float originalAlpha;
 
+    [SerializeField] private bool bIskAnimation = true;
+
     private void Start()
     {
         if (targetImage == null)
@@ -43,6 +45,7 @@ public class ButtonEffect : MonoBehaviour,IPointerDownHandler, IPointerUpHandler
 
     public void OnPointerDown(PointerEventData eventData)
     {
+        if (!bIskAnimation) return;
         // 스케일 줄이고 알파 올리기
         transform.DOScale(originalScale * pressedScale, duration).SetEase(Ease.OutQuad);
         targetImage.DOFade(pressedAlpha, duration);
@@ -50,6 +53,7 @@ public class ButtonEffect : MonoBehaviour,IPointerDownHandler, IPointerUpHandler
 
     public void OnPointerUp(PointerEventData eventData)
     {
+        if (!bIskAnimation) return;
         // 원래대로 복원
         transform.DOScale(originalScale, duration).SetEase(Ease.OutBack);
         targetImage.DOFade(originalAlpha, duration);

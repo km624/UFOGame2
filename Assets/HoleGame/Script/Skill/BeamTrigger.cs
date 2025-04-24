@@ -19,9 +19,23 @@ public class BeamTrigger : MonoBehaviour
 
     private GameObject Beamobject = null;
 
+    float duaringTime;
+
     private float BeamActiveTime = 0.1f;
     private float RotateDuration = 0.2f;
-    public void SetBeamData(Transform gun , float interval,GameObject beamprefab, UFOPlayer ufoplayer)
+
+    public List<ParticleSystem> myParticlelist =new List<ParticleSystem>();
+
+    private void SetParticleLifetime(float lifetime)
+    {
+        foreach (var particle in myParticlelist)
+        {
+            var main = particle.main;
+            main.startLifetime = lifetime;
+        }
+      
+    }
+    public void SetBeamData(Transform gun , float interval,GameObject beamprefab, UFOPlayer ufoplayer ,float time)
     {
         GunTransform = gun;
         BeamInterval = interval;
@@ -29,6 +43,8 @@ public class BeamTrigger : MonoBehaviour
         Beamobject.SetActive(false);
         FireTransform = GunTransform.GetChild(0).transform;
         player = ufoplayer;
+        duaringTime = time;
+        SetParticleLifetime(duaringTime);
 
 
     }
@@ -44,8 +60,8 @@ public class BeamTrigger : MonoBehaviour
             FallingObject FObject = other.GetComponent<FallingObject>();
             if (FObject != null)
             {
-                //플레이어 보다 레벨 높으면 return
-                if (player.CurrentLevel < FObject.ObjectMass) return;
+               /* //플레이어 보다 레벨 높으면 return
+                if (player.CurrentLevel < FObject.ObjectMass) return;*/
 
                 BossObject bossObject = other.GetComponent<BossObject>();
                 //보스 오브젝트면 빔 활성화 X
@@ -175,6 +191,11 @@ public class BeamTrigger : MonoBehaviour
         Beamobject.transform.rotation = targetRotation;
         Beamobject.transform.position = FireTransform.position + direction.normalized * (distance / 2);
         Beamobject.SetActive(true);
+       
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.soundManager.PlaySfx(SoundEnum.Skill_Beam,0.5f);
+        }
     }
 
     private void DestroyObject(FallingObject obj)
@@ -183,7 +204,10 @@ public class BeamTrigger : MonoBehaviour
         Inrange.Remove(obj);
 
         if (obj.GetShapeEnum() == ShapeEnum.boomb)
-            Destroy(obj);
+        {
+           
+            Destroy(obj.gameObject);
+        }
         else
             obj.OnSwallow();
 

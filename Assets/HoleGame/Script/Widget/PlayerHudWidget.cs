@@ -52,9 +52,16 @@ public class PlayerHudWidget : MonoBehaviour
    
    [SerializeField]
     private DetectWidget detectWidget;
+    
+    public TMP_Text fpsText;
+    float deltaTime = 0.0f;
 
-
-
+    void Update()
+    {
+        deltaTime += (Time.unscaledDeltaTime - deltaTime) * 0.1f;
+        float fps = 1.0f / deltaTime;
+        fpsText.text = $"FPS: {Mathf.Ceil(fps)}";
+    }
 
     public void CallBack_CreateShapeWidget(ShapeEnum shapetype , int count)
     {
@@ -198,6 +205,23 @@ public class PlayerHudWidget : MonoBehaviour
 
         AllSkillWidgets[num].ActivateSkillWidget(skillcount);
     }
+
+    public void OnPauseSkillWidget(bool active)
+    {
+        foreach(var skiilwidget in AllSkillWidgets)
+        {
+            if(active)
+            {
+                skiilwidget.PauseSkillCooltime();
+
+            }
+            else
+            {
+                skiilwidget.ResumeSkillCooltime();
+            }
+        }
+    }
+
 
     public void SetTimeWidget(float totaltime,GameState gamestate)
     {

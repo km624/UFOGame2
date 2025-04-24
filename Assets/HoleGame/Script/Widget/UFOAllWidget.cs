@@ -8,6 +8,7 @@ using UnityEngine;
 public class UFOAllWidget : MonoBehaviour
 {
     [SerializeField]private MainWidget mainWidget;
+    [SerializeField]private RectTransform mainWidgetRect;
 
     [SerializeField] private RectTransform UFOAllWidgetTransform;
     //[SerializeField] private RectTransform UFOSlideButtonTransform;
@@ -26,7 +27,7 @@ public class UFOAllWidget : MonoBehaviour
     [SerializeField] private SelectPaletteWidget selectPaletteWidget;
     [SerializeField] private ReinForceWidget reinForceWidget;
 
-    [SerializeField] private Color MTlockedColor = new Color32(34, 34, 34, 255);
+    [SerializeField] private Color MTLockedColor = new Color32(34, 34, 34, 255);
 
     private int selecetUFOindex = -1;
 
@@ -51,15 +52,15 @@ public class UFOAllWidget : MonoBehaviour
         //SetInteractable(false);
 
         Vector2 shownPos = new Vector2(0, 50f);
-       
-  
-        UFOAllWidgetTransform.DOAnchorPos(shownPos, slideDuration)
+
+        mainWidgetRect.DOAnchorPosX(-800f, 0.25f).SetEase(Ease.InQuad);
+       /* UFOAllWidgetTransform.DOAnchorPos(shownPos, slideDuration)
             .SetEase(Ease.InBack)
             .OnComplete(() =>
             {
                 //SetInteractable(true);
                 isVisible = true;
-            });
+            });*/
     }
 
     private void HidePanel()
@@ -164,7 +165,7 @@ public class UFOAllWidget : MonoBehaviour
                 for (int i = 0; i < count; i++)
                 {
                     mats[i] = new Material(currentUFOdata.UFOColorDataList[0].Materials[i]); // 복사
-                    mats[i].color = MTlockedColor;
+                    mats[i].color = MTLockedColor;
                 }
             }
             else // 언락된 경우

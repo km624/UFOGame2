@@ -292,7 +292,7 @@ GameObject:
   - component: {fileID: 4453283430784985530}
   - component: {fileID: 7061002084497992850}
   - component: {fileID: 8700898273921279477}
-  - component: {fileID: 8623618276854047353}
+  - component: {fileID: -1106859920013607888}
   m_Layer: 6
   m_Name: StonePrefab
   m_TagString: FallingObject
@@ -463,7 +463,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59c1a429540318045b3f565a38015a18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!65 &8623618276854047353
+--- !u!65 &-1106859920013607888
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
