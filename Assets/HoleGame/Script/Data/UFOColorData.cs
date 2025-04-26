@@ -5,6 +5,7 @@ using UnityEngine;
 public class UFOColorData
 {
     public Color32 IConColor =  new Color32(255, 255, 255, 255);
-    public List<Material> Materials = new(); 
+    public List<Material> Materials = new();
+    
     public int ColorPrice = 0;
 }

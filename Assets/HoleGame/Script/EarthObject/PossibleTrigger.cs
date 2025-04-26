@@ -59,7 +59,7 @@ public class PossibleTrigger : MonoBehaviour
 
         if (currentLevel >= obj.ObjectMass) 
         {
-            mat.SetFloat("_OutlineWidth", 0.6f);
+            mat.SetFloat("_OutlineWidth", 0.5f);
            
         }
         else

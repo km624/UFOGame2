@@ -31,16 +31,16 @@ public class SkillBeam : SkillBase
             trigger.SetBeamData(GunInstant.transform, ShootInterval, BeamInstant, UFOplayer,remainingTime);
         }
        
-        UFOplayer.ChangeCameraDistance(18.0f);
+        UFOplayer.ChangeCameraDistance(12.0f);
     }
   
 
     public override void Deactivate()
     {
         
-        DestroyImmediate(GunInstant, true);
-        DestroyImmediate(BeamRangeInstant, true);
-        DestroyImmediate(BeamInstant, true);
+        Destroy(GunInstant);
+        Destroy(BeamRangeInstant);
+        Destroy(BeamInstant);
         UFOplayer.ResetCameraDistance();
     }
 }

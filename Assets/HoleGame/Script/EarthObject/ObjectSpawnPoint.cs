@@ -4,21 +4,21 @@ using System.Data.SqlTypes;
 using System.Collections.Generic;
 public class ObjectSpawnPoint : MonoBehaviour
 {
-    private Vector3 CurrentSpawnPoint;
+    protected Vector3 CurrentSpawnPoint;
 
     // 기본 스폰 대기 시간
-    private float SpawnTime = 5.0f;
+    protected float SpawnTime = 5.0f;
     // 스폰 대기시간의 ±variation 범위
-    private float variation = 1.0f;
+    protected float variation = 1.0f;
 
-    private GenerationObjects currentGeneration = null;
-   
-    private ObjectManager objectManager = null;
+    protected GenerationObjects currentGeneration = null;
 
-    private Coroutine SpawnCoroutine;
+    protected ObjectManager objectManager = null;
+
+    protected Coroutine SpawnCoroutine;
 
     // 이 변수가 true이면 대기시간 진행을 잠시 멈춥니다.
-    private bool bIsStopSpawn = false;
+    protected bool bIsStopSpawn = false;
 
     void Start()
     {
@@ -45,7 +45,7 @@ public class ObjectSpawnPoint : MonoBehaviour
     }
 
     // SpawnPrefab이 호출되면, 이미 실행 중이 아니면 스폰 루틴 코루틴을 시작합니다.
-    public void SpawnPrefab()
+    public virtual void SpawnPrefab()
     {
         // 이미 코루틴이 실행중이면 중복 실행하지 않음
         if (SpawnCoroutine != null) return;
@@ -104,7 +104,7 @@ public class ObjectSpawnPoint : MonoBehaviour
    
 
     // WaitForSecondsWithPause : 지정한 시간(waitTime) 동안 대기하되, bIsStopSpawn가 true이면 남은 시간을 소모하지 않습니다.
-    private IEnumerator WaitForSecondsWithPause(float waitTime)
+    protected IEnumerator WaitForSecondsWithPause(float waitTime)
     {
         float remainingTime = waitTime;
         while (remainingTime > 0f)
@@ -119,7 +119,7 @@ public class ObjectSpawnPoint : MonoBehaviour
     }
 
     // 가중치 기반으로 currentGeneration 내의 FallingObject 중 하나를 랜덤으로 선택
-    private int SelectPrefabByWeight(GenerationObjects generation ,IReadOnlyList<EarthObjectStatData> earthObjectDatas)
+    protected int SelectPrefabByWeight(GenerationObjects generation ,IReadOnlyList<EarthObjectStatData> earthObjectDatas)
     {
         //if (generation.objects.Count == 0 || generation.spawnWeights == null || generation.spawnWeights.Length != generation.objects.Count)
         if (generation.objects.Count == 0 || earthObjectDatas.Count -1 == generation.objects.Count)
@@ -136,7 +136,7 @@ public class ObjectSpawnPoint : MonoBehaviour
         }
        
         // 0부터 totalWeight 사이의 랜덤 값 선택
-        float randomValue = Random.Range(0f, totalWeight);
+        float randomValue = Random.Range(0.1f, totalWeight);
         float cumulativeWeight = 0f;
         //Debug.Log("randomValue : " + randomValue);
         for (int i = 0; i < generation.objects.Count; i++)
@@ -151,22 +151,10 @@ public class ObjectSpawnPoint : MonoBehaviour
 
         // 혹시 이상 상황이 발생하면 fallback
         //return generation.objects[generation.objects.Count - 1];
-        return 0;
+        return 1;
     }
 
-   /* private EarthObjectStatData GetEarthObjectStatData(int generation , int num)
-    {
-
-       ExelEarthObjectData stattime = objectManager.ObjecstStatTime;
-        
-        if (stattime == null) return null;
-      
-        
-
-
-        return objectManager.ObjectStatList[num];
-    }
-*/
+  
     // 외부에서 스폰을 중지(일시정지) 또는 재개할 수 있도록 bIsStopSpawn의 상태를 설정하는 메서드
     public void SetPauseState(bool isPaused)
     {

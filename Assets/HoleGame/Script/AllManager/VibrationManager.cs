@@ -81,11 +81,11 @@ public class VibrationManager : MonoBehaviour
             case VibrationEnum.None:
                 break;
         }
-        Debug.Log(type.ToString() + " Vibration Start " + Time.time);
+        //Debug.Log(type.ToString() + " Vibration Start " + Time.time);
        
     }
 
-    public void StartLiftLoopVibration(float duration = 0.25f, float interval = 0.15f, int amplitude = 15)
+    public void StartLiftLoopVibration(float duration = 0.15f, float interval = 0.1f, int amplitude = 10)
     {
         if (!bIsVibrated || bisLiftLoop|| bPauseVibrated) return;
 
@@ -102,7 +102,7 @@ public class VibrationManager : MonoBehaviour
         if (vibrationLoopRoutine != null)
         {
             StopCoroutine(vibrationLoopRoutine);
-            Debug.Log("Stop Lift!! " + Time.time);
+            //Debug.Log("Stop Lift!! " + Time.time);
             vibrationLoopRoutine = null;
         }
 
@@ -117,9 +117,9 @@ public class VibrationManager : MonoBehaviour
 
         while (bisLiftLoop)
         {
-            Debug.Log("LiftLoop "  + Time.time);
+           // Debug.Log("LiftLoop "  + Time.time);
             Vibration.CreateOneShot((long)(duration * 1000f), amplitude); // ms 단위로 변환
-            Debug.Log(interval + duration);
+            //Debug.Log(interval + duration);
             yield return delay;
         }
     }

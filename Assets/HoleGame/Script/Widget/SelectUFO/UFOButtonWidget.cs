@@ -9,8 +9,7 @@ public class UFOButtonWidget : MonoBehaviour
     private int ufoindex;
     [SerializeField] private Image UFOIcon;
     [SerializeField]private Button UfoSelectbutton;
-    [SerializeField] private Button UfoPurchasebutton;
-    [SerializeField] private TMP_Text PriceText;
+   
     private int ufoPrice;
 
     private Color LockColor = new Color32(64, 64, 64, 255);
@@ -29,7 +28,7 @@ public class UFOButtonWidget : MonoBehaviour
 
 
         ufoPrice = price;
-        PriceText.text = ufoPrice.ToString(); 
+       
 
         bIsUnlocked =  bIsunlock;
        if(!bIsUnlocked)
@@ -37,7 +36,7 @@ public class UFOButtonWidget : MonoBehaviour
 
         UfoSelectbutton.interactable = !bselect;
         
-        UfoPurchasebutton.gameObject.SetActive(false);
+    
 
     }
 
@@ -45,29 +44,22 @@ public class UFOButtonWidget : MonoBehaviour
     {
 
         UfoSelectbutton.interactable = false;
-        selectUFOWidget.SelectUFOType(ufoindex,bIsUnlocked);
-        
-        if(!bIsUnlocked)
-            UfoPurchasebutton.gameObject.SetActive(!bIsUnlocked);
-    }
+        selectUFOWidget.SelectUFOType(ufoindex, bIsUnlocked , ufoPrice);
 
+
+    }
     public void UnSelect()
     {
        
         UfoSelectbutton.interactable = true;
-        UfoPurchasebutton.gameObject.SetActive(false);
-    }
-
-    public void OnClickPurchaseBtn()
-    {
-        selectUFOWidget.PurchaseUFO(ufoindex, ufoPrice);
+       
     }
 
     public void UnlockUFO()
     {
         bIsUnlocked = true;
         UFOIcon.color = UnlockColor;
-        UfoPurchasebutton.gameObject.SetActive(false);
+       
     }
     
 }

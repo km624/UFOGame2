@@ -45,6 +45,7 @@ public class BeamTrigger : MonoBehaviour
         player = ufoplayer;
         duaringTime = time;
         SetParticleLifetime(duaringTime);
+      
 
 
     }
@@ -60,8 +61,8 @@ public class BeamTrigger : MonoBehaviour
             FallingObject FObject = other.GetComponent<FallingObject>();
             if (FObject != null)
             {
-               /* //플레이어 보다 레벨 높으면 return
-                if (player.CurrentLevel < FObject.ObjectMass) return;*/
+                //플레이어 보다 1 레벨 높으면 return
+                if (player.CurrentLevel < FObject.ObjectMass + 1) return;
 
                 BossObject bossObject = other.GetComponent<BossObject>();
                 //보스 오브젝트면 빔 활성화 X
@@ -86,7 +87,7 @@ public class BeamTrigger : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.layer == 9)
+        if (other.gameObject.layer == 9 || other.gameObject.layer==10)
         {
 
             FallingObject FObject = other.GetComponent<FallingObject>();

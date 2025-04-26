@@ -51,8 +51,8 @@ public class ObjectManager : MonoBehaviour
     Bounds RangeBounds;
     
     [Header("폭탄")]
-    [SerializeField]
-    private float BombSpawnHeight=1.0f;
+    //[SerializeField]
+    //private float BombSpawnHeight=1.0f;
     [SerializeField] 
     private int BombPostionInterval = 1; 
     //[SerializeField]
@@ -66,21 +66,21 @@ public class ObjectManager : MonoBehaviour
 
     private Coroutine BombCoroutine;
 
- 
- 
-
     public event Action<FallingObject> FOnObjectSwallowed;
     public event Action<Vector3 /*아이콘 생성 위치*/, ShapeEnum> FOnBonusSwallowed;
     public event Action<float /*minustime*/> FOnBomnbSwallowed;
     
 
-    //private Dictionary<ShapeEnum, int> BonusObjectsOrgin = new Dictionary<ShapeEnum, int>();
     private Dictionary<float/*objectsmass*/, int> BonusObjectsOrgin = new Dictionary<float, int>();
     private Dictionary<ShapeEnum, int> BonusObjectsCnt = new Dictionary<ShapeEnum, int>();
     public event Action< ShapeEnum, int /*count*/> FOnBounsWidgetCreated;
     public event Action<Dictionary<float,int>/*BonusObjectsOrgin*/> FOnBounusCompleted;
 
-    
+
+    [SerializeField] private LayerMask groundMask;
+    [SerializeField] private LayerMask wallMask;
+    [SerializeField] private LayerMask IgnoreMask;
+
     public int GetMaxObjectCnt() { return MaxObjectCnt; }
 
     public string getCurrentGenerationName() 
@@ -121,6 +121,11 @@ public class ObjectManager : MonoBehaviour
         StartSpawnObjects();
         StartBombSapwn();
         SpawnBossAtRandomGridPosition();
+        
+        for(int i=0;i<15;i++)
+        {
+            SpawnBounsAtRandomGridPosition();
+        }
     }
 
     private void CollectSpawnPoints()
@@ -168,8 +173,7 @@ public class ObjectManager : MonoBehaviour
     #region 오브젝트 생성 , 관리
     public void SetUpGeneration(int currentgeneration)
     {
-        // CurrentGenerationData = (generationList.Count > 0) ? generationList[currentgeneration] : null;
-       
+      
         // 기본 세대 설정 (정상 범위)
         if (generationList.Count > currentgeneration)
         {
@@ -220,6 +224,11 @@ public class ObjectManager : MonoBehaviour
 
         SpawnBossAtRandomGridPosition();
 
+        for (int i = 0; i < 10; i++)
+        {
+            SpawnBounsAtRandomGridPosition();
+        }
+
         FOnGenerationChanged?.Invoke(CurrentGenration);
         Debug.Log(CurrentGenration + " : 현재 세대");
 
@@ -235,7 +244,11 @@ public class ObjectManager : MonoBehaviour
         {
             EarthObjectStatData earthojectdata = ScriptableObject.CreateInstance<EarthObjectStatData>();
 
-            earthojectdata.bMovement = true;
+            if(i!= 0)
+                earthojectdata.bMovement = true;
+            else
+                earthojectdata.bMovement = false;   
+
             earthojectdata.mass = ExelEarthObjectStatList[i].Mass + (currentgeneration * ObjecstStatTime.Mass);
             earthojectdata.jumpDistance = ExelEarthObjectStatList[i].MoveDistance + (currentgeneration * ObjecstStatTime.MoveDistance);
             
@@ -253,13 +266,12 @@ public class ObjectManager : MonoBehaviour
             if (i == ExelEarthObjectStatList.Count - 1)
             {
                 earthojectdata.EXPCnt = 0;
-               
-
                 bossStat = earthojectdata;
             }  
             else
                 objectStatList.Add(earthojectdata);
         }
+        
 
         //폭탄 세팅
         EarthObjectStatData bombdata = ScriptableObject.CreateInstance<EarthObjectStatData>();
@@ -333,21 +345,14 @@ public class ObjectManager : MonoBehaviour
                 {
                     CheckBonusCleared(destroyShape);
                     Vector3 position = Vector3.zero;
-                  /*  if (destroyoBj.bIsAttacked)
-                    {
-                        position = GameState.Instance.GetPlayerPostion();
-                    }
-                    else
-                    {
-                        position = destroyoBj.gameObject.transform.position;
-                    }*/
+               
                     position = destroyoBj.gameObject.transform.position;
 
                     FOnBonusSwallowed?.Invoke(position, destroyoBj.GetShapeEnum());
                 }
 
 
-                //FOnObjectSwallowed?.Invoke(destroyoBj, CurrentGenration);
+               
                 FOnObjectSwallowed?.Invoke(destroyoBj);
             }
          
@@ -364,55 +369,46 @@ public class ObjectManager : MonoBehaviour
 
     #region 보너스 오브젝트 생성 , 관리
 
-    
+   
     private void CreateBonusObjects()
     {
-
-        // generationList 체크: 비어있거나 CurrentGenration 인덱스 초과시 경고 후 null 반환
-      /*  if (generationList == null || generationList.Count <= CurrentGenration)
-        {
-            Debug.LogWarning("Generation list is empty or CurrentGenration index is out of range!");
-            return;
-        }*/
-
-        // 현재 GenerationObjects 참조
-        //GenerationObjects currentGen = generationList[CurrentGenration];
         GenerationObjects currentGen = CurrentGenerationData;
 
-        // objects 리스트가 비었는지 확인
         if (currentGen.objects == null || currentGen.objects.Count == 0)
         {
             Debug.LogWarning("No objects found in the current GenerationObjects!");
             return;
         }
 
-        int levelOffset = CurrentGenration * 4 + 1;
+        // 세대당 4레벨씩 루프 돌게 구성
+        int localLevel = gameState.GetPlayerCurrentLevel() - (CurrentGenration * 4);
+        int usableCount = Mathf.Clamp(localLevel + 1, 1, currentGen.objects.Count);
 
-        int usableCount = Mathf.Clamp(gameState.GetPlayerCurrentLevel() - levelOffset + 1, 1, currentGen.objects.Count);
+        List<FallingObject> limitedList = new();
+        
+        for (int i = 1; i < usableCount; i++) // 0번째 인덱스 제외하고 1부터 시작
+        {
+            if (i < currentGen.objects.Count)
+                limitedList.Add(currentGen.objects[i]);
+        }
 
-        List<FallingObject> limitedList = currentGen.objects.GetRange(0, usableCount);
-
-        // 셔플
-
+        //  셔플
         for (int i = 0; i < limitedList.Count; i++)
         {
             int randomIndex = UnityEngine.Random.Range(i, limitedList.Count);
             (limitedList[i], limitedList[randomIndex]) = (limitedList[randomIndex], limitedList[i]);
         }
 
-        int countToSelect = UnityEngine.Random.Range(1, limitedList.Count+1);
+        int countToSelect = UnityEngine.Random.Range(1, limitedList.Count + 1);
 
         for (int i = 0; i < countToSelect; i++)
         {
-            int randomCount = UnityEngine.Random.Range(bonusMinCount, bonusMaxCount + 1); // 2부터 5까지 (6 미포함)
-
+            int randomCount = UnityEngine.Random.Range(bonusMinCount, bonusMaxCount + 1);
 
             BonusObjectsOrgin.Add(limitedList[i].ObjectMass, randomCount);
             BonusObjectsCnt.Add(limitedList[i].GetShapeEnum(), randomCount);
             FOnBounsWidgetCreated?.Invoke(limitedList[i].GetShapeEnum(), randomCount);
         }
-
-      
     }
 
     private void CheckBonusCleared(ShapeEnum shape)
@@ -496,11 +492,13 @@ public class ObjectManager : MonoBehaviour
         FallingObject spawnbomb = CurrentGenerationData.bomb;
         if (spawnbomb == null) return;
 
-        Vector2 SpawnLocation = RandomSpawnRange();
+       // Vector2 SpawnLocation = RandomSpawnRange();
+        Vector3 SpawnLocation = GetValidSpawnPosition();
 
-       
-        Vector3 spawnPosition = new Vector3(SpawnLocation.x, BombSpawnHeight, SpawnLocation.y);
-        GameObject bombobj = Instantiate(spawnbomb.gameObject, spawnPosition, Quaternion.identity);
+
+        //Vector3 spawnPosition = new Vector3(SpawnLocation.x, BombSpawnHeight, SpawnLocation.z);
+        GameObject bombobj = Instantiate(spawnbomb.gameObject, SpawnLocation, Quaternion.identity);
+        //GameObject bombobj = Instantiate(spawnbomb.gameObject, spawnPosition, Quaternion.identity);
        
         FallingObject bombfall = bombobj.GetComponent<FallingObject>();
         if (bombfall != null)
@@ -529,20 +527,64 @@ public class ObjectManager : MonoBehaviour
 
         return new Vector2(randomX, randomZ);   
     }
+
+
+    private Vector3 GetValidSpawnPosition()
+    {
+        int raycastMask = ~IgnoreMask; // ignoreMask에 해당하는 레이어만 제외하고 나머지는 전부 감지
+
+        for (int i = 0; i < 10; i++)
+        {
+            Vector2 randXZ = RandomSpawnRange();
+            Vector3 origin = new Vector3(randXZ.x, 100f, randXZ.y);
+            Vector3 direction = Vector3.down;
+            float rayLength = 200f;
+
+            //Debug.DrawRay(origin, direction * rayLength, Color.red, 1.0f);
+
+            if (Physics.Raycast(origin, direction, out RaycastHit hit, rayLength, raycastMask))
+            {
+                GameObject hitObj = hit.collider.gameObject;
+
+                if (((1 << hitObj.layer) & wallMask) != 0)
+                {
+                    //Debug.Log($"[Spawn] Ray hit WALL: {hitObj.name}");
+                    continue;
+                }
+
+                if (((1 << hitObj.layer) & groundMask) != 0)
+                {
+                    //Debug.Log($"[Spawn] Ray hit valid GROUND: {hitObj.name}");
+                    return hit.point + Vector3.up * 0.5f;
+                }
+
+                //Debug.Log($"[Spawn] Ray hit something else: {hitObj.name} (Layer: {LayerMask.LayerToName(hitObj.layer)})");
+            }
+            else
+            {
+                //Debug.Log("[Spawn] Ray missed everything.");
+            }
+        }
+
+        //Debug.LogWarning("[Spawn] Failed to find valid spawn point. Returning fallback position.");
+        return transform.position;
+    }
+
     #endregion
 
     #region 보스
-    
+
     void SpawnBossAtRandomGridPosition()
     {
         //BossObject bossprefab = generationList[CurrentGenration].Boss;
         BossObject bossprefab = CurrentGenerationData.Boss;
         if (bossprefab == null) return;
 
-        Vector2 SpawnLocation = RandomSpawnRange();
+        //Vector2 SpawnLocation = RandomSpawnRange();
+       // Vector3 spawnPosition = new Vector3(SpawnLocation.x, 0.0f, SpawnLocation.y);
 
 
-        Vector3 spawnPosition = new Vector3(SpawnLocation.x, 0.0f, SpawnLocation.y);
+        Vector3 spawnPosition = GetValidSpawnPosition();
         GameObject bossobj = Instantiate(bossprefab.gameObject, spawnPosition, Quaternion.identity);
         //EarthObjectStatData bossstatdata = null;
         //if (CurrentGenration < BossStatList.Count)
@@ -585,10 +627,10 @@ public class ObjectManager : MonoBehaviour
        
         if (starobjectprefab == null) return;
 
-        Vector2 SpawnLocation = RandomSpawnRange();
+        //Vector2 SpawnLocation = RandomSpawnRange();
+        // Vector3 spawnPosition = new Vector3(SpawnLocation.x, BombSpawnHeight +5.0f, SpawnLocation.y);
 
-
-        Vector3 spawnPosition = new Vector3(SpawnLocation.x, BombSpawnHeight +5.0f, SpawnLocation.y);
+        Vector3 spawnPosition = GetValidSpawnPosition() + Vector3.up * 5.0f; 
         GameObject starobj = Instantiate(starobjectprefab.gameObject, spawnPosition, Quaternion.identity);
 
         StarObject star = starobj.GetComponent<StarObject>();
@@ -598,11 +640,38 @@ public class ObjectManager : MonoBehaviour
             star.FOnStarSwallowed += gameState.CallBack_StartSwallowed;
 
             //star spawn 이벤트 발생
+           
             FOnStartSpawned?.Invoke(star);
         }
     }
 
     #endregion
+
+    private void SpawnBounsAtRandomGridPosition()
+    {
+        //FallingObject spawnbomb = generationList[CurrentGenration].bomb;
+        FallingObject spawnbonus = CurrentGenerationData.objects[0];
+        if (spawnbonus == null) return;
+
+        
+        Vector3 SpawnLocation = GetValidSpawnPosition();
+
+
+        //Vector3 spawnPosition = new Vector3(SpawnLocation.x, BombSpawnHeight, SpawnLocation.z);
+        GameObject bonusobj = Instantiate(spawnbonus.gameObject, SpawnLocation, Quaternion.identity);
+        //GameObject bombobj = Instantiate(spawnbomb.gameObject, spawnPosition, Quaternion.identity);
+
+        FallingObject bonusfall = bonusobj.GetComponent<FallingObject>();
+        if (bonusfall != null)
+        {
+            bonusfall.SetStatData(ObjectStatList[0]);
+
+            bonusfall.AddGenerationMass(CurrentGenration);
+            bonusfall.onSwallowed.AddListener(RemoveSpawnedObject);
+        }
+
+    }
+
 
     public void AllObjectStopActive(bool active)
     {

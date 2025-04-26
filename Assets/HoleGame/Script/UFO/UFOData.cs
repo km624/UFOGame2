@@ -8,10 +8,15 @@ public class UFOData : ScriptableObject
     public Mesh UFOMesh;
     public List<UFOColorData> UFOColorDataList = new List<UFOColorData>();
 
-    public Mesh AllStatUFOMesh;
-    public Material AllStatUFOMaterial;
+    public List<GameObject> AddUFObject =  new List<GameObject>();
+
+    public List<GameObject> AddFullStatObject = new List<GameObject>();
 
     public int UFOPrice;
+
+    public Sprite UFOIcon;
+
+    public SkillEnum Skilltype;
 
     public List<UFOStatData> StatList = new();
 

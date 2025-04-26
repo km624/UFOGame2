@@ -1,19 +1,21 @@
-using NUnit.Framework;
-using System;
+
 using UnityEngine;
 using System.Collections.Generic;
 
 public class MapChange : MonoBehaviour
 {
     [SerializeField]
-    private MeshRenderer mRenderer;
-
+    private List<MeshRenderer> mRenderers = new List<MeshRenderer>();
+    
     [SerializeField]
     private GameObject SpawnMapObject;
     
     public void ChangeMap(GenerationObjects currentgenerationdata)
     {
-        mRenderer.material  = currentgenerationdata.MapMaterial;
+        foreach (var renderer in mRenderers)
+        {
+            renderer.material = currentgenerationdata.MapMaterial;
+        }
     }
 
     private void CreateMapObject()

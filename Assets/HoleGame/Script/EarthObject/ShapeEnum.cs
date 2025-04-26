@@ -5,12 +5,16 @@ public enum ShapeEnum
     Dino_Egg,
     Dino_Anky,
     Dino_Trikera,
+    Dino_Braki,
     Dino_TRex,
-    Human_Thin,
-    Human_Fat,
+    Rock_Thin,
+    Rock_Fat,
+    Rock_KongBug,
+    Rock_Savior,
     boomb,
     boss,
-    star
+    star,
+    bonus
 
    
 }

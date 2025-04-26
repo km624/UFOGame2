@@ -13,8 +13,13 @@ public class BossObject : FallingObject
         //Debug.Log("Boss "+ ObjectMass);
     }
 
-    public void BossSwallow()
+    public override void OnSwallow()
+    {
+        FOnBossSwallowed?.Invoke(this);
+    }
+
+   /* public void BossSwallow()
     {
         FOnBossSwallowed?.Invoke(this); 
-    }
+    }*/
 }

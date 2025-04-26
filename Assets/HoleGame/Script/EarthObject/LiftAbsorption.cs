@@ -27,7 +27,9 @@ public class LiftAbsorption : MonoBehaviour
 
     //private bool activelift = false;
 
-    
+    private bool bHasLanded = true;
+
+    private int groundlayer = 11;
     public void InitiaLiftAbsorption(Vector3 orginsclale,float mass)
     {
         targetScale = new Vector3(TargetScaleValue, TargetScaleValue, TargetScaleValue);
@@ -38,34 +40,21 @@ public class LiftAbsorption : MonoBehaviour
     }
 
    
-
     public void StartAbsorp(int swallowlevel)
     {
 
-        /* float referenceSpeed = 10f;
-         float referenceMass = 1f;
-         float baseScaleTime = 1.5f;
-
-         float liftRatio = (liftSpeed / referenceSpeed) / (objectmass / referenceMass);
-         ScaleTime = baseScaleTime * liftRatio;
- */
-        /* float power = -1f;
-         float baseFactor = 15f;
-
-         ScaleTime = baseFactor * Mathf.Pow(objectmass / liftSpeed, power);*/
-       
        
 
         if((swallowlevel - objectmass) >=0)
         {
-            ScaleTime = 3.0f;
+            ScaleTime = 5.0f;
         }
         else
         {
             ScaleTime = 0.5f;
         }
-       // Debug.Log(gameObject.name + " : " + objectmass);
 
+        bHasLanded = false;
 
         scaleseq?.Kill();
         swallowobject.ActivateBounce(false);
@@ -93,10 +82,23 @@ public class LiftAbsorption : MonoBehaviour
        
         scaleseq = DOTween.Sequence();
         scaleseq.Append(transform.DOScale(defaultScale, 0.5f).SetEase(Ease.OutQuad));  // 0.5초 스케일 tween
-        scaleseq.AppendInterval(1.0f);  // tween 완료 후 1초 지연
-        scaleseq.OnComplete(() => swallowobject.ActivateBounce(true));  // 지연 후 콜백 실행
+        /*scaleseq.AppendInterval(1.0f);  // tween 완료 후 1초 지연
+        scaleseq.OnComplete(() => swallowobject.ActivateBounce(true));  // 지연 후 콜백 실행*/
+
+    }
 
 
-       
+    private void OnCollisionEnter(Collision collision)
+    {
+        // 이미 처리된 경우 무시
+        if (bHasLanded) return;
+
+      
+        if (collision.gameObject.layer== groundlayer)
+        {
+            bHasLanded = true; // 한 번만 실행되게 막음
+            swallowobject.ActivateBounce(true);
+            Debug.Log(collision.gameObject.name  + " : 땅에 닿음");
+        }
     }
 }

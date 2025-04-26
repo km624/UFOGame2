@@ -2,5 +2,6 @@ public enum UFOStatEnum
 {
     MoveSpeed,
     LiftSpeed,
-    BeamRange
+    BeamRange,
+    SkillCount
 }

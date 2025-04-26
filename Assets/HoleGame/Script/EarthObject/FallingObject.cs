@@ -132,10 +132,9 @@ public class FallingObject : MonoBehaviour
 
   
 
-    public void OnSwallow()
+    public virtual void OnSwallow()
     {
         onSwallowed?.Invoke(this);
-
     }
 
     void SelectMove()
@@ -187,6 +186,7 @@ public class FallingObject : MonoBehaviour
     {
         if (icon != null)
             StateIconWidget.sprite = icon;
+       
     }
     public void ActiveStateIconWidget(bool active)
     {

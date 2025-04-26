@@ -8,6 +8,8 @@ public class GenerationObjects : ScriptableObject
 {
     public List<FallingObject> objects = new List<FallingObject>();
 
+    //public FallingObject StaticObject;
+
     public FallingObject bomb = null;
 
     public BossObject Boss = null;

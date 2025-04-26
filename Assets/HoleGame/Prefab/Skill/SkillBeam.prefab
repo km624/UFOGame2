@@ -49,4 +49,4 @@ MonoBehaviour:
   GunPrefab: {fileID: 5255377436168414800, guid: a48ed6f91d793894889957729f01c277, type: 3}
   Beamprefab: {fileID: 1395013998450002516, guid: 0663aeb76031afd44828be895be75b94, type: 3}
   BeamRange: {fileID: 3765980485794852711, guid: 1f51cb75bf1c50441b403ad772bc5055, type: 3}
-  ShootInterval: 1
+  ShootInterval: 0.5

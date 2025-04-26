@@ -18,7 +18,7 @@ public class FallingTrigger : MonoBehaviour
 
             fallingobject.OnSwallow();
 
-            BossObject boss = other.GetComponent<BossObject>();
+          /*  BossObject boss = other.GetComponent<BossObject>();
 
             if (boss && currentLevel == boss.ObjectMass)
             {
@@ -29,7 +29,7 @@ public class FallingTrigger : MonoBehaviour
             if (star)
             {
                 star.StarSwallow();
-            }
+            }*/
 
             if(GameManager.Instance!=null)
             {

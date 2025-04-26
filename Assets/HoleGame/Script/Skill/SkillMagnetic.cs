@@ -21,7 +21,7 @@ public class SkillMagnetic : SkillBase
             trigger.SetMindcontrolData(UFOplayer.transform, MinMindControlTime, mindcontrolIcon,remainingTime);
         }
         InstantMagnetic.transform.localPosition = new Vector3(0, -3, 0);
-        UFOplayer.ChangeCameraDistance(18.0f);
+        UFOplayer.ChangeCameraDistance(12.0f);
         if (GameManager.Instance != null)
         {
             GameManager.Instance.soundManager.PlaySfxLoop(SoundEnum.Skill_MindControl,0.6f);
@@ -31,7 +31,7 @@ public class SkillMagnetic : SkillBase
 
     public override void Deactivate() 
     {
-        DestroyImmediate(InstantMagnetic, true);
+        Destroy(InstantMagnetic);
         UFOplayer.ResetCameraDistance();
         if (GameManager.Instance != null)
         {

@@ -21,7 +21,7 @@ Shader "Lpk/LightModel/ToonLightBase"
         
         [Space]   
         _OutlineWidth      ("OutlineWidth", Range(0.0, 1.0))      = 0.15
-        _OutlineColor      ("OutlineColor", Color)                = (0.0, 0.0, 0.0, 1)
+        [HDR]_OutlineColor      ("OutlineColor", Color)                = (0.0, 0.0, 0.0, 1)
     }
     SubShader
     {

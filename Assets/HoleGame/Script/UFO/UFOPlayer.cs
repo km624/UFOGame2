@@ -1,4 +1,5 @@
-using DamageNumbersPro;
+ï»¿using DamageNumbersPro;
+using DG.Tweening;
 using NUnit.Framework.Internal;
 using System;
 using System.Buffers.Text;
@@ -15,33 +16,27 @@ public class UFOPlayer : MonoBehaviour, IDetctable
 {
     //private GameState gameState;
 
-    [Header("·¹º§ ½ºÅİ")]
-    //private float LiftSpeed = 10f;  // ²ø¾î´ç±â´Â Èû
+    [Header("ë ˆë²¨ ìŠ¤í…Ÿ")]
+    //private float LiftSpeed = 10f;  // ëŒì–´ë‹¹ê¸°ëŠ” í˜
     public int CurrentLevel { get; private set; } = 1;
     
     private int MaxLevel = 5;
 
     private float CurrentExpGauge;
-    [Header("ÃÊ±â °æÇèÄ¡·®")]
+    [Header("ì´ˆê¸° ê²½í—˜ì¹˜ëŸ‰")]
     [SerializeField]
     private float MaxExpGauge = 100.0f;
 
-    float baseExpPerMass = 10.0f;
+    float baseExpPerMass = 5.0f;
 
-   //[Header("·¹º§¿¡ µû¸¥ ÃÖ´ë °æÇèÄ¡ Ãß°¡·®")]
-    //[SerializeField]
-   // private float AddMaxExp = 25.0f;
+    public event Action<float> FOnExpAdded;
+
 
     private float fillSpeed = 3.0f;
     private float TargetfillPercent = 0.0f;
 
-   
-    //private List<ExelPlayerData> PlayerStatList = new List<ExelPlayerData>();
-
-    //private List<ExelUFOStatData> UFOBaseStatList = new List<ExelUFOStatData>();
     private ExelUFOStatData UFOBaseStatList;
 
-    //private List<ExelUFOStatData> UFOStatTimeList = new List<ExelUFOStatData>();
     private ExelUFOStatData UFOStatTimeList;
 
 
@@ -49,12 +44,25 @@ public class UFOPlayer : MonoBehaviour, IDetctable
     [SerializeField]
     private Image EXPGaugeBar;
     [SerializeField]
-    //private Text LevelText;
+    private Image TimeGaugeBar; 
+    [SerializeField]
+    private Image TimeGaugeBar2;
+   
+    private int TimeMax = 30;
+    private float fullTransitionDuration = 1.0f;
+    private Tween _bar1Tween, _bar2Tween;
+    private int _prevClamped = -1;
+    [SerializeField]
+    BossDetectWidget bossdetectwidget;
+
+    [SerializeField]
     private TMP_Text LevelText;
     [SerializeField]
     private DamageNumber numberPrefab;
+    [SerializeField]
+    private DamageNumber LevelUpPrefab;
 
-    [Header(" °³¹ßÀÚ ")]
+    [Header(" ê°œë°œì ")]
     [SerializeField]
     private UFOMovement ufoMovement;
     [SerializeField]
@@ -69,43 +77,24 @@ public class UFOPlayer : MonoBehaviour, IDetctable
     private FallingTrigger trigger;
     [SerializeField]
     private PossibleTrigger possibleTrigger;
-   
-
-   
-   
 
     private float DefaultCameraDistance = 0.0f;
 
-    public Material defaultMaterial { get; private set; } // ±âº» ¸ÓÆ¼¸®¾ó
+    public Material defaultMaterial { get; private set; } // ê¸°ë³¸ ë¨¸í‹°ë¦¬ì–¼
 
     public Vector3 WorldPosition => transform.position;
 
-    /*//ÃÖ¼Ò ½ºÅİ
-    private float MinMoveSpeed = 5f;
-    private float MinLiftSpeed = 10f;
-    private float MinBeamRange = 0.7f;
-    private float MinTextOffset = -1.9f;
-
-    
-    //¹èÀ²
-    private float MoveSpeedTimes = 2.5f;
-    private float LiftSpeedTimes = 10.0f;
-    private float BeamRangeTimes = 0.15f;
-    private float TextOffsetTimes = -0.3f;
-*/
-
-
-
-    void Start()
+ 
+    public void InitUFO(float gametime)
     {
-       LoadPlayerStatList();
+        LoadPlayerStatList();
+
+      
+        TimeGaugeBar.fillAmount = gametime / TimeMax;
+        float Time2 = gametime - TimeMax;
         
-        InitUFO();
+        TimeGaugeBar2.fillAmount = Time2 / TimeMax;
 
-    }
-
-    private void InitUFO()
-    {
         if (GameManager.Instance != null)
         {
             if (GameManager.Instance.userData != null)
@@ -121,7 +110,7 @@ public class UFOPlayer : MonoBehaviour, IDetctable
             }
 
         }
-        //default °ª ¼³Á¤
+        //default ê°’ ì„¤ì •
         if (CamerapositionComposer != null)
         {
             DefaultCameraDistance = CamerapositionComposer.CameraDistance;
@@ -131,7 +120,7 @@ public class UFOPlayer : MonoBehaviour, IDetctable
             defaultMaterial = UFORenderer.material;
         }
 
-        //·¹º§ ¼¼ÆÃ
+        //ë ˆë²¨ ì„¸íŒ…
         if (UFOBeam != null)
             UFOBeam.SetSwallowLevelSet(CurrentLevel);
 
@@ -143,49 +132,127 @@ public class UFOPlayer : MonoBehaviour, IDetctable
 
         EXPGaugeBar.fillAmount = 0.0f;
 
-        //·¹º§ Ç¥½Ã
+        //ë ˆë²¨ í‘œì‹œ
         UpdateSizeText(CurrentLevel);
     }
 
    
    private void LoadPlayerStatList()
     {
-       // PlayerStatList = CsvLoader.LoadCSV<ExelPlayerData>("StatData/CSVPlayerEXPList");
+      
 
         UFOBaseStatList = CsvLoader.LoadSingleCSV <ExelUFOStatData>("StatData/CSVUFOBaseStat");
         UFOStatTimeList = CsvLoader.LoadSingleCSV <ExelUFOStatData>("StatData/CSVUFOStatTime");
 
-        //MaxLevel = PlayerStatList.Count;
-
-        //SetUFOLevelData(0);
 
     }
 
-   /* private void SetUFOLevelData(int listnum)
-    {
-        if (listnum >= PlayerStatList.Count)
-        {
-            Debug.Log("µ¥ÀÌÅÍ ¾øÀ½");
-            return;
-        }
-        //MaxExpGauge = PlayerStatList[listnum].MaxExp;
-        //CurrentLevel = PlayerStatList[listnum].Level;
-    }*/
-
-
-    void FixedUpdate()
+  
+    void Update()
     {
 
         UpdateSizeGaugeBar();
-
+      
     }
-
+   
     private void OnDisable()
     {
+        
         UFORenderer.material = defaultMaterial;
+       
+    }
+    
+ 
+    public void CallBack_SetRemainTime(int remainTime)
+    {
+        // 1) ëª©í‘œ fill ë¹„ìœ¨ ê³„ì‚°
+        int clamped = Mathf.Clamp(remainTime, 0, TimeMax * 2);
+        float target1, target2;
+        
+        bool above = clamped > TimeMax;
+        if (above)
+        {
+            target1 = 1f;
+            target2 = (clamped - TimeMax) / (float)TimeMax;
+        }
+        else
+        {
+            target1 = clamped / (float)TimeMax;
+            target2 = 0f;
+        }
+
+        // 2) êµ¬ê°„ ì „í™˜ â€” ì´ì „ êµ¬ê°„ê³¼ ë‹¬ë¼ì§ˆ ë•Œë§Œ ì‹œí€€ìŠ¤ ì²˜ë¦¬
+        if (_prevClamped < 0 || (clamped > TimeMax) != (_prevClamped > TimeMax))
+        {
+           
+            if (above)
+            {
+                StartSequence(
+                    TimeGaugeBar, 1f,
+                    TimeGaugeBar2, target2
+                );
+            }
+            else
+            {
+                StartSequence(
+                    TimeGaugeBar2, 0f,
+                    TimeGaugeBar, target1
+                );
+            }
+        }
+        else
+        {
+            if (above)
+            {
+                KillTween(ref _bar2Tween);
+                _bar1Tween?.Kill(); TimeGaugeBar.fillAmount = 1f;
+                _bar2Tween = TimeGaugeBar2
+                    .DOFillAmount(target2, fullTransitionDuration)
+                    .SetEase(Ease.OutQuad);
+            }
+            else
+            {
+                KillTween(ref _bar1Tween);
+                _bar2Tween?.Kill(); TimeGaugeBar2.fillAmount = 0f;
+                _bar1Tween = TimeGaugeBar
+                    .DOFillAmount(target1, fullTransitionDuration)
+                    .SetEase(Ease.OutQuad);
+            }
+        }
+
+        _prevClamped = clamped;
     }
 
-    public void SetUFOData(UFOData ufodata,UserUFOData userUFOdata)
+   
+    private void StartSequence(Image firstBar, float firstTarget, Image secondBar, float secondTarget)
+    {
+        
+        KillTween(ref _bar1Tween);
+        KillTween(ref _bar2Tween);
+
+        _bar1Tween = firstBar
+            .DOFillAmount(firstTarget, fullTransitionDuration)
+            .SetEase(Ease.OutQuad)
+            .OnComplete(() =>
+            {
+                _bar2Tween = secondBar
+                    .DOFillAmount(secondTarget, fullTransitionDuration)
+                    .SetEase(Ease.OutQuad);
+            });
+    }
+
+    private void KillTween(ref Tween t)
+    {
+        if (t != null && t.IsActive())
+        {
+            t.Kill();
+            t = null;
+        }
+    }
+
+   
+
+    public void SetUFOData(UFOData ufodata,UserUFOData userUFOdata )
     {
 
         MeshFilter meshFilter = ufoModel.GetComponent<MeshFilter>();
@@ -262,6 +329,7 @@ public class UFOPlayer : MonoBehaviour, IDetctable
     {
 
         EXPGaugeBar.fillAmount = Mathf.Lerp(EXPGaugeBar.fillAmount, TargetfillPercent, Time.deltaTime * fillSpeed);
+      
     }
 
     public void AddEXPGauge(float gauge , float mass)
@@ -271,16 +339,14 @@ public class UFOPlayer : MonoBehaviour, IDetctable
 
         if (CurrentLevel >= MaxLevel) return;
 
-        //if (CurrentLevel >= PlayerStatList.Count) return;
-
         //CurrentExpGauge += gauge;
-        //Debug.Log(" ³» ·¹º§ : " + CurrentLevel + " Áú·® : "+ mass);
+        //Debug.Log(" ë‚´ ë ˆë²¨ : " + CurrentLevel + " ì§ˆëŸ‰ : "+ mass);
         float newGague = CalculateExpGain(CurrentLevel, mass);
 
-        //Debug.Log("°ÏÇøÄ¡ : " + newGague);
+        //Debug.Log("ê²…í˜ì¹˜ : " + newGague);
         CurrentExpGauge += newGague;
         //Debug.Log("UFOPLAYEr : " + newGague);
-       
+        FOnExpAdded?.Invoke(newGague);
 
         if (CurrentExpGauge >= MaxExpGauge)
         {
@@ -312,10 +378,10 @@ public class UFOPlayer : MonoBehaviour, IDetctable
 
         float levelDiff = level - absorbedMass;
 
-        // Áö¼ö °¨¼Ò: 2Â÷ÀÌ
+        // ì§€ìˆ˜ ê°ì†Œ: 2ì°¨ì´
         float expMultiplier = Mathf.Pow(0.5f, levelDiff);
 
-        // 2n-n = Áõ°¡ È¿°úµµ Æ÷ÇÔµÊ
+        // 2n-n = ì¦ê°€ íš¨ê³¼ë„ í¬í•¨ë¨
         float exp = baseExpPerMass * expMultiplier;
 
         return exp;
@@ -328,7 +394,7 @@ public class UFOPlayer : MonoBehaviour, IDetctable
         //AddGaugeSound.Play();
         // DamageNumber damageNumber = 
         string gaugestring = "+" + string.Format("{0:N1}", gauge);
-        numberPrefab.Spawn(transform.position, gaugestring);
+        numberPrefab.Spawn(transform.position, gauge);
     }
 
     public void SwallowSound()
@@ -341,6 +407,11 @@ public class UFOPlayer : MonoBehaviour, IDetctable
 
         CurrentLevel += bLevelUp ? 1 : -1;
 
+        if(MaxLevel == CurrentLevel)
+            bossdetectwidget.ActiveBossDetect(true);
+
+
+
         if (GameManager.Instance != null)
         {
             GameManager.Instance.vibrationManager.Play(VibrationEnum.LevelUp);
@@ -348,8 +419,8 @@ public class UFOPlayer : MonoBehaviour, IDetctable
             GameManager.Instance.soundManager.PlaySfx(SoundEnum.LevelUp, 0.3f);
         }
 
-        Vector3 newpos = transform.position + Vector3.up*1; 
-        numberPrefab.Spawn(newpos, "Level Up");
+        Vector3 newpos = transform.position + Vector3.up*1;
+        LevelUpPrefab.Spawn(newpos, "Level Up");
 
         UFOBeam.SetSwallowLevelSet(CurrentLevel);
         trigger.SetCurrentLevel(CurrentLevel);
@@ -365,16 +436,20 @@ public class UFOPlayer : MonoBehaviour, IDetctable
 
     public void SetCurrentBoss(BossObject boss)
     {
-        Debug.Log("º¸½º ¼¼ÆÃ : " +  boss.name);
+       
+       
+        bossdetectwidget.SetBosstransform(boss.transform);
+        bossdetectwidget.ActiveBossDetect(false);
+
         UFOBeam.SetCurrentBoss(boss);
     }
 
     private void UpdateSizeText(int currentsizelevel)
     {
       /* if(currentsizelevel == PlayerStatList.Count)
-            LevelText.text = "·¹º§: " + "MAX";
+            LevelText.text = "ë ˆë²¨: " + "MAX";
        else*/
-            LevelText.text = "·¹º§: " + currentsizelevel.ToString();
+            LevelText.text = "ë ˆë²¨: " + currentsizelevel.ToString();
         
     }
 

@@ -10,7 +10,7 @@ public class UserData
     public string userId;
     public int CurrentUFO;
     //public int currentClearIndex;
-    public List<int> SkillCnt;
+    //public List<int> SkillCnt;
     public int BestScore;
     public int StarCnt;
    
@@ -22,7 +22,7 @@ public class UserData
     {
         userId = "Guest";
         CurrentUFO = 0;
-        SkillCnt = new List<int> { 2, 3, 4, 5 };
+        //SkillCnt = new List<int> { 2, 3, 4, 5 };
         BestScore = 0;
         StarCnt = 100;
         userSettingData = new UserSettingData();
@@ -32,7 +32,7 @@ public class UserData
     {
         userId = userid;
         CurrentUFO = 0;
-        SkillCnt = new List<int> { 2, 3, 4, 5 };
+        //SkillCnt = new List<int> { 2, 3, 4, 5 };
         BestScore = 0;
         StarCnt = 100;
         userSettingData = new UserSettingData();
@@ -80,7 +80,7 @@ public class UserData
        
     }
 
-    public void UpdateSkillCnt(int index , int cnt)
+    /*public void UpdateSkillCnt(int index , int cnt)
     {
         int newcnt = 0;
         if (cnt>=0)
@@ -88,7 +88,7 @@ public class UserData
             newcnt=cnt;
         }
         SkillCnt[index] = newcnt;
-    }
+    }*/
 
 
 

@@ -387,6 +387,7 @@ namespace DanielLochner.Assets.SimpleScrollSnap
 
                     float panelPosX = (movementAxis == MovementAxis.Horizontal) ? i * (automaticLayoutSpacing + 1f) * size.x + (size.x / 2f) : 0f;
                     float panelPosY = (movementAxis == MovementAxis.Vertical)   ? i * (automaticLayoutSpacing + 1f) * size.y + (size.y / 2f) : 0f;
+                    
                     Panels[i].anchoredPosition = new Vector2(panelPosX, panelPosY);
                 }
             }

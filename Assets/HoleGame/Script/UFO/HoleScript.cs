@@ -1,4 +1,5 @@
 
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -56,25 +57,6 @@ public class HoleScript : MonoBehaviour
     }
 
 
-   /* private void OnTriggerEnter(Collider other)
-    {
-
-        if (other.gameObject.layer == NormalLayer && other.attachedRigidbody != null)
-        {
-           
-            //objectsInTrigger.Add(other.attachedRigidbody);
-            //other.gameObject.layer = LiftUpLayer;
-           
-            *//*LiftAbsorption absorption = other.GetComponent<LiftAbsorption>();
-            if (absorption)
-            {
-                absorption.StartAbsorp(LiftSpeed);
-            }*//*
-
-        }
-
-    }*/
-
     private void OnTriggerExit(Collider other)
     {
       
@@ -104,72 +86,90 @@ public class HoleScript : MonoBehaviour
 
     }
 
-    private void OnTriggerStay(Collider other)
-    {
-       
-        Rigidbody rb = other.attachedRigidbody;
-        if (rb != null && (other.gameObject.layer == NormalLayer || other.gameObject.layer == LiftUpLayer))
-        {
-            if (bossobj != null && bossobj.gameObject == other.gameObject)
-            {
-                if(bossobj.ObjectMass > CurrentLevel) return;
-            }
+     private void OnTriggerStay(Collider other)
+     {
 
-            if(other.gameObject.layer == NormalLayer)
-            {
-                other.gameObject.layer = LiftUpLayer;
-            }
+         Rigidbody rb = other.attachedRigidbody;
+         if (rb != null && (other.gameObject.layer == NormalLayer || other.gameObject.layer == LiftUpLayer))
+         {
+             if (bossobj != null && bossobj.gameObject == other.gameObject)
+             {
+                 if(bossobj.ObjectMass > CurrentLevel) return;
+             }
 
-            if (GameManager.Instance != null)
-            {
-                GameManager.Instance.vibrationManager.StartLiftLoopVibration();
-            }
+             if(other.gameObject.layer == NormalLayer)
+             {
+                 other.gameObject.layer = LiftUpLayer;
+             }
 
-            if (!absorptionCache.TryGetValue(other, out var absorption))
-            {
-                absorption = other.GetComponent<LiftAbsorption>();
-                if (absorption != null)
-                    absorptionCache[other] = absorption;
-                absorption.StartAbsorp(CurrentLevel);
-            }
+             if (GameManager.Instance != null)
+             {
+                 //GameManager.Instance.vibrationManager.StartLiftLoopVibration();
+             }
+
+             if (!absorptionCache.TryGetValue(other, out var absorption))
+             {
+                 absorption = other.GetComponent<LiftAbsorption>();
+                 if (absorption != null)
+                     absorptionCache[other] = absorption;
+                 absorption.StartAbsorp(CurrentLevel);
+             }
 
 
 
-            absorption?.ApplyAbsorptionScale();
+             absorption?.ApplyAbsorptionScale();
 
-            Vector3 directionToShip = (UFOtransform.position - rb.position).normalized;
+             //Vector3 directionToShip = (UFOtransform.position - rb.position).normalized;
 
-            float newLifSpeed = CalculateLiftSpeed(CurrentLevel, absorption.GetObjectMass());
-            
-            //Vector3 liftForce = Vector3.up * LiftSpeed;
-            Vector3 liftForce = Vector3.up * newLifSpeed;
-           
-            float distance = Vector3.Distance(rb.position, UFOtransform.position);
-            float attractionStrength = Mathf.Clamp(distance * 2f, 10f, 50f);
+            /*  float newLifSpeed = CalculateLiftSpeed(CurrentLevel, absorption.GetObjectMass());
+
+              //Vector3 liftForce = Vector3.up * LiftSpeed;
+              Vector3 liftForce = Vector3.up * newLifSpeed;
+
+              float distance = Vector3.Distance(rb.position, UFOtransform.position);
+              float attractionStrength = Mathf.Clamp(distance * 2f, 10f, 50f);
+
+
+              Vector3 attractionForce = directionToShip * attractionStrength;
+
+              rb.AddForce(liftForce + attractionForce, ForceMode.Acceleration);
+
+              rb.linearDamping = Mathf.Lerp(rb.linearDamping, 2f, Time.deltaTime * 2f);*/
+
+            Vector3 targetPos = UFOtransform.position + Vector3.up * 1.5f;
+            Vector3 pullDir = (targetPos - rb.position).normalized;
+            float absorbStrength = CalculateAbsorbStrength(CurrentLevel, absorption.GetObjectMass(),LiftSpeed);
+            rb.AddForce(pullDir * absorbStrength, ForceMode.Acceleration);
+            rb.linearVelocity = Vector3.Lerp(rb.linearVelocity, pullDir * absorbStrength, Time.deltaTime * 3f);
           
-
-            Vector3 attractionForce = directionToShip * attractionStrength;
-
-            rb.AddForce(liftForce + attractionForce, ForceMode.Force);
-
-            rb.linearDamping = Mathf.Lerp(rb.linearDamping, 2f, Time.deltaTime * 2f);
-
-           
-
 
         }
 
-    }
+     }
 
-    public float CalculateLiftSpeed(int ufoLevel, float objectLevel)
+
+    /* public float CalculateLiftSpeed(int ufoLevel, float objectLevel)
+     {
+         float delta = objectLevel - ufoLevel;
+
+         float rawSpeed = Mathf.Pow(LiftSpeed, 1f - delta); // 감쇠 수식
+         float clampedSpeed = Mathf.Clamp(rawSpeed, 0.1f, 30.0f); // 범위 제한
+
+         return clampedSpeed;
+     }*/
+
+    public float CalculateAbsorbStrength(int ufoLevel, float objectMass, float baseStrength)
     {
-        float delta = objectLevel - ufoLevel;
+        float delta = objectMass - ufoLevel;
+        float powerBase = baseStrength == 20f ? 5f : 3.333f;
 
-        float rawSpeed = Mathf.Pow(LiftSpeed, 1f - delta); // 감쇠 수식
-        float clampedSpeed = Mathf.Clamp(rawSpeed, 0.1f, 50.0f); // 범위 제한
+        float strength = baseStrength * Mathf.Pow(powerBase, -delta);
 
-        return clampedSpeed;
+        if (delta <= 0)
+        {
+            strength *= 2f;
+        }
+
+        return Mathf.Clamp(strength, 2.5f, 50f);
     }
-
-
 }

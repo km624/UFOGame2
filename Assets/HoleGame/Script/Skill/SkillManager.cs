@@ -1,61 +1,65 @@
-using NUnit.Framework;
+
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class SkillManager : MonoBehaviour
 {
-    public List<SkillBase> AllSkillPrefabs  = new List<SkillBase>();
-    private List<SkillBase> AllSkills = new List<SkillBase>();
-    public IReadOnlyList<SkillBase> ReadAllSkills => AllSkills;
+
+    public SkillBase CurrentSkill { get; private set; } = null;
+    
     private UFOPlayer UFOPlayer;
 
     public event Action<int/*skillnum*/, int/*count*/> FOnSkillActivated;
-   
-   
 
-    public void SetSkill(UFOPlayer ufoPlayer)
-    {
-        UFOPlayer = ufoPlayer;
-        int index = 0;
-        foreach (SkillBase  skillprefab in  AllSkillPrefabs)
-        {
-            GameObject skillObject = Instantiate(skillprefab.gameObject, transform);
-            SkillBase skill = skillObject.GetComponent<SkillBase>();
-            if (skill != null)
-            {
-                int skillCnt = 2;
-                //유저 데이터 토대로 세팅
-                if (GameManager.Instance != null)
-                    if(GameManager.Instance.userData!=null)
-                    skillCnt = GameManager.Instance.userData.SkillCnt[index];
+    [SerializeField] private List<SkillData> skillEntries;
 
-                skill.Initialize(UFOPlayer,this, skillCnt);
-                AllSkills.Add(skill);
-            }
+    private Dictionary<SkillEnum, SkillBase> skillDict;
 
-            index++;
-        }
-    }
-
-    void Start()
-    {
-    
-
-    }
-
-
-
-    void Update()
+    private void Awake()
     {
         
+        skillDict = new Dictionary<SkillEnum, SkillBase>();
+        foreach (var entry in skillEntries)
+        {
+            if (!skillDict.ContainsKey(entry.Skilltype))
+            {
+                skillDict.Add(entry.Skilltype, entry.Skillbase);
+            }
+        }
+
     }
+
+
+
+    public void SetSkill(UFOPlayer ufoPlayer, UserUFOData ufodata)
+    {
+        UFOPlayer = ufoPlayer;
+        //int index = 0;
+        SkillBase ufoskill = skillDict[SkillEnum.Beam];
+        if (ufodata != null)  
+            ufoskill = skillDict[ufodata.skilltype];
+        GameObject skillObject = Instantiate(ufoskill.gameObject, transform);
+        SkillBase skill = skillObject.GetComponent<SkillBase>();
+        if (skill != null)
+        {
+            int skillCnt = 2;
+            if (ufodata != null)
+                skillCnt = ufodata.GetReinforceValue(UFOStatEnum.SkillCount);
+
+            skill.Initialize(UFOPlayer, this, skillCnt);
+            //AllSkills.Add(skill);
+            CurrentSkill = skill;
+        }
+
+    }
+
 
     public void ActivateSkill(int num)
     {
-        if (AllSkills[num]!=null)
+        if (CurrentSkill != null)
         {
-           int CurrentSkillCount = AllSkills[num].UseSkill();
+           int CurrentSkillCount = CurrentSkill.UseSkill();
             if (CurrentSkillCount >= 0)
             {
                 FOnSkillActivated?.Invoke(num, CurrentSkillCount);
@@ -78,12 +82,12 @@ public class SkillManager : MonoBehaviour
 
     private void PauseAllSkills()
     {
-        foreach (var s in AllSkills) s.PauseSkill();
+        CurrentSkill.PauseSkill();
     }
 
     private void ResumeAllSkills()
     {
-        foreach (var s in AllSkills) s.ResumeSkill();
+        CurrentSkill.ResumeSkill();
     }
 
 

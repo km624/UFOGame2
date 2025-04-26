@@ -13,11 +13,12 @@ MonoBehaviour:
   m_Name: GenrationObjects
   m_EditorClassIdentifier: 
   objects:
+  - {fileID: 5985187835597346729, guid: bb51832886c81534da1239dabf213d06, type: 3}
   - {fileID: 6829897734837259997, guid: 6a9cc7b1a921a5c469b2108896e21c70, type: 3}
   - {fileID: 280135421211903750, guid: 49662204c7114ae4e82775fc8abb8ffd, type: 3}
   - {fileID: 5335334928670281468, guid: 56fc4df49340e9549bcf4cfcb3f0d6ec, type: 3}
-  - {fileID: 5349104326824382967, guid: 8040702dd5c003a4eb83bd4a0b322560, type: 3}
-  bomb: {fileID: 472563596000138413, guid: 5c65c4cd2c542f9459d55d8b576ac375, type: 3}
-  Boss: {fileID: 495717928946335468, guid: 7983f1f08bb920b4ca06c745aa5c3660, type: 3}
+  - {fileID: 8020113506937158844, guid: 0114d44d21550954cb9452ee3d292771, type: 3}
+  bomb: {fileID: 1700924457554982850, guid: c39617ec02b85c741ba12fc22621f37d, type: 3}
+  Boss: {fileID: 354041552339809526, guid: 8040702dd5c003a4eb83bd4a0b322560, type: 3}
   GenerationName: "\uBC31\uC545\uAE30 \uC2DC\uB300"
-  MapMaterial: {fileID: 2100000, guid: cbd2dcabf8cc9004bb96a9691faa9c34, type: 2}
+  MapMaterial: {fileID: 2100000, guid: 22ffb96697013764e827515311c4d2cc, type: 2}

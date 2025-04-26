@@ -8,42 +8,13 @@ using UnityEngine;
 public class UserUFOData
 {
     public string UFOName;
-    //public bool IsUnlocked;          
+            
     public List<UFOStatData> StatReinforceList = new();
 
     public List<int> OwnedColorIndexes = new(); 
     public int CurrentColorIndex = 0;
-
+    public SkillEnum skilltype;
    
-    /*public UserUFOData()
-    {
-        UFOName = "UFONormal";
-
-        StatReinforceList = new List<StatReinforceData>
-        {
-            new() {
-                StatType = UFOStatEnum.MoveSpeed,
-                ReinforceValue = 0,
-                MaxReinforceValue = 1
-            },
-            new() {
-                StatType = UFOStatEnum.LiftSpeed,
-                ReinforceValue = 0,
-                MaxReinforceValue = 1
-            },
-            new() {
-                StatType = UFOStatEnum.BeamRange,
-                ReinforceValue = 0,
-                MaxReinforceValue = 1
-            }
-        };
-
-        OwnedColorIndexes.Add(0);
-
-        CurrentColorIndex = 0;
-
-        //AllStat = false;
-    }*/
     public UserUFOData(UFOData ufoData)
     {
         UFOName = ufoData.UFOName;
@@ -81,14 +52,14 @@ public class UserUFOData
         return StatReinforceList.Find(s => s.StatType == type)?.BaseValue ?? 0;
     }
 
-    /*public void AddReinforce(UFOStatEnum type)
+    public void AddReinforce(UFOStatEnum type)
     {
         var stat = StatReinforceList.Find(s => s.StatType == type);
         if (stat != null && stat.BaseValue < stat.MaxValue)
         {
             stat.BaseValue++;
         }
-    }*/
+    }
 
     public void SetReinforce(UFOStatEnum type, int statcnt)
     {

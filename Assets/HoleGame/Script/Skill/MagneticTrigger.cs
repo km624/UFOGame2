@@ -31,12 +31,11 @@ public class MagneticTrigger : MonoBehaviour
     }
 
     //List<ObjectMovement> MagneticObjects = new List<ObjectMovement>();
-    private void OnTriggerEnter(Collider other)
+  /*  private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer == 9)
         {
-            BossObject boss =  other.GetComponent<BossObject>();
-            if (boss == null) return;
+            if (other.GetComponent<BossObject>() != null) return;
 
             FallingObject FObject = other.GetComponent<FallingObject>();
             if (FObject != null)
@@ -45,14 +44,21 @@ public class MagneticTrigger : MonoBehaviour
             }
         }
     }
-
+*/
     private void OnTriggerStay(Collider other)
     {
         if (other.gameObject.layer==9) 
         {
-            if (other.GetComponent<BossObject>() is not BossObject boss) return;
+
+            if (other.GetComponent<BossObject>() != null) return;
 
             ObjectMovement movement = other.GetComponent<ObjectMovement>();
+            
+            FallingObject FObject = other.GetComponent<FallingObject>();
+            if (FObject != null)
+            {
+                FObject.SetStateSpriteIcon(StateIcon);
+            }
             if (movement != null && movement.enabled)
             {
                 

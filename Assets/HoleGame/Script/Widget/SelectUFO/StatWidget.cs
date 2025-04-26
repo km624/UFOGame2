@@ -1,7 +1,10 @@
 
 using System.Collections.Generic;
+
 using TMPro;
+using Unity.Collections;
 using UnityEngine;
+
 using UnityEngine.UI;
 
 public class StatWidget : MonoBehaviour
@@ -9,18 +12,22 @@ public class StatWidget : MonoBehaviour
     private ReinForceWidget reinForceWidget;
     private UFOStatEnum StatType;
     private int CurrentStat;
-    private int PreviewStat;
     private int MaxStat;
 
-    private float StatCnt = 5.0f;
-
+    private int currentStatPrice;
+    [SerializeField] private List<Image> ActiveList = new List<Image>();
     [SerializeField] private List<Image> BoxFrameList = new List<Image>();
     [SerializeField] private TMP_Text statText;
-    [SerializeField] private Image StatProgressBar;
-    [SerializeField] private Image StatPreviewBar;
+    [SerializeField] private TMP_Text statPrice;
+    [SerializeField] private Image StatIcon;
 
+ 
+    [SerializeField] Button UpButton;
 
-    public void InitializeStatWidget(ReinForceWidget reinforce, UFOStatEnum stattype, string StatText, int basestat, int maxStat)
+    [SerializeField]private List<int>StatPriceList = new List<int>();
+
+    public void InitializeStatWidget(ReinForceWidget reinforce, UFOStatEnum stattype, string StatText, int basestat, int maxStat, int starcnt,
+       Sprite staticon )
     {
         reinForceWidget = reinforce;
         StatType = stattype;
@@ -28,77 +35,77 @@ public class StatWidget : MonoBehaviour
         statText.text = StatText;
 
         CurrentStat = basestat;
-        PreviewStat = CurrentStat;
+
+        for (int i = 0; i < CurrentStat; i++)
+        {
+            ActiveList[i].enabled=true;
+        }
+
+        currentStatPrice = StatPriceList[CurrentStat - 1];
+
+        CheckStatPrice(starcnt);
+
+        statPrice.text = currentStatPrice.ToString();
+
+       
         MaxStat = maxStat;
 
         for (int i = 0; i < MaxStat; i++)
         {
-            BoxFrameList[i].gameObject.SetActive(true);
+            //ActiveList[i].enabled=true;
+            BoxFrameList[i].enabled = true;
         }
 
+        if (CurrentStat == MaxStat)
+        {
+            statPrice.text = "MAX";
+            UpButton.interactable = false;
+            
+
+        }
+
+        if (staticon != null)
+        {
+            StatIcon.sprite = staticon;
+        }
+
+    }
+
+    public void OnClickUpStat()
+    {
+        CurrentStat++;
+        if (CurrentStat == MaxStat)
+        {
+            statPrice.text = "MAX";
+            UpButton.interactable = false;
+
+        }
+        else
+        {
+            ActiveList[CurrentStat-1].enabled = true;
+            currentStatPrice = StatPriceList[CurrentStat - 1];
+            statPrice.text = currentStatPrice.ToString();
+        }
         
-        StatProgressBar.fillAmount = CurrentStat/ StatCnt;
-        StatPreviewBar.fillAmount = StatProgressBar.fillAmount;
-
+        reinForceWidget.OnClickApply(currentStatPrice, StatType);
+      
     }
-
-    public void OnClicknUpStat()
+   
+    public void CheckStatPrice(int starcnt)
     {
-        PreviewStat++;
-        ChangePreviewStat(PreviewStat);
+        if (CurrentStat == MaxStat) return;
+
+         bool buttonactive = starcnt >= currentStatPrice;
+         UpButton.interactable = buttonactive;
     }
-
-    public void OnClickDownStat()
-    {
-        PreviewStat--;
-        ChangePreviewStat(PreviewStat);
-    }
-
-    public void ApplyStat()
-    {
-        CurrentStat = PreviewStat;
-        StatProgressBar.fillAmount = CurrentStat / StatCnt;
-       
-    }
-
-
-    public void OnCancelStat()
-    {
-        ChangePreviewStat(CurrentStat);
-    }
-
-    private void ChangePreviewStat(int newstat)
-    {
-        if(MaxStat < newstat)
-        {
-            PreviewStat = MaxStat;
-            return;
-        }
-           
-        if(CurrentStat > newstat)
-        {
-            PreviewStat = CurrentStat;
-            return;
-        }
-           
-
-        if (newstat>=CurrentStat)
-        {
-            PreviewStat = newstat;
-
-           // Debug.Log(PreviewStat);
-            StatPreviewBar.fillAmount = PreviewStat / StatCnt;
-        }
-
-        reinForceWidget.OnChangePreviewStat(StatType, PreviewStat);
-    }
-
-
+   
     public void ClearStatWidget()
     {
-        for (int i = 0; i < BoxFrameList.Count; i++)
+        for (int i = 0; i < ActiveList.Count; i++)
         {
-            BoxFrameList[i].gameObject.SetActive(false);
+            ActiveList[i].enabled = false;
+            BoxFrameList[i].enabled = false;
+
         }
     }
 

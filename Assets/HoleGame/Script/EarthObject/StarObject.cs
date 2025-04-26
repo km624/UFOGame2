@@ -14,9 +14,12 @@ public class StarObject : FallingObject,IDetctable
         
         //Debug.Log("Boss "+ ObjectMass);
     }
-
-    public void StarSwallow()
+    public override void OnSwallow()
     {
         FOnStarSwallowed?.Invoke(this);
     }
+   /* public void StarSwallow()
+    {
+        FOnStarSwallowed?.Invoke(this);
+    }*/
 }

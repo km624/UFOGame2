@@ -42,13 +42,18 @@ public class DetectWidget : MonoBehaviour
     public void AddTarget(IDetctable target)
     {
         if (targets.Contains(target)) return;
-        
-        gameObject.SetActive(true);
+
+
+        //gameObject.SetActive(true);
 
         targets.Add(target);
         GameObject dot = Instantiate(radarDotPrefab, radarUI);
+        Debug.Log(dot.name);
        // dot.GetComponent<Image>().sprite = target.RadarIcon;
         dotMap[target] = dot;
+        gameObject.SetActive(true);
+        Canvas.ForceUpdateCanvases(); // 강제 갱신
+       
     }
 
     public void RemoveTarget(IDetctable target)

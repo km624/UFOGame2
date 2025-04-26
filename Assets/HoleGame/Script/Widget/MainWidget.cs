@@ -5,12 +5,13 @@ using Lean.Gui;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using DG.Tweening;
 
 
 
 public class MainWidget : MonoBehaviour
 {
-    public LeanSwitch leanSwitch;
+    //public LeanSwitch leanSwitch;
     public TransitionSettings transition;
 
     public Button PlayButton;
@@ -58,10 +59,10 @@ public class MainWidget : MonoBehaviour
     }
 
    
-   public void ChangeleanSwitch(int change,int select)
+  /* public void ChangeleanSwitch(int change,int select)
    {
         leanSwitch.State = change;
-   }
+   }*/
 
     public void SetStarCntText(int cnt)
     {
@@ -86,8 +87,8 @@ public class MainWidget : MonoBehaviour
 
    public void PlayGame()
    {
-      
-       
+
+        DOTween.KillAll();
         TransitionManager.Instance().Transition("GameScene", transition,0);
        
 

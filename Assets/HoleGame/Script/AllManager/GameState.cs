@@ -94,20 +94,30 @@ public class GameState : MonoBehaviour
         //재화 스폰 이벤트 바인딩
         objectManager.FOnStartSpawned += CallBack_StarSpawned;
 
-        //온도계 위젯 바인딩
-       // objectManager.FOnGenerationDataSeted += PlayerHud.CallBack_SetThermometerWidget;
-        //ufoplayer.FOnExpGagueAdded += PlayerHud.CallBack_AddEXPThermometerWidget;
+        //연료통 위젯 바인딩
+        // objectManager.FOnGenerationDataSeted += PlayerHud.CallBack_SetThermometerWidget;
+        PlayerHud.CallBack_SetFuelTankWidget();
+        ufoplayer.FOnExpAdded += PlayerHud.CallBack_AddEXPFuelTankWidget;
 
-
-
+        //UFO에 시간 바인딩
+        FOnTotalTimeChanged += ufoplayer.CallBack_SetRemainTime;
         //스킬 세팅
-        AllSkillManager.SetSkill(ufoplayer);
-        //스킬 표시
-        foreach (SkillBase skilldata in AllSkillManager.ReadAllSkills)
+        
+        UserUFOData ufodata = null;
+        if(GameManager.Instance.userData != null)
         {
 
-            PlayerHud.CreateSkillWidget(skilldata, AllSkillManager);
         }
+            
+        AllSkillManager.SetSkill(ufoplayer, ufodata);
+        //스킬 표시
+        /* foreach (SkillBase skilldata in AllSkillManager.ReadAllSkills)
+         {
+
+             PlayerHud.CreateSkillWidget(skilldata, AllSkillManager);
+         }*/
+        //스킬 표시
+        PlayerHud.CreateSkillWidget(AllSkillManager.CurrentSkill, AllSkillManager); 
 
         //스킬 바인딩
         AllSkillManager.FOnSkillActivated += PlayerHud.ActiveSkill;
@@ -118,9 +128,7 @@ public class GameState : MonoBehaviour
         //감지 위젯 플레이어 세팅
         PlayerHud.SetDetectStandardTarget(ufoplayer);
 
-        //현재 시대 이름 세팅
-       
-
+        //시간 세팅
         PlayerHud.SetTimeWidget(TotalTime,this);
         StartPlayTimer();
         StartGameTimer();
@@ -130,6 +138,9 @@ public class GameState : MonoBehaviour
 
         //현재 시대 이름 세팅
         PlayerHud.ChangeGenerationNameText(objectManager.getCurrentGenerationName());
+
+        //플레이어 초기화
+        ufoplayer.InitUFO(TotalTime);
 
     }
 
@@ -143,20 +154,47 @@ public class GameState : MonoBehaviour
 
         AllSkillManager.FOnSkillActivated -= PlayerHud.ActiveSkill;
         PlayerHud.FOnAllBounusAnimEnded -= objectManager.CallBack_RenewalBonusObject;
+        ufoplayer.FOnExpAdded -= PlayerHud.CallBack_AddEXPFuelTankWidget;
+
         //ufoplayer.FOnExpGagueAdded -= PlayerHud.CallBack_AddEXPThermometerWidget;
     }
 
     private void CallBack_ObjectSwallow(FallingObject fallingobject)
     {
 
+ 
+        PlayerHud.SetScoreText(TotalScore);
+        
+        ufoplayer.AddEXPGauge(fallingobject.Score, fallingobject.ObjectMass);
         //Debug.Log("흡수함");
         TotalScore += fallingobject.Score;
-        TotalTime += fallingobject.TimeCnt;
+
+        float calculatetime = CalculateTimeGain(ufoplayer.CurrentLevel, fallingobject.ObjectMass);
+        BossObject bossobject = fallingobject as BossObject;
+        if (bossobject != null)
+        {
+            calculatetime += 10.0f;
+        }
+
+        TotalTime += calculatetime;
+
+       // Debug.Log(calculatetime);
 
         PlayerHud.SetScoreText(TotalScore);
+    }
 
-        ufoplayer.AddEXPGauge(fallingobject.TimeCnt, fallingobject.ObjectMass);
-      
+    private float CalculateTimeGain(int level, float absorbedMass)
+    {
+
+        float levelDiff = level - absorbedMass;
+
+        // 지수 감소: 2차이
+        float expMultiplier = Mathf.Pow(0.3f, levelDiff);
+
+        // 2n-n = 증가 효과도 포함됨
+        float exp = 1.0f * expMultiplier;
+
+        return exp;
     }
 
     private void CallBack_BonusClear(Dictionary<float, int> allbouns)
@@ -176,6 +214,7 @@ public class GameState : MonoBehaviour
     {
        
         TotalTime -= minustime;
+        GameManager.Instance.soundManager.PlaySfx(SoundEnum.Bomb,0.5f);
         Camerashake.ShakeCamera();
     }
 
@@ -283,7 +322,9 @@ public class GameState : MonoBehaviour
         string generationname = objectManager.getCurrentGenerationName();
         PlayerHud.ChangeGenerationNameText(generationname);
         PlayerHud.OnForceRenewalBounusWidget();
-
+        
+        PlayerHud.CallBack_InitFuelTankWidget();
+       
         ufoplayer.MaxLevelLimitUp();
     }
 
@@ -393,13 +434,13 @@ public class GameState : MonoBehaviour
         GameManager.Instance.userData.AddStarCnt(StarCnt);
         GameManager.Instance.userData.UpdateBestScore(TotalScore);
 
-        //스킬 카운트 업데이트
-        for(int i=0;i<4;i++)
+       
+      /*  for(int i=0;i<4;i++)
         {
             int cnt = AllSkillManager.ReadAllSkills[i].SkillCount;
             GameManager.Instance.userData.UpdateSkillCnt(i, cnt);
         }
-       
+       */
         
         GameManager.Instance.SaveUserData();
     }

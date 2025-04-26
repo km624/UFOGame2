@@ -3,16 +3,17 @@ using DG.Tweening;
 using System.Collections.Generic;
 
 using UnityEngine;
+using UnityEngine.UI;
 
 
 public class UFOAllWidget : MonoBehaviour
 {
     [SerializeField]private MainWidget mainWidget;
-    [SerializeField]private RectTransform mainWidgetRect;
+   
 
     [SerializeField] private RectTransform UFOAllWidgetTransform;
-    //[SerializeField] private RectTransform UFOSlideButtonTransform;
-    //[SerializeField] private RectTransform UFOAllWidgetTransform;
+    [SerializeField] private Button UFOSelectButton;
+    [SerializeField] private Button UFOReinforceButton;
     
     [SerializeField] private GameObject PreviewUFO;
 
@@ -23,7 +24,14 @@ public class UFOAllWidget : MonoBehaviour
     private Vector2 hiddenPosition;
     private bool isVisible = false;
 
+    
+
     [SerializeField] private SelectUFOWidget selectUFOWidget;
+
+
+
+    [SerializeField] private GameObject ColorReinforcePanel;
+
     [SerializeField] private SelectPaletteWidget selectPaletteWidget;
     [SerializeField] private ReinForceWidget reinForceWidget;
 
@@ -33,7 +41,7 @@ public class UFOAllWidget : MonoBehaviour
 
     void Start()
     {
-       
+        ColorReinforcePanel.SetActive(false);
     }
 
     public void TogglePanel()
@@ -47,40 +55,42 @@ public class UFOAllWidget : MonoBehaviour
     }
     private void ShowPanel()
     {
+        isVisible = true;
+        
+        Vector2 shownPos = new Vector2(0, 0f);
 
-        // 블록 끄고 → 끝나면 켜기
-        //SetInteractable(false);
+        UFOSelectButton.gameObject.SetActive(true);
+        UFOReinforceButton.gameObject.SetActive(true);
+       
 
-        Vector2 shownPos = new Vector2(0, 50f);
-
-        mainWidgetRect.DOAnchorPosX(-800f, 0.25f).SetEase(Ease.InQuad);
-       /* UFOAllWidgetTransform.DOAnchorPos(shownPos, slideDuration)
-            .SetEase(Ease.InBack)
+        UFOAllWidgetTransform.DOAnchorPos(shownPos, slideDuration)
+            .SetEase(Ease.OutQuart)
             .OnComplete(() =>
-            {
-                //SetInteractable(true);
-                isVisible = true;
-            });*/
+            { 
+                //isVisible = true;
+            });
     }
 
     private void HidePanel()
     {
-        // 블록 끄고 → 끝나면 비활성화
-        // SetInteractable(false);
-       
+
+        isVisible = false;
+
         int currentufo = GameManager.Instance.userData.CurrentUFO;
 
         //판넬 닺힐때 강제 리셋
         CallBAck_ChangePreviewUFOType(currentufo, true);
         RenewalWidget(currentufo,true);
+       
+        UFOSelectButton.gameObject.SetActive(false);
+        UFOReinforceButton.gameObject.SetActive(false);
 
-
-        Vector2 hiddenPos = new Vector2(800f, 50f);
+        Vector2 hiddenPos = new Vector2(0.0f, -1100.0f);
         UFOAllWidgetTransform.DOAnchorPos(hiddenPos, slideDuration)
-            .SetEase(Ease.OutBack)
+            .SetEase(Ease.InQuart)
             .OnComplete(() =>
             {
-                isVisible = false;
+                //isVisible = false;
                 
             });
     }
@@ -117,7 +127,7 @@ public class UFOAllWidget : MonoBehaviour
         
         //UFO 선택 란 생성
         CreateSelectWidget(currentUFOindex);
-
+       
         CallBAck_ChangePreviewUFOType(currentUFOindex, true);
 
     }
@@ -132,6 +142,8 @@ public class UFOAllWidget : MonoBehaviour
         IReadOnlyDictionary<string, UserUFOData> ufomap =  GameManager.Instance.userData.serialUFOList.UFOMap;
         selectUFOWidget.InitializeSelectWidget(this, ufoDataList,
             ufomap, currnetUFOIndex);
+
+        reinForceWidget.ReinforceInitWidget();
 
         //구매했을때 바인딩
         selectUFOWidget.FOnUFOPurchased += mainWidget.CallBack_OnPurchased;
@@ -167,6 +179,8 @@ public class UFOAllWidget : MonoBehaviour
                     mats[i] = new Material(currentUFOdata.UFOColorDataList[0].Materials[i]); // 복사
                     mats[i].color = MTLockedColor;
                 }
+
+              
             }
             else // 언락된 경우
             {
@@ -182,6 +196,7 @@ public class UFOAllWidget : MonoBehaviour
                     {
                         mats[i] = new Material(colorSet.Materials[i]); // 복사본
                     }
+
                 }
 
                 SaveSelectUFO(ufoindex);
@@ -189,22 +204,22 @@ public class UFOAllWidget : MonoBehaviour
 
             // 머터리얼 배열 통째로 적용
             renderer.materials = mats;
-
-            
+            if(isVisible)
+                UFOReinforceButton.gameObject.SetActive(bunlock);
 
             // UFO 새로 선택하면 위젯 갱신
-            if(selecetUFOindex != ufoindex)
+            if (selecetUFOindex != ufoindex)
             {
                 selecetUFOindex = ufoindex;
                 RenewalWidget(selecetUFOindex, bunlock);
             }
             //구매해서 다시 프리뷰 세팅했다는 뜻
             //색깔 , 강화 위젯 활성화
-            else
+           /* else
             {
-                OnEnableSelectWidget(bunlock);
+                OnEnableColorReinForceWidget();
                 Debug.Log("색깔 , 강화 가능");
-            }
+            }*/
               
         }
 
@@ -303,20 +318,26 @@ public class UFOAllWidget : MonoBehaviour
 
         reinForceWidget.ClearStat();
 
-        reinForceWidget.InitializeStatWidgetList(this, currentUFOdata.UFOName, statdatalist);
+        reinForceWidget.InitializeStatWidgetList(this, currentUFOdata.UFOName, statdatalist, currentUFOdata.Skilltype);
 
-        OnEnableSelectWidget(bUnlock);
+        //OnEnableColorReinForceWidget();
 
         Debug.Log("새로 생성 : " + Time.time);
 
     }
 
-    public void OnEnableSelectWidget(bool bunlock)
+    public void OnEnableColorReinForceWidget()
     {
-        selectPaletteWidget.OnSelectPaletteWdiget(bunlock);
-        reinForceWidget.OnSelectPaletteWdiget(bunlock);
+
+        ColorReinforcePanel.SetActive(true);
+        selectUFOWidget.gameObject.SetActive(false);
     }
 
+    public void OnEnableUFOSelectWdiget()
+    {
+        selectUFOWidget.gameObject.SetActive(true);
+        ColorReinforcePanel.SetActive(false);
 
+    }
 
 }

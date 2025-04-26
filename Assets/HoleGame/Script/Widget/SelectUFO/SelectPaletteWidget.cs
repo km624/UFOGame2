@@ -122,7 +122,7 @@ public class SelectPaletteWidget : MonoBehaviour
 
         }
     }
-    public void OnSelectPaletteWdiget(bool bactive)
+   /* public void OnSelectPaletteWdiget(bool bactive)
     {
         //캔버스 그룹 비활성화
         CanvasGroup cg = GetComponent<CanvasGroup>();
@@ -132,7 +132,7 @@ public class SelectPaletteWidget : MonoBehaviour
             cg.interactable = bactive;
            
         }
-    }
+    }*/
 
     public void CallBack_ClearPalettetWidget()
     {

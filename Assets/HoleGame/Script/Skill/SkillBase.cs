@@ -34,10 +34,12 @@ public abstract  class SkillBase : MonoBehaviour
 
         SkillCount--;
         bProgressSkill = true;
+       
+        remainingTime = SkillDuration;
         
         Activate();
 
-        remainingTime = SkillDuration;
+       
         skillRoutine = StartCoroutine(SkillTimer());
 
         return SkillCount;
@@ -73,6 +75,7 @@ public abstract  class SkillBase : MonoBehaviour
 
         bProgressSkill = false;
         Deactivate();
+       
     }
 
     /*── 파생 클래스에서 구현할 부분 ───────*/

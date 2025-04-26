@@ -44,8 +44,8 @@ public class PlayerHudWidget : MonoBehaviour
 
     public TransitionSettings transition;
     
-   /* [SerializeField]
-    private ThermometerWidget thermometerWidget;*/
+    [SerializeField]
+    private FuelTankWidget fuelTankWidget;
 
     [SerializeField]
     private TMP_Text StarCntText;
@@ -235,23 +235,29 @@ public class PlayerHudWidget : MonoBehaviour
         CurrentScoreText.text = score.ToString();
     }
 
-   /* public void CallBack_SetThermometerWidget(GenerationObjects generationdata)
+    public void CallBack_SetFuelTankWidget()
     {
-        
-        if(thermometerWidget != null)
+        if(fuelTankWidget != null)
         {
-            thermometerWidget.SetThermometerData(generationdata);
+            fuelTankWidget.SetThermometerData();
         }
     }
-    public void CallBack_AddEXPThermometerWidget(float addgauge)
+    public void CallBack_AddEXPFuelTankWidget(float addgauge)
     {
        
-        if (thermometerWidget != null)
+        if (fuelTankWidget != null)
         {
             //Debug.Log(addgauge);
-            thermometerWidget.AddEXPGauge(addgauge);
+            fuelTankWidget.AddEXPGauge(addgauge);
         }
-    }*/
+    }
+    public void CallBack_InitFuelTankWidget()
+    {
+        if (fuelTankWidget != null)
+        {
+            fuelTankWidget.InitFuelTank();
+        }
+    }
 
     public void ChangeStarCntText(int cnt)
     {
@@ -270,6 +276,7 @@ public class PlayerHudWidget : MonoBehaviour
 
     public void CallBack_AddDetectTarget(IDetctable star)
     {
+       
         detectWidget.AddTarget(star);   
     }
 
@@ -291,12 +298,13 @@ public class PlayerHudWidget : MonoBehaviour
 
     public void GoMainScreen()
     {
-        
+        DOTween.KillAll();
         TransitionManager.Instance().Transition("MainScene", transition, 0.0f);
     }
 
     public void RestartGame()
     {
+        DOTween.KillAll();
         TransitionManager.Instance().Transition("GameScene", transition, 0.0f);
     }
 
