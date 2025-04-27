@@ -20,8 +20,18 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a94cea26ddb9d584fb59937b6cfd0ebd
+    m_Address: Assets/HoleGame/AllData/UFOData/UFOSpeed.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: bb5da4c585c54e647ad864fc75ad6983
     m_Address: Assets/HoleGame/UFOData/UFO.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fbcbc1b2f47a56f4eb11e27e314f546d
+    m_Address: Assets/HoleGame/AllData/UFOData/UFOFat.asset
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

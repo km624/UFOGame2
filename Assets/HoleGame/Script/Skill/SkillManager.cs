@@ -32,20 +32,20 @@ public class SkillManager : MonoBehaviour
 
 
 
-    public void SetSkill(UFOPlayer ufoPlayer, UserUFOData ufodata)
+    public void SetSkill(UFOPlayer ufoPlayer, UserUFOData ufouserdata , UFOData ufodata)
     {
         UFOPlayer = ufoPlayer;
         //int index = 0;
-        SkillBase ufoskill = skillDict[SkillEnum.Beam];
+        SkillBase ufoskill = skillDict[SkillEnum.MindControl];
         if (ufodata != null)  
-            ufoskill = skillDict[ufodata.skilltype];
+            ufoskill = skillDict[ufodata.Skilltype];
         GameObject skillObject = Instantiate(ufoskill.gameObject, transform);
         SkillBase skill = skillObject.GetComponent<SkillBase>();
         if (skill != null)
         {
             int skillCnt = 2;
             if (ufodata != null)
-                skillCnt = ufodata.GetReinforceValue(UFOStatEnum.SkillCount);
+                skillCnt = ufouserdata.GetReinforceValue(UFOStatEnum.SkillCount);
 
             skill.Initialize(UFOPlayer, this, skillCnt);
             //AllSkills.Add(skill);

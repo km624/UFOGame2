@@ -192,8 +192,11 @@ public class PlayerHudWidget : MonoBehaviour
 
             if (skillwidget != null)
             {
-                
-                skillwidget.SetSkillWidget(skillmanager,skillData.SkillIcon, skillData.SkillCount, skillData.SkillDuration, AllSkillWidgets.Count);
+                Sprite skillicon = null;
+                if (SkillIconManager.Instance != null)
+                    skillicon = SkillIconManager.Instance.GetSkillIconSprite(skillData.skilltype);
+
+                skillwidget.SetSkillWidget(skillmanager,skillicon, skillData.SkillCount, skillData.SkillDuration, AllSkillWidgets.Count);
                 AllSkillWidgets.Add(skillwidget);
             }
 
@@ -299,6 +302,7 @@ public class PlayerHudWidget : MonoBehaviour
     public void GoMainScreen()
     {
         DOTween.KillAll();
+        GameManager.Instance.soundManager.PlayBgm(SoundEnum.BGM, 0.2f);
         TransitionManager.Instance().Transition("MainScene", transition, 0.0f);
     }
 

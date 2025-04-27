@@ -13,5 +13,6 @@ public enum SoundEnum
     Swallowed,
     Bomb,
     BonusClear,
-    LevelUp
+    LevelUp,
+    BGM_GameEnd
 }

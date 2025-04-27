@@ -48,7 +48,7 @@ public class DetectWidget : MonoBehaviour
 
         targets.Add(target);
         GameObject dot = Instantiate(radarDotPrefab, radarUI);
-        Debug.Log(dot.name);
+       
        // dot.GetComponent<Image>().sprite = target.RadarIcon;
         dotMap[target] = dot;
         gameObject.SetActive(true);

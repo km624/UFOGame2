@@ -13,7 +13,7 @@ public class UserUFOData
 
     public List<int> OwnedColorIndexes = new(); 
     public int CurrentColorIndex = 0;
-    public SkillEnum skilltype;
+  
    
     public UserUFOData(UFOData ufoData)
     {
@@ -23,7 +23,7 @@ public class UserUFOData
 
       foreach(var stat in ufoData.StatList)
         {
-            StatReinforceList.Add(stat);
+            StatReinforceList.Add(new UFOStatData(stat));
             //Debug.Log(stat.BaseValue);
         }
        

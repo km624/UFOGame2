@@ -13,17 +13,25 @@ MonoBehaviour:
   m_Name: UFONormal
   m_EditorClassIdentifier: 
   UFOName: UFONormal
-  UFOMesh: {fileID: 7810371007003685382, guid: a7cab91a16a3a5144b89cf9c085b9a88, type: 3}
+  UFOMesh: {fileID: 7810371007003685382, guid: 62a6e662bfc13654684970b9dc0dba67, type: 3}
   UFOColorDataList:
   - IConColor:
       serializedVersion: 2
       rgba: 4294488833
     Materials:
-    - {fileID: 2100000, guid: 133fc9c089cbf5a4f86caa4de1d40b07, type: 2}
+    - {fileID: 2100000, guid: 0682b92219d641d4e92ccaf64bd0bc01, type: 2}
     ColorPrice: 0
-  AllStatUFOMesh: {fileID: 0}
-  AllStatUFOMaterial: {fileID: 0}
+  - IConColor:
+      serializedVersion: 2
+      rgba: 4290065785
+    Materials:
+    - {fileID: 2100000, guid: c45c5d3a3c1a47245a62e604ddb17724, type: 2}
+    ColorPrice: 10
+  AddUFObject: []
+  AddFullStatObject: []
   UFOPrice: 0
+  UFOIcon: {fileID: 0}
+  Skilltype: 1
   StatList:
   - StatType: 0
     BaseValue: 2
@@ -32,5 +40,8 @@ MonoBehaviour:
     BaseValue: 2
     MaxValue: 4
   - StatType: 2
+    BaseValue: 2
+    MaxValue: 4
+  - StatType: 3
     BaseValue: 2
     MaxValue: 4

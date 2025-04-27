@@ -29,12 +29,14 @@ MonoBehaviour:
     - {fileID: 2100000, guid: 77cd6dc0c2b746d43bc2076ce54a928a, type: 2}
     - {fileID: 2100000, guid: 74bd119c204b8e1488559718e177b7e2, type: 2}
     ColorPrice: 10
-  AllStatUFOMesh: {fileID: 0}
-  AllStatUFOMaterial: {fileID: 0}
+  AddUFObject: []
+  AddFullStatObject: []
   UFOPrice: 20
+  UFOIcon: {fileID: 0}
+  Skilltype: 0
   StatList:
   - StatType: 0
-    BaseValue: 4
+    BaseValue: 3
     MaxValue: 5
   - StatType: 1
     BaseValue: 2
@@ -42,3 +44,6 @@ MonoBehaviour:
   - StatType: 2
     BaseValue: 1
     MaxValue: 3
+  - StatType: 3
+    BaseValue: 1
+    MaxValue: 1

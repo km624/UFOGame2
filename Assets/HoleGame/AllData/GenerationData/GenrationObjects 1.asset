@@ -22,3 +22,4 @@ MonoBehaviour:
   Boss: {fileID: 7842467512705719170, guid: 38be62f1a6fdf434eb38ac35a0f44824, type: 3}
   GenerationName: "\uC120\uC0AC \uC2DC\uB300"
   MapMaterial: {fileID: 2100000, guid: 94b67c99565f776499ca8843d096d632, type: 2}
+  GenerationBGM: {fileID: 8300000, guid: e1b01cb9dd62c4f4e87757a5e0c46b1e, type: 3}

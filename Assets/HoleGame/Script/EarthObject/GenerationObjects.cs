@@ -18,6 +18,8 @@ public class GenerationObjects : ScriptableObject
     public string GenerationName;
 
     public Material MapMaterial;
+
+    public AudioClip GenerationBGM;
 }
 
 

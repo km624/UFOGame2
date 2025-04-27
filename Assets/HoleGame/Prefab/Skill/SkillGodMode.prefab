@@ -44,6 +44,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7bfba59930769a24ab902980fb2f4c1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SkillIcon: {fileID: 21300000, guid: 1b8dccfb3180beb409ca352b96dce39e, type: 3}
+  skilltype: 2
   SkillDuration: 10
   Godmodematerial: {fileID: 2100000, guid: 74bd119c204b8e1488559718e177b7e2, type: 2}

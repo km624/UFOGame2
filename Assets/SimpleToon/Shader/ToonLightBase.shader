@@ -173,6 +173,7 @@ Shader "Lpk/LightModel/ToonLightBase"
         {
             Name "Outline"
             Cull Front
+           
             Tags
             {
                 "LightMode" = "SRPDefaultUnlit"
@@ -203,6 +204,7 @@ Shader "Lpk/LightModel/ToonLightBase"
             {
                 v2f o;
                 VertexPositionInputs vertexInput = GetVertexPositionInputs(v.vertex.xyz);
+                float2 clipUV = (vertexInput.positionCS.xy / vertexInput.positionCS.w);
                 o.pos = TransformObjectToHClip(float4(v.vertex.xyz + v.normal * _OutlineWidth * 0.1 ,1));
                 o.fogCoord = ComputeFogFactor(vertexInput.positionCS.z);
 
@@ -217,6 +219,28 @@ Shader "Lpk/LightModel/ToonLightBase"
             
             ENDHLSL
         }
+        Pass
+        {
+        Name "ShadowCaster"
+        Tags{ "LightMode"="ShadowCaster" }
+        Cull Back
+        HLSLPROGRAM
+        #pragma vertex vert
+        #pragma fragment frag
+        #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+        struct appdata { float4 vertex:POSITION; };
+        struct v2f    { float4 pos:SV_POSITION; };
+        v2f vert (appdata v)
+        {
+        v2f o;
+        o.pos = TransformObjectToHClip(v.vertex);
+        return o;
+        }
+        half4 frag(v2f i) : SV_Target { return 0; }
+        ENDHLSL
+}
+
+
         UsePass "Universal Render Pipeline/Lit/ShadowCaster"
     }
 }

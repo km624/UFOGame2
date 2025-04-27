@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a08779f880e7cf943ab05e046a2d8b03, type: 3}
+  m_Name: UFOSpeed
+  m_EditorClassIdentifier: 
+  UFOName: UFOSpeed
+  UFOMesh: {fileID: -951608786083511892, guid: fdb9979ce79d6e746a55bac1d41d0943, type: 3}
+  UFOColorDataList:
+  - IConColor:
+      serializedVersion: 2
+      rgba: 4278626579
+    Materials:
+    - {fileID: 2100000, guid: 85cf6d81d24148146be3b16f7fb66b86, type: 2}
+    ColorPrice: 0
+  - IConColor:
+      serializedVersion: 2
+      rgba: 4281555907
+    Materials:
+    - {fileID: 2100000, guid: deaa81e0de6e54d40873e0418d966952, type: 2}
+    ColorPrice: 10
+  AddUFObject:
+  - {fileID: 2474884020779558425, guid: 2dcdb050f6f48014a8a3c2903e44488f, type: 3}
+  AddFullStatObject:
+  - {fileID: 4057589139852022725, guid: 17b7dec0b1bde934790f250e0a95d15b, type: 3}
+  UFOPrice: 25
+  UFOIcon: {fileID: 0}
+  Skilltype: 3
+  StatList:
+  - StatType: 0
+    BaseValue: 3
+    MaxValue: 5
+  - StatType: 1
+    BaseValue: 2
+    MaxValue: 4
+  - StatType: 2
+    BaseValue: 1
+    MaxValue: 3
+  - StatType: 3
+    BaseValue: 1
+    MaxValue: 3

@@ -204,6 +204,11 @@ public class ObjectManager : MonoBehaviour
             }
             
         }
+
+        if(GameManager.Instance!=null)
+        {
+            GameManager.Instance.soundManager.PlayBgm(CurrentGenerationData.GenerationBGM,1.0f);
+        }
     }
 
     public void ChangeGeneration()

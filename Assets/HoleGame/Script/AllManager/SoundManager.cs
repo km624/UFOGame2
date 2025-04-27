@@ -18,6 +18,8 @@ public class SoundManager : MonoBehaviour
     private bool isSfxMuted = false;
 
     private bool isSoundPuased = false;
+
+    private AudioClip CurrentBGM;
    
 
 #if UNITY_EDITOR
@@ -64,14 +66,52 @@ public class SoundManager : MonoBehaviour
                 sfxMap.Add(entry.type, entry.clip);
     }
 
-    public void PlayBgm(SoundEnum type, float fadeTime = 0.5f, bool loop = true)
+    public void PlayBgm(SoundEnum type, float fadeTime = 0.5f, bool loop = true )
     {
         if (isBgmMuted) return;
         if(isSoundPuased) return;
-      
+
+    
         if (sfxMap.TryGetValue(type, out var clip))
+        {
             StartCoroutine(FadeBgmCoroutine(clip, fadeTime, loop));
+            CurrentBGM = clip;
+        }
+           
     }
+
+    public void PlayBGMOneShot(SoundEnum type, float fadeTime = 0.5f, bool loop = true)
+    {
+        if (isBgmMuted) return;
+        if (isSoundPuased) return;
+
+
+        if (sfxMap.TryGetValue(type, out var clip))
+        {
+            StartCoroutine(FadeBgmCoroutine(clip, fadeTime, loop));
+           
+        }
+    }
+
+    public void PlayBgm(AudioClip next, float fadeTime = 0.5f, bool loop = true)
+    {
+        if (isBgmMuted) return;
+        if (isSoundPuased) return;
+
+        StartCoroutine(FadeBgmCoroutine(next, fadeTime, loop));
+        CurrentBGM = next;
+    }
+
+    public void ResumeBgm(float fadeTime = 0.5f, bool loop = true)
+    {
+        if (isBgmMuted) return;
+        if (isSoundPuased) return;
+
+        if(CurrentBGM!=null)
+            StartCoroutine(FadeBgmCoroutine(CurrentBGM, fadeTime, loop));
+    }
+
+
     public void StopBgm(float fadeTime = 0.5f)
     {
         StartCoroutine(FadeOutBgmCoroutine(fadeTime));

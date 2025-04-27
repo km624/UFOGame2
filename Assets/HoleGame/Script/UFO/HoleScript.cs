@@ -167,7 +167,7 @@ public class HoleScript : MonoBehaviour
 
         if (delta <= 0)
         {
-            strength *= 2f;
+            strength *= 1.5f;
         }
 
         return Mathf.Clamp(strength, 2.5f, 50f);

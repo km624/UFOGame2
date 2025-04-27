@@ -44,8 +44,10 @@ public class SelectUFOWidget : MonoBehaviour
         GameObject currentBox = null; // 현재 UFOBOX Prefab 인스턴스
         int inBoxCounter = 0;          // 현재 박스 안에 몇 개 넣었는지 카운트
 
+       
+        PriceText.text = string.Empty;
+
         PurchaseButton.interactable = false;
-        PriceText.text = string.Empty;  
 
         for (int i = 0; i < ufoList.Count; i++)
         {
@@ -57,6 +59,8 @@ public class SelectUFOWidget : MonoBehaviour
 
             bool bunlock = userufo.ContainsKey(ufoList[i].UFOName);
             bool bselect = (selectindex == i);
+
+           
 
             selectUfoindex = selectindex;
 
@@ -99,8 +103,19 @@ public class SelectUFOWidget : MonoBehaviour
             UFOBtnWidgetList[i].UnSelect();
         }
         selectUfoindex = index;
-
-        PurchaseButton.interactable = !bunlock;
+       
+        //재화 확인
+        int starcnt = GameManager.Instance.userData.StarCnt;
+      
+        if (starcnt < ufoprice || bunlock)
+        {
+            PurchaseButton.interactable = false;
+        }
+        else
+        {
+            PurchaseButton.interactable = true;
+        }
+       
 
         selectUfoPrice = ufoprice;
         if (!bunlock)

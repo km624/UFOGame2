@@ -16,7 +16,9 @@ public class UFOAllWidget : MonoBehaviour
     [SerializeField] private Button UFOReinforceButton;
     
     [SerializeField] private GameObject PreviewUFO;
-
+    
+    private List<GameObject> AddObjectInstanceList =new List<GameObject>();
+    private List<GameObject> FullStatObjectInstanceList =new List<GameObject>();
 
     [SerializeField] private float slideDuration = 0.6f;
    
@@ -149,15 +151,27 @@ public class UFOAllWidget : MonoBehaviour
         selectUFOWidget.FOnUFOPurchased += mainWidget.CallBack_OnPurchased;
         selectPaletteWidget.FOnColorPurchased += mainWidget.CallBack_OnPurchased;
         reinForceWidget.FOnReinforceApplied += mainWidget.CallBack_OnPurchased;
+        reinForceWidget.FOnFullStated += CreateFullStatObject;
 
 
     }
 
     public void CallBAck_ChangePreviewUFOType(int ufoindex, bool bunlock)
     {
-        
-       UFOData currentUFOdata = UFOLoadManager.Instance.LoadedUFODataList[ufoindex];
-    
+        foreach (var addobject in AddObjectInstanceList)
+        {
+            Destroy(addobject);
+        }
+        AddObjectInstanceList.Clear();
+        foreach (var addobject in FullStatObjectInstanceList)
+        {
+            Destroy(addobject);
+        }
+        FullStatObjectInstanceList.Clear();
+ 
+
+        UFOData currentUFOdata = UFOLoadManager.Instance.LoadedUFODataList[ufoindex];
+
         MeshFilter meshFilter = PreviewUFO.GetComponent<MeshFilter>();
         if (meshFilter != null)
         {
@@ -169,6 +183,7 @@ public class UFOAllWidget : MonoBehaviour
         if (renderer != null)
         {
             Material[] mats = null;
+            Texture baseMap = null;
 
             if (!bunlock) // 언락 안 된 경우
             {
@@ -178,6 +193,14 @@ public class UFOAllWidget : MonoBehaviour
                 {
                     mats[i] = new Material(currentUFOdata.UFOColorDataList[0].Materials[i]); // 복사
                     mats[i].color = MTLockedColor;
+                    if (mats[i].HasProperty("_BaseColor"))
+                    {
+                        mats[i].SetColor("_BaseColor", MTLockedColor);
+                    }
+                    if (mats[i].HasProperty("_Color"))
+                    {
+                        mats[i].SetColor("_Color", MTLockedColor);
+                    }
                 }
 
               
@@ -192,10 +215,17 @@ public class UFOAllWidget : MonoBehaviour
                     var colorSet = currentUFOdata.UFOColorDataList[colorIndex]; 
                     int count = colorSet.Materials.Count;
                     mats = new Material[count];
+
+                    baseMap = colorSet.Materials[0].GetTexture("_BaseMap");
+
                     for (int i = 0; i < count; i++)
                     {
                         mats[i] = new Material(colorSet.Materials[i]); // 복사본
                     }
+
+                    //풀강 확인 후 추가
+                    if(userufo.AllStat())
+                     CreateFullStatObject(currentUFOdata,baseMap);
 
                 }
 
@@ -206,6 +236,10 @@ public class UFOAllWidget : MonoBehaviour
             renderer.materials = mats;
             if(isVisible)
                 UFOReinforceButton.gameObject.SetActive(bunlock);
+
+            //추가 오브젝트 세팅
+            CreateAddObject(currentUFOdata, bunlock, baseMap);
+            
 
             // UFO 새로 선택하면 위젯 갱신
             if (selecetUFOindex != ufoindex)
@@ -227,6 +261,99 @@ public class UFOAllWidget : MonoBehaviour
 
     }
 
+    private void CreateAddObject(UFOData currentUFOdata, bool bunlock, Texture currentBaseMap)
+    {
+       
+
+        // 새 인스턴스 생성
+        foreach (var addobject in currentUFOdata.AddUFObject)
+        {
+            GameObject addobjectInstance = Instantiate(addobject, PreviewUFO.transform);
+
+            if (addobjectInstance != null)
+            {
+                MeshRenderer renderer = addobjectInstance.GetComponent<MeshRenderer>();
+                if (renderer != null)
+                {
+                    Material[] originalMaterials = renderer.sharedMaterials;
+                    Material[] newMaterials = new Material[originalMaterials.Length];
+
+                    for (int i = 0; i < originalMaterials.Length; i++)
+                    {
+                        // 원본 머터리얼 복사
+                        newMaterials[i] = new Material(originalMaterials[i]);
+
+                        if (!bunlock)
+                        {
+                            if (newMaterials[i].HasProperty("_BaseColor"))
+                            {
+                                newMaterials[i].SetColor("_BaseColor", MTLockedColor);
+                            }
+                            if (newMaterials[i].HasProperty("_Color"))
+                            {
+                                newMaterials[i].SetColor("_Color", MTLockedColor);
+                            }
+                            newMaterials[i].color = MTLockedColor;
+                        }
+                        else
+                        {
+                            // 언락 상태 → BaseMap(Texture) 교체
+                            if (newMaterials[i].HasProperty("_BaseMap"))
+                            {
+                                newMaterials[i].SetTexture("_BaseMap", currentBaseMap);
+                            }
+                           
+                        }
+                    }
+
+                    // 새 머터리얼 배열 적용
+                    renderer.materials = newMaterials;
+                }
+
+                AddObjectInstanceList.Add(addobjectInstance);
+            }
+        }
+    }
+
+    private void CreateFullStatObject(UFOData currentUFOdata ,Texture BaseMap)
+    {
+
+        // 새 인스턴스 생성
+        foreach (var addobject in currentUFOdata.AddFullStatObject)
+        {
+            GameObject addobjectInstance = Instantiate(addobject, PreviewUFO.transform);
+
+            if (addobjectInstance != null)
+            {
+                MeshRenderer renderer = addobjectInstance.GetComponent<MeshRenderer>();
+                if (renderer != null)
+                {
+                    Material[] originalMaterials = renderer.sharedMaterials;
+                    Material[] newMaterials = new Material[originalMaterials.Length];
+
+
+
+                    for (int i = 0; i < originalMaterials.Length; i++)
+                    {
+                        // 원본 머터리얼 복사
+                        newMaterials[i] = new Material(originalMaterials[i]);
+
+                        if (newMaterials[i].HasProperty("_BaseMap"))
+                        {
+                            newMaterials[i].SetTexture("_BaseMap", BaseMap);
+                        }
+                   
+                    }
+
+                    // 새 머터리얼 배열 적용
+                    renderer.materials = newMaterials;
+                }
+
+                FullStatObjectInstanceList.Add(addobjectInstance);
+            }
+        }
+
+    }
     public void SaveSelectUFO(int selectindex)
     {
         if (GameManager.Instance.userData == null)
@@ -243,6 +370,17 @@ public class UFOAllWidget : MonoBehaviour
     
     public void CallBack_ChangeColor(int colorindex,bool bunclock)
     {
+        foreach (var addobject in AddObjectInstanceList)
+        {
+            Destroy(addobject);
+        }
+        AddObjectInstanceList.Clear();
+        foreach (var addobject in FullStatObjectInstanceList)
+        {
+            Destroy(addobject);
+        }
+        FullStatObjectInstanceList.Clear();
+
         int currentUFOIndex = GameManager.Instance.userData.CurrentUFO;
         UFOData currentUFOdata = UFOLoadManager.Instance.LoadedUFODataList[currentUFOIndex];
 
@@ -257,6 +395,8 @@ public class UFOAllWidget : MonoBehaviour
             var colorSet = currentUFOdata.UFOColorDataList[colorindex];
             int count = colorSet.Materials.Count;
 
+            Texture baseMap = colorSet.Materials[0].GetTexture("_BaseMap");
+
             mats = new Material[count];
             for (int i = 0; i < count; i++)
             {
@@ -268,6 +408,13 @@ public class UFOAllWidget : MonoBehaviour
             
             if(bunclock)
                 SaveSelectColor(colorindex, currentUFOdata);
+
+            UserUFOData userufodata = GameManager.Instance.userData.serialUFOList.Get(currentUFOdata.UFOName);
+            if (userufodata.AllStat())
+                CreateFullStatObject(currentUFOdata, baseMap);
+
+
+            CreateAddObject(currentUFOdata, bunclock, baseMap);
 
         }
     }
@@ -318,7 +465,7 @@ public class UFOAllWidget : MonoBehaviour
 
         reinForceWidget.ClearStat();
 
-        reinForceWidget.InitializeStatWidgetList(this, currentUFOdata.UFOName, statdatalist, currentUFOdata.Skilltype);
+        reinForceWidget.InitializeStatWidgetList(this, currentUFOdata, statdatalist, currentUFOdata.Skilltype);
 
         //OnEnableColorReinForceWidget();
 

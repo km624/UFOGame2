@@ -8,13 +8,16 @@ using UnityEngine;
 public class ReinForceWidget : MonoBehaviour
 {
     private UFOAllWidget  ufoAllWidget;
-    private string UFOName;
+  
+    private UFOData currentUFOData;
 
     [SerializeField]List<StatStructWidget> StatWidgetList = new List<StatStructWidget>();
 
     private Dictionary<UFOStatEnum, StatWidget> statWidgetMap = new();
 
     public event Action<bool/*bsuccess*/, int/*currentstarcnt*/> FOnReinforceApplied;
+
+    public event Action<UFOData,Texture/*basemap*/> FOnFullStated;
 
     [System.Serializable]
     public struct StatStructWidget
@@ -40,11 +43,11 @@ public class ReinForceWidget : MonoBehaviour
         InitializeDictionary();
     }
     
-    public void InitializeStatWidgetList(UFOAllWidget allwidget ,string ufoname,  IReadOnlyList<UFOStatData> ufostatlist,SkillEnum skilltype)
+    public void InitializeStatWidgetList(UFOAllWidget allwidget ,UFOData ufodata,  IReadOnlyList<UFOStatData> ufostatlist,SkillEnum skilltype)
     {
 
         ufoAllWidget = allwidget;
-        UFOName = ufoname;
+        currentUFOData = ufodata;
         if (StatWidgetList.Count != 4) Debug.Log("stat ∫Œ¡∑");
 
       
@@ -75,14 +78,23 @@ public class ReinForceWidget : MonoBehaviour
 
     public void OnClickApply(int price , UFOStatEnum statenum)
     {
-        UserUFOData userufodata = GameManager.Instance.userData.serialUFOList.Get(UFOName);
+        UserUFOData userufodata = GameManager.Instance.userData.serialUFOList.Get(currentUFOData.UFOName);
         userufodata.AddReinforce(statenum);
-       
+
+        if (userufodata.AllStat())
+        {
+            int colorIndex = userufodata.CurrentColorIndex;
+
+            var colorSet = currentUFOData.UFOColorDataList[colorIndex];
+           
+            Texture baseMap = colorSet.Materials[0].GetTexture("_BaseMap");
+
+            FOnFullStated?.Invoke(currentUFOData, baseMap);
+        }
+           
+
         int currentcnt =  GameManager.Instance.userData.MinusStartCnt(price);
        
-
-      
-
         FOnReinforceApplied?.Invoke(true, currentcnt);
         GameManager.Instance.SaveUserData();
 

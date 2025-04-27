@@ -1,10 +1,6 @@
 ﻿using DamageNumbersPro;
 using DG.Tweening;
-using NUnit.Framework.Internal;
 using System;
-using System.Buffers.Text;
-using System.Collections.Generic;
-using System.Net.NetworkInformation;
 using TMPro;
 using Unity.Cinemachine;
 
@@ -30,7 +26,6 @@ public class UFOPlayer : MonoBehaviour, IDetctable
     float baseExpPerMass = 5.0f;
 
     public event Action<float> FOnExpAdded;
-
 
     private float fillSpeed = 3.0f;
     private float TargetfillPercent = 0.0f;
@@ -85,7 +80,7 @@ public class UFOPlayer : MonoBehaviour, IDetctable
     public Vector3 WorldPosition => transform.position;
 
  
-    public void InitUFO(float gametime)
+    public void InitUFO(float gametime , UserUFOData userufodata , UFOData selectUFOdata)
     {
         LoadPlayerStatList();
 
@@ -95,21 +90,10 @@ public class UFOPlayer : MonoBehaviour, IDetctable
         
         TimeGaugeBar2.fillAmount = Time2 / TimeMax;
 
-        if (GameManager.Instance != null)
-        {
-            if (GameManager.Instance.userData != null)
-            {
+        
+        if(userufodata!=null && selectUFOdata!=null)
+            SetUFOData(selectUFOdata, userufodata);
 
-                int selectUFOIndex = GameManager.Instance.userData.CurrentUFO;
-                UFOData selectUFOdata = UFOLoadManager.Instance.LoadedUFODataList[selectUFOIndex];
-                if (selectUFOdata != null)
-                {
-                    UserUFOData userufodata = GameManager.Instance.userData.serialUFOList.Get(selectUFOdata.UFOName);
-                    SetUFOData(selectUFOdata, userufodata);
-                }
-            }
-
-        }
         //default 값 설정
         if (CamerapositionComposer != null)
         {
@@ -267,6 +251,17 @@ public class UFOPlayer : MonoBehaviour, IDetctable
             {
                 int selectcolor = userUFOdata.CurrentColorIndex;
                 meshRenderer.materials = ufodata.UFOColorDataList[selectcolor].Materials.ToArray();
+               Texture basemap = ufodata.UFOColorDataList[selectcolor].Materials[0].GetTexture("_BaseMap");
+                
+                //추가 오브젝트 세팅
+                CreateAddCObject(ufodata,basemap);
+                
+                //올스텟 오브젝트 세팅
+                if(userUFOdata.AllStat())
+                {
+                    CreateFullStatObject(ufodata,basemap);
+                }
+
             }
         }
         if (UFOBaseStatList!=null && UFOStatTimeList!=null)
@@ -302,8 +297,93 @@ public class UFOPlayer : MonoBehaviour, IDetctable
 
             }
         }
+    }
+
+    private void CreateAddCObject(UFOData currentUFOdata, Texture currentBaseMap)
+    {
+
+        // 새 인스턴스 생성
+        foreach (var addobject in currentUFOdata.AddUFObject)
+        {
+            GameObject addobjectInstance = Instantiate(addobject, ufoModel.transform);
+
+            if (addobjectInstance != null)
+            {
+                MeshRenderer renderer = addobjectInstance.GetComponent<MeshRenderer>();
+                if (renderer != null)
+                {
+                    Material[] originalMaterials = renderer.sharedMaterials;
+                    Material[] newMaterials = new Material[originalMaterials.Length];
+
+                    for (int i = 0; i < originalMaterials.Length; i++)
+                    {
+                        // 원본 머터리얼 복사
+                        newMaterials[i] = new Material(originalMaterials[i]);
+
+                        if (newMaterials[i].HasProperty("_BaseMap"))
+                        {
+                            newMaterials[i].SetTexture("_BaseMap", currentBaseMap);
+
+
+                        }
+                        // 새 머터리얼 배열 적용
+                        renderer.materials = newMaterials;
+                    }
+
+                }
+            }
+        }
+    }
+
+    private void CreateFullStatObject(UFOData currentUFOdata, Texture BaseMap)
+    {
+
+        // 새 인스턴스 생성
+        foreach (var addobject in currentUFOdata.AddFullStatObject)
+        {
+            GameObject addobjectInstance = Instantiate(addobject, ufoModel.transform);
+
+            if (addobjectInstance != null)
+            {
+                MeshRenderer renderer = addobjectInstance.GetComponent<MeshRenderer>();
+                if (renderer != null)
+                {
+                    Material[] originalMaterials = renderer.sharedMaterials;
+                    Material[] newMaterials = new Material[originalMaterials.Length];
+
+
+
+                    for (int i = 0; i < originalMaterials.Length; i++)
+                    {
+                        // 원본 머터리얼 복사
+                        newMaterials[i] = new Material(originalMaterials[i]);
+
+                        if (newMaterials[i].HasProperty("_BaseMap"))
+                        {
+                            newMaterials[i].SetTexture("_BaseMap", BaseMap);
+                        }
+
+                    }
+
+                    // 새 머터리얼 배열 적용
+                    renderer.materials = newMaterials;
+                }
+
+            }
+        }
 
     }
+
+    private void AddUFOETCObject()
+    {
+
+    }
+
+    private void AddFullStatOBject()
+    {
+
+    }
+
 
     public void CallBack_StopMovement(bool active)
     {
@@ -409,8 +489,6 @@ public class UFOPlayer : MonoBehaviour, IDetctable
 
         if(MaxLevel == CurrentLevel)
             bossdetectwidget.ActiveBossDetect(true);
-
-
 
         if (GameManager.Instance != null)
         {

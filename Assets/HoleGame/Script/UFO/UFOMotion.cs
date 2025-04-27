@@ -31,7 +31,7 @@ public class UFOMotion : MonoBehaviour
     {
         
         baseY = transform.localPosition.y;
-        StartSpin();
+        //StartSpin();
     }
 
     void Update()
@@ -44,7 +44,7 @@ public class UFOMotion : MonoBehaviour
        
     }
 
-   private void StartSpin()
+  /* private void StartSpin()
     {
 
         //Debug.Log("스타트 스핀");
@@ -52,7 +52,7 @@ public class UFOMotion : MonoBehaviour
             .SetLoops(-1, LoopType.Restart)
             .SetEase(Ease.Linear);
     }
-
+*/
     public void StartWobble(Vector3 direction)
     {
         spinTween?.Kill();
@@ -73,8 +73,8 @@ public class UFOMotion : MonoBehaviour
         rotationTween?.Kill();
        // Debug.Log("제자리로");
         bIsMove = false;
-        rotationTween = transform.DORotate(Vector3.zero, wobbleDuration).SetEase(Ease.OutQuad)
-            .OnComplete(() => StartSpin());
+        rotationTween = transform.DORotate(Vector3.zero, wobbleDuration).SetEase(Ease.OutQuad);
+            //.OnComplete(() => StartSpin());
     }
 
     public void OnLevelUpMotion()
@@ -83,9 +83,6 @@ public class UFOMotion : MonoBehaviour
         spinTween?.Kill();
         rotationTween?.Kill();
         bounceShape.enabled = false;
-
-
-
 
     }
 

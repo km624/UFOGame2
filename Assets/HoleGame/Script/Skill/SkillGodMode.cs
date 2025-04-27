@@ -11,7 +11,7 @@ public class SkillGodMode : SkillBase
         
         if (GameManager.Instance != null)
         {
-            GameManager.Instance.soundManager.PlayBgm(SoundEnum.Skill_God,0.2f);
+            GameManager.Instance.soundManager.PlayBGMOneShot(SoundEnum.Skill_God,0.2f);
         }
     }
 
@@ -23,7 +23,7 @@ public class SkillGodMode : SkillBase
         UFOplayer.ChangeUFOMaterial(UFOplayer.defaultMaterial);
         if (GameManager.Instance != null)
         {
-            GameManager.Instance.soundManager.PlayBgm(SoundEnum.BGM);
+            GameManager.Instance.soundManager.ResumeBgm();
         }
     }
 }

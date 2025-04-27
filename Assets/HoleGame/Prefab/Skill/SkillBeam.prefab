@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d962d0d5e1bde934ea215740ecb5b29d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SkillIcon: {fileID: 21300000, guid: 51937e99c2482af46b40952992a3c9db, type: 3}
+  skilltype: 3
   SkillDuration: 7.5
   GunPrefab: {fileID: 5255377436168414800, guid: a48ed6f91d793894889957729f01c277, type: 3}
   Beamprefab: {fileID: 1395013998450002516, guid: 0663aeb76031afd44828be895be75b94, type: 3}

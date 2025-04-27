@@ -14,7 +14,7 @@ public class StatWidget : MonoBehaviour
     private int CurrentStat;
     private int MaxStat;
 
-    private int currentStatPrice;
+    private int currentStatPrice = 0;
     [SerializeField] private List<Image> ActiveList = new List<Image>();
     [SerializeField] private List<Image> BoxFrameList = new List<Image>();
     [SerializeField] private TMP_Text statText;
@@ -40,29 +40,28 @@ public class StatWidget : MonoBehaviour
         {
             ActiveList[i].enabled=true;
         }
-
-        currentStatPrice = StatPriceList[CurrentStat - 1];
-
-        CheckStatPrice(starcnt);
-
-        statPrice.text = currentStatPrice.ToString();
-
        
         MaxStat = maxStat;
 
         for (int i = 0; i < MaxStat; i++)
         {
-            //ActiveList[i].enabled=true;
+           
             BoxFrameList[i].enabled = true;
         }
 
-        if (CurrentStat == MaxStat)
+
+
+        if (CheckStatPrice(starcnt))
+        {
+            currentStatPrice = StatPriceList[CurrentStat - 1];
+            statPrice.text = currentStatPrice.ToString();
+        }
+        else
         {
             statPrice.text = "MAX";
             UpButton.interactable = false;
-            
-
         }
+
 
         if (staticon != null)
         {
@@ -82,21 +81,23 @@ public class StatWidget : MonoBehaviour
         }
         else
         {
-            ActiveList[CurrentStat-1].enabled = true;
+           
             currentStatPrice = StatPriceList[CurrentStat - 1];
             statPrice.text = currentStatPrice.ToString();
         }
-        
+        ActiveList[CurrentStat - 1].enabled = true;
         reinForceWidget.OnClickApply(currentStatPrice, StatType);
       
     }
    
-    public void CheckStatPrice(int starcnt)
+    public bool CheckStatPrice(int starcnt)
     {
-        if (CurrentStat == MaxStat) return;
+        if (CurrentStat == MaxStat) return false;
 
          bool buttonactive = starcnt >= currentStatPrice;
          UpButton.interactable = buttonactive;
+
+        return true;
     }
    
     public void ClearStatWidget()

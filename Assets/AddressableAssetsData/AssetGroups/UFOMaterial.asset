@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: UFOMaterial
+  m_EditorClassIdentifier: 
+  m_GroupName: UFOMaterial
+  m_GUID: beeccb3bf603e8849ac06bb8baa5fd7b
+  m_SerializeEntries:
+  - m_GUID: 0682b92219d641d4e92ccaf64bd0bc01
+    m_Address: Assets/HoleGame/Mesh/UFO/Normal/MT_NormalUFO1.mat
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 49bfb1a307224f1418f434ffdd8ca691
+    m_Address: Assets/HoleGame/Mesh/UFO/Fat/MT_FatUFO1.mat
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6d2d43920fd1b3149921526f2a1c32cc
+    m_Address: Assets/HoleGame/Mesh/UFO/Fat/MT_FatUFO2.mat
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 85cf6d81d24148146be3b16f7fb66b86
+    m_Address: Assets/HoleGame/Mesh/UFO/Speed/MT_SpeedUFO1.mat
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c45c5d3a3c1a47245a62e604ddb17724
+    m_Address: Assets/HoleGame/Mesh/UFO/Normal/MT_NormalUFO2.mat
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: deaa81e0de6e54d40873e0418d966952
+    m_Address: Assets/HoleGame/Mesh/UFO/Speed/MT_SpeedUFO.mat
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: c6990955080994a46ab2e8ca546c8f45, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 39f63eb7cfcc12241a48bf82afa8fab4, type: 2}
+    - {fileID: 11400000, guid: 2ae1f18713660544483b63406843fb47, type: 2}

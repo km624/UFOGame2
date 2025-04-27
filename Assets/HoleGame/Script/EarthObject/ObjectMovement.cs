@@ -42,12 +42,16 @@ public class ObjectMovement : MonoBehaviour
     private Coroutine ForceDirectionCoroutine;
 
     private Transform ForceMoveObject = null;
-
+   
+    private Rigidbody rb;
     public void SetJupmpDistance(float distance)
     {
         jumpDistance = distance;
     }
-
+    private void Awake()
+    {
+        rb = GetComponent<Rigidbody>(); 
+    }
     void Start()
     {
         JumpNormalized();
@@ -179,15 +183,27 @@ public class ObjectMovement : MonoBehaviour
  
        
          jumpSeq = DOTween.Sequence();
-       
+
         jumpSeq.Append(transform.DORotate(Quaternion.LookRotation(horizontalDir).eulerAngles, 0.5f, RotateMode.Fast)
-                  .SetEase(Ease.OutQuad))
-                .Append(transform.DOScale(SquishedScale, squishDuration).SetEase(Ease.OutQuad))
-               .Append(transform.DOScale(defaultScale, squishDuration).SetEase(Ease.InQuad));
-               
-        jumpSeq.Append(transform.DOJump(targetPosition, jumpPower, 1, jumpDuration).SetEase(Ease.OutQuad));
-       
-      
+                  .SetEase(Ease.OutQuad)).SetUpdate(UpdateType.Fixed);
+
+        jumpSeq.Append(transform.DOScale(SquishedScale, squishDuration).SetEase(Ease.OutQuad))
+               .Append(transform.DOScale(defaultScale, squishDuration).SetEase(Ease.InQuad)).SetUpdate(UpdateType.Fixed);
+
+
+        //jumpSeq.Append(transform.DOJump(targetPosition, jumpPower, 1, jumpDuration).SetEase(Ease.OutQuad)).SetUpdate(UpdateType.Fixed);
+        jumpSeq.Append(rb
+            .DOJump(
+                transform.position + horizontalDir * jumpDistance,
+                jumpPower,      // jump height
+                1,              // num of jumps
+                jumpDuration   // duration
+            )
+            .SetEase(Ease.OutQuad)
+            .SetUpdate(UpdateType.Fixed));
+
+
+
     }
 
     Vector3 CalculateUfoDirection(Transform objecttransform)

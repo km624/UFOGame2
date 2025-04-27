@@ -61,8 +61,8 @@ public class BeamTrigger : MonoBehaviour
             FallingObject FObject = other.GetComponent<FallingObject>();
             if (FObject != null)
             {
-                //플레이어 보다 1 레벨 높으면 return
-                if (player.CurrentLevel < FObject.ObjectMass + 1) return;
+                //오브젝트가 플레이어 보다 1 레벨 높으면 return
+                if (player.CurrentLevel + 1 < FObject.ObjectMass) return;
 
                 BossObject bossObject = other.GetComponent<BossObject>();
                 //보스 오브젝트면 빔 활성화 X

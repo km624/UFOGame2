@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Android.Gradle.Manifest;
 using UnityEngine;
 
 
@@ -102,20 +103,27 @@ public class GameState : MonoBehaviour
         //UFO에 시간 바인딩
         FOnTotalTimeChanged += ufoplayer.CallBack_SetRemainTime;
         //스킬 세팅
-        
-        UserUFOData ufodata = null;
-        if(GameManager.Instance.userData != null)
+
+        //데이터 불러와서 세팅
+        UserUFOData userufodata = null;
+        UFOData selectUFOdata = null;
+        if (GameManager.Instance != null)
         {
+            if (GameManager.Instance.userData != null)
+            {
 
+                int selectUFOIndex = GameManager.Instance.userData.CurrentUFO;
+               selectUFOdata = UFOLoadManager.Instance.LoadedUFODataList[selectUFOIndex];
+                if (selectUFOdata != null)
+                {
+                   userufodata = GameManager.Instance.userData.serialUFOList.Get(selectUFOdata.UFOName);
+                }
+            }
         }
-            
-        AllSkillManager.SetSkill(ufoplayer, ufodata);
-        //스킬 표시
-        /* foreach (SkillBase skilldata in AllSkillManager.ReadAllSkills)
-         {
 
-             PlayerHud.CreateSkillWidget(skilldata, AllSkillManager);
-         }*/
+            
+        AllSkillManager.SetSkill(ufoplayer, userufodata, selectUFOdata);
+        
         //스킬 표시
         PlayerHud.CreateSkillWidget(AllSkillManager.CurrentSkill, AllSkillManager); 
 
@@ -140,7 +148,7 @@ public class GameState : MonoBehaviour
         PlayerHud.ChangeGenerationNameText(objectManager.getCurrentGenerationName());
 
         //플레이어 초기화
-        ufoplayer.InitUFO(TotalTime);
+        ufoplayer.InitUFO(TotalTime, userufodata, selectUFOdata);
 
     }
 
@@ -421,7 +429,7 @@ public class GameState : MonoBehaviour
         //ufoplayer.CallBack_StopMovement(true);
 
         GamePause(true);
-
+        GameManager.Instance.soundManager.PlayBgm(SoundEnum.BGM_GameEnd,0.5f);
         bIsGameEnd = true;
         int converttime = Mathf.RoundToInt(TotalPlayTime);
         PlayerHud.UpdateGameState(converttime, TotalScore, StarCnt);

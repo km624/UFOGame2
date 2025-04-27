@@ -4,7 +4,8 @@ using System.Collections;
 public abstract  class SkillBase : MonoBehaviour
 {
     public int SkillCount { get; private set; }
-    public Sprite SkillIcon;
+    //public Sprite SkillIcon;
+    public SkillEnum skilltype;
     public float SkillDuration = 3f;
 
    // protected bool bProgressSkill = false;
