@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class ButtonEffect : MonoBehaviour,IPointerDownHandler, IPointerUpHandler
 {
     [SerializeField] private VibrationEnum vibetype = VibrationEnum.ButtonClick;
-
+    [SerializeField] private SoundEnum sound = SoundEnum.ButtonClick;
    
      private Image targetImage;
      private float pressedScale = 0.85f;
@@ -33,6 +33,7 @@ public class ButtonEffect : MonoBehaviour,IPointerDownHandler, IPointerUpHandler
                 btn.onClick.AddListener(() =>
                 {
                     GameManager.Instance.vibrationManager.Play(vibetype);
+                    GameManager.Instance.soundManager.PlaySfx(sound,0.3f);
                 });
             }
 

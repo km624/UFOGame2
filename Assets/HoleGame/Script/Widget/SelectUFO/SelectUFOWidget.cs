@@ -68,7 +68,10 @@ public class SelectUFOWidget : MonoBehaviour
 
             // UFOButtonWidget을 현재 Box에 생성
             UFOButtonWidget btnWidget = Instantiate(PrefabUFOBtnWidget, currentBox.transform, false);
-            btnWidget.InitializeUFOButton(this, i, null, bunlock, bselect, price);
+
+            Sprite ufoicon = ufoList[i].UFOIcon;
+
+            btnWidget.InitializeUFOButton(this, i, ufoicon, bunlock, bselect, price);
 
             UFOBtnWidgetList.Add(btnWidget);
 

@@ -104,7 +104,7 @@ public class HoleScript : MonoBehaviour
 
              if (GameManager.Instance != null)
              {
-                 //GameManager.Instance.vibrationManager.StartLiftLoopVibration();
+                 GameManager.Instance.vibrationManager.StartLiftLoopVibration();
              }
 
              if (!absorptionCache.TryGetValue(other, out var absorption))

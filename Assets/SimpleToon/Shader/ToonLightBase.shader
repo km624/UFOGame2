@@ -9,10 +9,10 @@ Shader "Lpk/LightModel/ToonLightBase"
         _ShadowStep         ("ShadowStep", Range(0, 1))           = 0.5
         _ShadowStepSmooth   ("ShadowStepSmooth", Range(0, 1))     = 0.04
         
-        [Space] 
-        _SpecularStep       ("SpecularStep", Range(0, 1))         = 0.6
-        _SpecularStepSmooth ("SpecularStepSmooth", Range(0, 1))   = 0.05
-        [HDR]_SpecularColor ("SpecularColor", Color)              = (1,1,1,1)
+        //[Space] 
+        //_SpecularStep       ("SpecularStep", Range(0, 1))         = 0.6
+        //_SpecularStepSmooth ("SpecularStepSmooth", Range(0, 1))   = 0.05
+        //[HDR]_SpecularColor ("SpecularColor", Color)              = (1,1,1,1)
         
         [Space]
         _RimStep            ("RimStep", Range(0, 1))              = 0.65
@@ -141,7 +141,8 @@ Shader "Lpk/LightModel/ToonLightBase"
                 float4 baseMap = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv);
 
                 // return NH;
-               float specularNH = smoothstep((1-_SpecularStep * 0.05)  - _SpecularStepSmooth * 0.05, (1-_SpecularStep* 0.05)  + _SpecularStepSmooth * 0.05, NH) ;
+               //float specularNH = smoothstep((1-_SpecularStep * 0.05)  - _SpecularStepSmooth * 0.05, (1-_SpecularStep* 0.05)  + _SpecularStepSmooth * 0.05, NH) ;
+               
                float shadowNL = smoothstep(_ShadowStep - _ShadowStepSmooth, _ShadowStep + _ShadowStepSmooth, NL);
 
 				input.shadowCoord = TransformWorldToShadowCoord(input.positionWS);
@@ -156,12 +157,13 @@ Shader "Lpk/LightModel/ToonLightBase"
                 float3 diffuse = _MainLightColor.rgb * baseMap * _BaseColor * shadowNL * shadow;
                 
                 //specular
-                float3 specular = _SpecularColor * shadow * shadowNL *  specularNH;
+                //float3 specular = _SpecularColor * shadow * shadowNL *  specularNH;
                 
                 //ambient
                 float3 ambient =  rim * _RimColor + SampleSH(N) * _BaseColor * baseMap;
             
-                float3 finalColor = diffuse + ambient + specular;
+                //float3 finalColor = diffuse + ambient + specular;
+                float3 finalColor = diffuse + ambient;
                 finalColor = MixFog(finalColor, input.fogCoord);
                 return float4(finalColor , 1.0);
             }
@@ -206,6 +208,7 @@ Shader "Lpk/LightModel/ToonLightBase"
                 VertexPositionInputs vertexInput = GetVertexPositionInputs(v.vertex.xyz);
                 float2 clipUV = (vertexInput.positionCS.xy / vertexInput.positionCS.w);
                 o.pos = TransformObjectToHClip(float4(v.vertex.xyz + v.normal * _OutlineWidth * 0.1 ,1));
+               
                 o.fogCoord = ComputeFogFactor(vertexInput.positionCS.z);
 
                 return o;
@@ -241,6 +244,6 @@ Shader "Lpk/LightModel/ToonLightBase"
 }
 
 
-        UsePass "Universal Render Pipeline/Lit/ShadowCaster"
+        //UsePass "Universal Render Pipeline/Lit/ShadowCaster"
     }
 }

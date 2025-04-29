@@ -414,7 +414,7 @@ public class UFOAllWidget : MonoBehaviour
                 CreateFullStatObject(currentUFOdata, baseMap);
 
 
-            CreateAddObject(currentUFOdata, bunclock, baseMap);
+            CreateAddObject(currentUFOdata, true, baseMap);
 
         }
     }

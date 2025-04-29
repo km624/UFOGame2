@@ -32,7 +32,7 @@ MonoBehaviour:
   AddUFObject: []
   AddFullStatObject: []
   UFOPrice: 20
-  UFOIcon: {fileID: 0}
+  UFOIcon: {fileID: 21300000, guid: 01c815adbe7d23241897d77310bcd6dd, type: 3}
   Skilltype: 0
   StatList:
   - StatType: 0

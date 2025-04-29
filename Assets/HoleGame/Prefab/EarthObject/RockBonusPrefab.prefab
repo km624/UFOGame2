@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 762797862882478486}
   - component: {fileID: 1619380233179080312}
   - component: {fileID: 4054889275951949815}
-  - component: {fileID: 5693412620970926435}
+  - component: {fileID: 6444114996869987469}
   m_Layer: 6
   m_Name: RockBonusPrefab
   m_TagString: FallingObject
@@ -187,14 +187,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59c1a429540318045b3f565a38015a18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!65 &5693412620970926435
+--- !u!65 &6444114996869987469
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2036141102387023650}
-  m_Material: {fileID: 13400000, guid: 49db833aac648b74695538536bdde390, type: 2}
+  m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -206,8 +206,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.5862946, y: 0.5303127, z: 0.25540507}
-  m_Center: {x: -0.019666964, y: -0.013638247, z: 0.12770247}
+  m_Size: {x: 0.80641115, y: 0.35129347, z: 0.7294117}
+  m_Center: {x: -0.027050659, y: 0.17564674, z: 0.01875852}
 --- !u!1 &3892058378503278801
 GameObject:
   m_ObjectHideFlags: 0

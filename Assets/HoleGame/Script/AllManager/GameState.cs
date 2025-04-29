@@ -2,7 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Android.Gradle.Manifest;
+
 using UnityEngine;
 
 
@@ -197,7 +197,7 @@ public class GameState : MonoBehaviour
         float levelDiff = level - absorbedMass;
 
         // 지수 감소: 2차이
-        float expMultiplier = Mathf.Pow(0.3f, levelDiff);
+        float expMultiplier = Mathf.Pow(0.5f, levelDiff);
 
         // 2n-n = 증가 효과도 포함됨
         float exp = 1.0f * expMultiplier;

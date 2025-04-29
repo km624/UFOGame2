@@ -64,7 +64,7 @@ Material:
     - _WaveSpeed: 0.4
     m_Colors:
     - _BaseColor: {r: 0, g: 0.54639435, b: 0.95408857, a: 0}
-    - _FoamColor: {r: 1.6967708, g: 1.6567526, b: 1.6567526, a: 1}
+    - _FoamColor: {r: 1.216786, g: 1.1880882, b: 1.1880882, a: 1}
     - _RippleColor: {r: 0.3537736, g: 0.6954565, b: 1, a: 0}
     - _TillingOffset: {r: 1000, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []

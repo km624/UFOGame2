@@ -23,7 +23,7 @@ public class UFOPlayer : MonoBehaviour, IDetctable
     [SerializeField]
     private float MaxExpGauge = 100.0f;
 
-    float baseExpPerMass = 5.0f;
+    float baseExpPerMass = 5f;
 
     public event Action<float> FOnExpAdded;
 
@@ -73,6 +73,10 @@ public class UFOPlayer : MonoBehaviour, IDetctable
     [SerializeField]
     private PossibleTrigger possibleTrigger;
 
+    //TEST
+    [SerializeField]
+    private BeamColorChangeGradation BeamColor;
+
     private float DefaultCameraDistance = 0.0f;
 
     public Material defaultMaterial { get; private set; } // 기본 머티리얼
@@ -113,6 +117,14 @@ public class UFOPlayer : MonoBehaviour, IDetctable
 
         if (possibleTrigger != null)
             possibleTrigger.SetLevel(CurrentLevel);
+
+        if(BeamColor != null)
+        {
+            BeamColor.SetMaxLevel(MaxLevel);
+            BeamColor.UpdateLevelSettings(CurrentLevel);
+           
+        }
+           
 
         EXPGaugeBar.fillAmount = 0.0f;
 
@@ -504,12 +516,16 @@ public class UFOPlayer : MonoBehaviour, IDetctable
         trigger.SetCurrentLevel(CurrentLevel);
         possibleTrigger.SetLevel(CurrentLevel);
 
+        BeamColor.UpdateLevelSettings(CurrentLevel);
+
         UpdateSizeText(CurrentLevel);
     }
 
     public void MaxLevelLimitUp()
     {
         MaxLevel  += 4;
+        BeamColor.SetMaxLevel(MaxLevel);
+        BeamColor.UpdateLevelSettings(CurrentLevel);
     }
 
     public void SetCurrentBoss(BossObject boss)
