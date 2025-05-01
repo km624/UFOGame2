@@ -292,7 +292,7 @@ GameObject:
   - component: {fileID: 3088339307989971654}
   - component: {fileID: 5222711144023794468}
   - component: {fileID: 4452947345747939705}
-  - component: {fileID: 3771547097985983927}
+  - component: {fileID: 6954606394468679250}
   m_Layer: 6
   m_Name: DianoBonusPrefab
   m_TagString: FallingObject
@@ -463,14 +463,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59c1a429540318045b3f565a38015a18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!65 &3771547097985983927
+--- !u!65 &6954606394468679250
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8344338221326644768}
-  m_Material: {fileID: 13400000, guid: 49db833aac648b74695538536bdde390, type: 2}
+  m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -482,5 +482,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.36559582, y: 0.21784396, z: 0.37580135}
-  m_Center: {x: 0.006937176, y: 0.09836166, z: 0.011891693}
+  m_Size: {x: 0.91398954, y: 0.5446099, z: 0.93950343}
+  m_Center: {x: 0.01734294, y: 0.24590415, z: 0.029729232}

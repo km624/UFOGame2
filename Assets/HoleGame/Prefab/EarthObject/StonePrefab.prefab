@@ -292,7 +292,7 @@ GameObject:
   - component: {fileID: 4453283430784985530}
   - component: {fileID: 7061002084497992850}
   - component: {fileID: 8700898273921279477}
-  - component: {fileID: 337698547418614772}
+  - component: {fileID: -8448130993352820184}
   m_Layer: 6
   m_Name: StonePrefab
   m_TagString: FallingObject
@@ -310,7 +310,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 8991868430838832440}
@@ -324,7 +324,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1300599383138542413}
-  m_Mesh: {fileID: 5060444177187149915, guid: f9bb05a3be29c8e448811c8f3c10850c, type: 3}
+  m_Mesh: {fileID: 5235561496113723397, guid: 5e0ce9e991271844d94587c655765967, type: 3}
 --- !u!23 &6836711853169574387
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -463,14 +463,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59c1a429540318045b3f565a38015a18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!65 &337698547418614772
+--- !u!65 &-8448130993352820184
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1300599383138542413}
-  m_Material: {fileID: 13400000, guid: 49db833aac648b74695538536bdde390, type: 2}
+  m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -482,5 +482,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.0818727, y: 0.8844881, z: 0.6171916}
-  m_Center: {x: 0.037278682, y: 0.42817515, z: 0.005159259}
+  m_Size: {x: 2.0609674, y: 1.68495, z: 1.1757501}
+  m_Center: {x: -0.071015894, y: 0.81567377, z: -0.00982821}

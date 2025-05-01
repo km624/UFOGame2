@@ -65,7 +65,7 @@ public class Vibration : MonoBehaviour {
         }
         //If not android do simple solution for now
         else {
-            Handheld.Vibrate();
+            //Handheld.Vibrate();
         }
     }
 

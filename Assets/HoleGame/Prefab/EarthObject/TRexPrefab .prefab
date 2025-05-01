@@ -15,8 +15,8 @@ GameObject:
   - component: {fileID: 5276872793198437437}
   - component: {fileID: 9158981098621082165}
   - component: {fileID: 8594808592780592121}
-  - component: {fileID: 102323616373726919}
   - component: {fileID: 354041552339809526}
+  - component: {fileID: 1641725555053458673}
   m_Layer: 6
   m_Name: 'TRexPrefab '
   m_TagString: FallingObject
@@ -167,27 +167,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59c1a429540318045b3f565a38015a18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!65 &102323616373726919
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1006106219408604765}
-  m_Material: {fileID: 13400000, guid: 49db833aac648b74695538536bdde390, type: 2}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.85082656, y: 1.3944283, z: 1.9937891}
-  m_Center: {x: 0, y: 0.69836974, z: 0.3699251}
 --- !u!114 &354041552339809526
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -209,6 +188,27 @@ MonoBehaviour:
   onSwallowed:
     m_PersistentCalls:
       m_Calls: []
+--- !u!65 &1641725555053458673
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1006106219408604765}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.1911572, y: 1.9521998, z: 2.791305}
+  m_Center: {x: 0, y: 0.9777177, z: 0.51789516}
 --- !u!1 &2317875604133627427
 GameObject:
   m_ObjectHideFlags: 0
@@ -351,7 +351,7 @@ Transform:
   m_GameObject: {fileID: 2842344753111520748}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
-  m_LocalPosition: {x: -0.015, y: 1.618, z: 0.839}
+  m_LocalPosition: {x: 0, y: 2.109, z: 1.102}
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 1
   m_Children: []

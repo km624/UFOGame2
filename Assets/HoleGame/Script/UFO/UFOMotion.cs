@@ -1,4 +1,5 @@
 using DG.Tweening;
+using UnityEditor.Build;
 using UnityEngine;
 
 public class UFOMotion : MonoBehaviour
@@ -25,6 +26,7 @@ public class UFOMotion : MonoBehaviour
     private Tween rotationTween;
     private Tween spinTween;
 
+    private bool bIsMotion = true;
     private bool bIsMove = false;
    
     void Start()
@@ -34,25 +36,22 @@ public class UFOMotion : MonoBehaviour
         //StartSpin();
     }
 
+   
+
     void Update()
     {
-      
+        if (!bIsMotion) return;
         float newY = baseY + verticalLength * Mathf.Sin(Time.time * verticalSpeed * 2 * Mathf.PI);
         transform.localPosition = new Vector3(transform.localPosition.x, newY, transform.localPosition.x);
 
-
-       
     }
 
-  /* private void StartSpin()
+    public void SetMotionStart(bool motion)
     {
-
-        //Debug.Log("스타트 스핀");
-        spinTween = transform.DORotate(new Vector3(0, 360, 0), 60.0f/rotationSpeed, RotateMode.FastBeyond360)
-            .SetLoops(-1, LoopType.Restart)
-            .SetEase(Ease.Linear);
+        bIsMotion = motion;
     }
-*/
+
+ 
     public void StartWobble(Vector3 direction)
     {
         spinTween?.Kill();
@@ -74,17 +73,8 @@ public class UFOMotion : MonoBehaviour
        // Debug.Log("제자리로");
         bIsMove = false;
         rotationTween = transform.DORotate(Vector3.zero, wobbleDuration).SetEase(Ease.OutQuad);
-            //.OnComplete(() => StartSpin());
+           
     }
 
-    public void OnLevelUpMotion()
-    {
-        //모든 모션 초기화
-        spinTween?.Kill();
-        rotationTween?.Kill();
-        bounceShape.enabled = false;
-
-    }
-
-    
+   
 }

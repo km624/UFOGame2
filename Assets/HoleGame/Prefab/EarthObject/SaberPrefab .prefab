@@ -206,7 +206,7 @@ GameObject:
   - component: {fileID: 1253462815242816301}
   - component: {fileID: 6960990403249266324}
   - component: {fileID: 3945388487654624507}
-  - component: {fileID: 4037247451297788224}
+  - component: {fileID: 8790993214711642025}
   m_Layer: 6
   m_Name: 'SaberPrefab '
   m_TagString: FallingObject
@@ -377,14 +377,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59c1a429540318045b3f565a38015a18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!65 &4037247451297788224
+--- !u!65 &8790993214711642025
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5863985950576268560}
-  m_Material: {fileID: 13400000, guid: 49db833aac648b74695538536bdde390, type: 2}
+  m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -396,8 +396,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.7895386, y: 1.1163706, z: 1.7788041}
-  m_Center: {x: 0, y: 0.55818516, z: -0.14726844}
+  m_Size: {x: 1.2632618, y: 1.7861929, z: 2.8460865}
+  m_Center: {x: 0, y: 0.8930962, z: -0.2356295}
 --- !u!1 &8377142382401313112
 GameObject:
   m_ObjectHideFlags: 0

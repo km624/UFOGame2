@@ -21,7 +21,7 @@ public class HoleScript : MonoBehaviour
    
     public Transform UFOtransform;
 
-   
+    private UFOPlayer ufoplayer;
 
     [Header("개발자")]
     private int LiftUpLayer =10;
@@ -31,6 +31,11 @@ public class HoleScript : MonoBehaviour
 
 
     private Dictionary<Collider, LiftAbsorption> absorptionCache = new();
+
+    public void InitBeam(UFOPlayer layer)
+    {
+        ufoplayer = layer;  
+    }
 
     public void SetCurrentBoss (BossObject boss)
     {
@@ -73,15 +78,14 @@ public class HoleScript : MonoBehaviour
             absorption?.ResetScale();
             absorptionCache.Remove(other);
          
-           // if(absorptionCache.Count<=0)
-            //{
-                if(GameManager.Instance!=null)
-                {
+             if(GameManager.Instance!=null)
+              {
                     GameManager.Instance.vibrationManager.StopLiftLoopVibration();  
-                }
-            //}
-            //other.gameObject.layer = NormalLayer;
-           
+              }
+
+             if(other.gameObject == bossobj.gameObject)
+                ufoplayer.ResetCameraDistance();
+
         }
 
     }
@@ -119,26 +123,17 @@ public class HoleScript : MonoBehaviour
 
              absorption?.ApplyAbsorptionScale();
 
-             //Vector3 directionToShip = (UFOtransform.position - rb.position).normalized;
-
-            /*  float newLifSpeed = CalculateLiftSpeed(CurrentLevel, absorption.GetObjectMass());
-
-              //Vector3 liftForce = Vector3.up * LiftSpeed;
-              Vector3 liftForce = Vector3.up * newLifSpeed;
-
-              float distance = Vector3.Distance(rb.position, UFOtransform.position);
-              float attractionStrength = Mathf.Clamp(distance * 2f, 10f, 50f);
-
-
-              Vector3 attractionForce = directionToShip * attractionStrength;
-
-              rb.AddForce(liftForce + attractionForce, ForceMode.Acceleration);
-
-              rb.linearDamping = Mathf.Lerp(rb.linearDamping, 2f, Time.deltaTime * 2f);*/
-
+ 
             Vector3 targetPos = UFOtransform.position + Vector3.up * 1.5f;
             Vector3 pullDir = (targetPos - rb.position).normalized;
             float absorbStrength = CalculateAbsorbStrength(CurrentLevel, absorption.GetObjectMass(),LiftSpeed);
+
+            if (bossobj.gameObject == other.gameObject)
+            {
+                ufoplayer.TestCameraChangeDistance();
+                absorbStrength = 4.5f;
+            }
+               
             rb.AddForce(pullDir * absorbStrength, ForceMode.Acceleration);
             rb.linearVelocity = Vector3.Lerp(rb.linearVelocity, pullDir * absorbStrength, Time.deltaTime * 3f);
           
@@ -148,15 +143,7 @@ public class HoleScript : MonoBehaviour
      }
 
 
-    /* public float CalculateLiftSpeed(int ufoLevel, float objectLevel)
-     {
-         float delta = objectLevel - ufoLevel;
-
-         float rawSpeed = Mathf.Pow(LiftSpeed, 1f - delta); // 감쇠 수식
-         float clampedSpeed = Mathf.Clamp(rawSpeed, 0.1f, 30.0f); // 범위 제한
-
-         return clampedSpeed;
-     }*/
+  
 
     public float CalculateAbsorbStrength(int ufoLevel, float objectMass, float baseStrength)
     {

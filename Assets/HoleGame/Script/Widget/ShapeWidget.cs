@@ -7,6 +7,7 @@ public class ShapeWidget : MonoBehaviour
 {
 
     public TMP_Text CountText;
+    public TMP_Text DoubleText;
     public Image ShapeImage;
     private int Shapecount = 0;
     private PlayerHudWidget playerhud;
@@ -50,6 +51,7 @@ public class ShapeWidget : MonoBehaviour
         //애니메이션 추가 가능
         CountText.enabled = false;
         ShapeImage.enabled = false;
+        DoubleText.enabled = false;
 
         OnShpaeWidgetAnimation();
     }

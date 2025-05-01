@@ -263,6 +263,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CountText: {fileID: 5688614616384260094}
+  DoubleText: {fileID: 5602001467012855618}
   ShapeImage: {fileID: 2058885083599684816}
 --- !u!1 &3951886370246105213
 GameObject:

@@ -43,16 +43,16 @@ Material:
     m_Ints: []
     m_Floats:
     - _Boolean: 0
-    - _Edge1End: 0.2
-    - _Edge1Start: 0
-    - _Edge2End: 0.4
-    - _Edge2Start: 0.2
-    - _Edge3End: 0.6
-    - _Edge3Start: 0.4
-    - _Edge4End: 0.8
-    - _Edge4Start: 0.6
+    - _Edge1End: 1
+    - _Edge1Start: 1
+    - _Edge2End: 1
+    - _Edge2Start: 1
+    - _Edge3End: 1
+    - _Edge3Start: 1
+    - _Edge4End: 1
+    - _Edge4Start: 1
     - _Edge5End: 1
-    - _Edge5Start: 0.8
+    - _Edge5Start: 0
     - _Float_7: 0
     - _Float_8: 0
     - _Progress: 1
@@ -67,7 +67,7 @@ Material:
     - _Color3: {r: 0.15525027, g: 1, b: 0.042452812, a: 0}
     - _Color4: {r: 0, g: 0.007030964, b: 1, a: 0}
     - _Color5: {r: 1, g: 0, b: 0.7253394, a: 0}
-    - _ColorDirect: {r: -1, g: 1, b: 0, a: 0}
+    - _ColorDirect: {r: 1, g: -1, b: 0, a: 0}
     - _Offsetvector: {r: 1, g: 1, b: 0, a: 0}
     - _RotateCenter: {r: 2, g: 0, b: 0, a: 0}
     - _tillingvector: {r: 1, g: 0.5, b: 0, a: 0}

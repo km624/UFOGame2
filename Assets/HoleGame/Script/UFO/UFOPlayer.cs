@@ -23,7 +23,7 @@ public class UFOPlayer : MonoBehaviour, IDetctable
     [SerializeField]
     private float MaxExpGauge = 100.0f;
 
-    float baseExpPerMass = 5f;
+    float baseExpPerMass = 7.0f;
 
     public event Action<float> FOnExpAdded;
 
@@ -110,7 +110,11 @@ public class UFOPlayer : MonoBehaviour, IDetctable
 
         //레벨 세팅
         if (UFOBeam != null)
+        {
+            UFOBeam.InitBeam(this);
             UFOBeam.SetSwallowLevelSet(CurrentLevel);
+        }
+
 
         if (trigger != null)
             trigger.SetCurrentLevel(CurrentLevel);
@@ -386,17 +390,6 @@ public class UFOPlayer : MonoBehaviour, IDetctable
 
     }
 
-    private void AddUFOETCObject()
-    {
-
-    }
-
-    private void AddFullStatOBject()
-    {
-
-    }
-
-
     public void CallBack_StopMovement(bool active)
     {
         ufoMovement.SetMoveActive(!active);
@@ -530,8 +523,7 @@ public class UFOPlayer : MonoBehaviour, IDetctable
 
     public void SetCurrentBoss(BossObject boss)
     {
-       
-       
+
         bossdetectwidget.SetBosstransform(boss.transform);
         bossdetectwidget.ActiveBossDetect(false);
 
@@ -540,20 +532,31 @@ public class UFOPlayer : MonoBehaviour, IDetctable
 
     private void UpdateSizeText(int currentsizelevel)
     {
-      /* if(currentsizelevel == PlayerStatList.Count)
-            LevelText.text = "레벨: " + "MAX";
-       else*/
-            LevelText.text = "레벨: " + currentsizelevel.ToString();
+    
+       LevelText.text = "레벨: " + currentsizelevel.ToString();
         
     }
 
     public void ChangeCameraDistance(float cameradistance)
     {
+        Debug.Log("Changecamera");
         CamerapositionComposer.CameraDistance = cameradistance;
     }
 
+    public void TestCameraChangeDistance()
+    {
+        float current =CamerapositionComposer.CameraDistance;
+        float target = 3.0f;
+
+        // 거리 줄이기 (Lerp로 부드럽게)
+        float newDistance = Mathf.Lerp(current, target, Time.deltaTime * 20.0f);
+        ChangeCameraDistance(newDistance);
+    }
+
+
     public void ResetCameraDistance()
     {
+        Debug.Log("Rest");
         CamerapositionComposer.CameraDistance = DefaultCameraDistance;
     }
 

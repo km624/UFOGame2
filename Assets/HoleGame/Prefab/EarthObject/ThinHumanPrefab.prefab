@@ -292,7 +292,7 @@ GameObject:
   - component: {fileID: 4832152545124272801}
   - component: {fileID: 1860806055644286296}
   - component: {fileID: 2246600155577430902}
-  - component: {fileID: 4784682501926963110}
+  - component: {fileID: -384204225962223200}
   m_Layer: 6
   m_Name: ThinHumanPrefab
   m_TagString: FallingObject
@@ -463,7 +463,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59c1a429540318045b3f565a38015a18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!65 &4784682501926963110
+--- !u!65 &-384204225962223200
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -482,5 +482,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.7650053, y: 0.92363554, z: 0.36700916}
-  m_Center: {x: 0.05262074, y: 0.46413502, z: 0.05578067}
+  m_Size: {x: 1.043189, y: 1.2595031, z: 0.5004671}
+  m_Center: {x: 0.07175556, y: 0.63291144, z: 0.07606456}

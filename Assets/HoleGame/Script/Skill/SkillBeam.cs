@@ -31,7 +31,7 @@ public class SkillBeam : SkillBase
             trigger.SetBeamData(GunInstant.transform, ShootInterval, BeamInstant, UFOplayer,remainingTime);
         }
        
-        UFOplayer.ChangeCameraDistance(12.0f);
+        //UFOplayer.ChangeCameraDistance(12.0f);
     }
   
 
@@ -41,6 +41,6 @@ public class SkillBeam : SkillBase
         Destroy(GunInstant);
         Destroy(BeamRangeInstant);
         Destroy(BeamInstant);
-        UFOplayer.ResetCameraDistance();
+        //UFOplayer.ResetCameraDistance();
     }
 }

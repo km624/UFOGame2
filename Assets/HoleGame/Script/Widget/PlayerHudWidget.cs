@@ -65,6 +65,7 @@ public class PlayerHudWidget : MonoBehaviour
 
     public void CallBack_CreateShapeWidget(ShapeEnum shapetype , int count)
     {
+        Debug.Log("Create : " + shapetype); 
         GameObject newWidgetObj = Instantiate(FallingObjectWidgetPrefab, AllShapeWidget.transform);
        
         if (newWidgetObj != null)
@@ -118,15 +119,15 @@ public class PlayerHudWidget : MonoBehaviour
 
        
         // 이미지 초기 크기를 작게 설정
-        spawnedImage.rectTransform.localScale = Vector3.one * 0.5f;
+        spawnedImage.rectTransform.localScale = Vector3.one * 4.0f;
         
       
         RectTransform targetUIAnchor = AllBonusWidget[shape].gameObject.GetComponent<RectTransform>();
         Vector3 endPos = targetUIAnchor.position;
 
         Sequence seq = DOTween.Sequence()
-        .Append(spawnedImage.rectTransform.DOScale(Vector3.one, 1.5f).SetEase(Ease.OutBack))
-        .Join(spawnedImage.rectTransform.DOMove(endPos, 0.8f).SetEase(Ease.OutCubic))
+        .Append(spawnedImage.rectTransform.DOScale(Vector3.one, 1.0f).SetEase(Ease.OutBack))
+        .Join(spawnedImage.rectTransform.DOMove(endPos, 1.0f).SetEase(Ease.OutCubic))
         .OnComplete(() => OnIconArrived(spawnedImage, shape));
 
     }

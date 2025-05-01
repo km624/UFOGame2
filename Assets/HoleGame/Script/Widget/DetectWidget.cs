@@ -72,8 +72,17 @@ public class DetectWidget : MonoBehaviour
 
     private void UpdateRadarDots()
     {
+
+        List<IDetctable> invalidTargets = new();
+
         foreach (var target in targets)
         {
+            if (target == null || (target is MonoBehaviour mb && mb == null))
+            {
+                invalidTargets.Add(target);
+                continue;
+            }
+
             Vector3 offset = target.WorldPosition - player.WorldPosition;
             Vector2 flatOffset = new Vector2(offset.x, offset.z);
             float distance = flatOffset.magnitude;
@@ -89,6 +98,11 @@ public class DetectWidget : MonoBehaviour
 
             RectTransform dotRT = dotMap[target].GetComponent<RectTransform>();
             dotRT.anchoredPosition = clampedPos;
+        }
+
+        foreach (var target in invalidTargets)
+        {
+            RemoveTarget(target);
         }
     }
 }

@@ -72,7 +72,9 @@ public class StatWidget : MonoBehaviour
 
     public void OnClickUpStat()
     {
+        reinForceWidget.OnClickApply(currentStatPrice, StatType);
         CurrentStat++;
+     
         if (CurrentStat == MaxStat)
         {
             statPrice.text = "MAX";
@@ -86,7 +88,7 @@ public class StatWidget : MonoBehaviour
             statPrice.text = currentStatPrice.ToString();
         }
         ActiveList[CurrentStat - 1].enabled = true;
-        reinForceWidget.OnClickApply(currentStatPrice, StatType);
+       
       
     }
    

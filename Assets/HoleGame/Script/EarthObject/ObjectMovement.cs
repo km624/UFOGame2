@@ -72,12 +72,14 @@ public class ObjectMovement : MonoBehaviour
             jumpDuration = 0.6f;
 
         // squishAmount 계산
-        squishAmount = 0.6f - 0.2f * D;
-        squishAmount = Mathf.Clamp(squishAmount, 0.2f, 0.6f);
+        squishAmount = 0.5f; 
+        //squishAmount = 0.6f - 0.2f * D;
+       //squishAmount = Mathf.Clamp(squishAmount, 0.2f, 0.6f);
         // squishDuration은 0.1f로 고정
 
         // JumpDelayTime 계산
-        JumpDelayTime = 1.8f - 0.4f * D;
+        JumpDelayTime = 2.5f - 0.4f * D;
+        //JumpDelayTime = 3.0f - 0.4f * D;
 
         // jumpPower 계산 (조건에 따라)
         if (D >= 1.0f)
@@ -150,7 +152,7 @@ public class ObjectMovement : MonoBehaviour
     }
 
 
-    private void PerformRandomJump2()
+    /*private void PerformRandomJump2()
     {
 
         Vector3 horizontalDir = Vector3.zero;
@@ -174,7 +176,7 @@ public class ObjectMovement : MonoBehaviour
             squishDuration = jumpDuration/2;
         }
 
-        // 목표 위치 (수평 이동 거리만 적용)
+      
         Vector3 targetPosition = transform.position + horizontalDir * jumpDistance;
         Vector3 SquishedScale = new Vector3(
                      defaultScale.x * (1 + squishAmount),
@@ -204,6 +206,146 @@ public class ObjectMovement : MonoBehaviour
 
 
 
+    }*/
+
+    /*private void PerformRandomJump2()
+    {
+       
+        Vector3 horizontalDir;
+        if (ForceMoveObject == null)
+        {
+            Vector2 randomDir2D = Random.insideUnitCircle.normalized;
+            horizontalDir = new Vector3(randomDir2D.x, 0f, randomDir2D.y);
+        }
+        else
+        {
+            Vector3 forceJumpDirection = CalculateUfoDirection(ForceMoveObject.transform);
+            horizontalDir = new Vector3(forceJumpDirection.x, 0f, forceJumpDirection.z) * 2f;
+        }
+
+      
+        if (squishDuration * 2 > jumpDuration)
+            squishDuration = jumpDuration / 2f;
+
+        
+        Vector3 targetPosition = transform.position + horizontalDir * jumpDistance;
+        Vector3 squishedScale = new Vector3(
+            defaultScale.x * (1 + squishAmount),
+            defaultScale.y * (1 - squishAmount),
+            defaultScale.z * (1 + squishAmount)
+        );
+
+       
+        if (jumpSeq != null && jumpSeq.IsActive())
+            jumpSeq.Kill();
+
+      
+        jumpSeq = DOTween.Sequence()
+           
+            .Append(transform
+                .DORotate(Quaternion.LookRotation(horizontalDir).eulerAngles, 0.5f, RotateMode.Fast)
+                .SetEase(Ease.OutQuad)
+            )
+            
+            .Append(transform
+                .DOScale(squishedScale, squishDuration)
+                .SetEase(Ease.OutQuad)
+            )
+            .Append(transform
+                .DOScale(defaultScale, squishDuration)
+                .SetEase(Ease.InQuad)
+            )
+            
+            .AppendCallback(() =>
+            {
+                rb.useGravity = false;
+                rb.linearVelocity = Vector3.zero;
+            })
+            
+            .AppendCallback(() =>
+            {
+                rb
+                  .DOJump(targetPosition, jumpPower, 1, jumpDuration)
+                  .SetEase(Ease.OutQuad)
+                  .SetUpdate(UpdateType.Fixed)
+                  .OnComplete(() =>
+                  {
+                     
+                      rb.useGravity = true;
+                  });
+            })
+           
+            .SetUpdate(UpdateType.Fixed);
+    }*/
+
+    private void PerformRandomJump2()
+    {
+        //수평 방향 계산 (기존 로직)
+        Vector3 horizontalDir;
+        if (ForceMoveObject == null)
+        {
+            Vector2 rnd = Random.insideUnitCircle.normalized;
+            horizontalDir = new Vector3(rnd.x, 0f, rnd.y);
+        }
+        else
+        {
+            Vector3 d = CalculateUfoDirection(ForceMoveObject.transform);
+            horizontalDir = new Vector3(d.x, 0f, d.z) * 2f;
+        }
+
+        //squash 타이밍 보정
+        if (squishDuration * 2 > jumpDuration)
+            squishDuration = jumpDuration / 2f;
+
+        // 목표 수평 속도 계산: 거리 / 시간
+        float horizontalSpeed = jumpDistance / jumpDuration;
+
+        // squash 스케일 계산
+        Vector3 squishedScale = new Vector3(
+            defaultScale.x * (1 + squishAmount),
+            defaultScale.y * (1 - squishAmount),
+            defaultScale.z * (1 + squishAmount)
+        );
+
+        //이전 시퀀스 정리
+        if (jumpSeq != null && jumpSeq.IsActive())
+            jumpSeq.Kill();
+
+        // 새 시퀀스 생성
+        jumpSeq = DOTween.Sequence()
+            //  바라보기 회전
+            .Append(transform
+                .DORotate(Quaternion.LookRotation(horizontalDir).eulerAngles, 0.5f, RotateMode.Fast)
+                .SetEase(Ease.OutQuad)
+            )
+            //  squash
+            .Append(transform
+                .DOScale(squishedScale, squishDuration)
+                .SetEase(Ease.OutQuad)
+            )
+            //  unsquash
+            .Append(transform
+                .DOScale(defaultScale, squishDuration)
+                .SetEase(Ease.InQuad)
+            )
+            // 점프 직전: 중력 켜고 속도 리셋
+            .AppendCallback(() =>
+            {
+                //rb.useGravity = true;
+                rb.linearVelocity = Vector3.zero;
+            })
+            //  점프용 속도 부여
+            .AppendCallback(() =>
+            {
+             /*   rb.AddForce(horizontalDir * horizontalSpeed*2.0f
+           + Vector3.up * jumpPower*20f,
+             ForceMode.Impulse);*/
+                rb.AddForce(horizontalDir * horizontalSpeed 
+          + Vector3.up * jumpPower * 5f,
+            ForceMode.VelocityChange);
+            })
+            //  FixedUpdate 타이밍에 맞춤
+            .SetUpdate(UpdateType.Fixed);
     }
 
     Vector3 CalculateUfoDirection(Transform objecttransform)

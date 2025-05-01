@@ -46,7 +46,9 @@ public class ObjectManager : MonoBehaviour
 
     [Header("맵 범위")]
     [SerializeField]
-    private Renderer SpawnRange;
+    private Renderer SpawnRange; 
+    [SerializeField]
+    private Renderer SafeSpawnRange;
 
     Bounds RangeBounds;
     
@@ -122,7 +124,7 @@ public class ObjectManager : MonoBehaviour
         StartBombSapwn();
         SpawnBossAtRandomGridPosition();
         
-        for(int i=0;i<15;i++)
+        for(int i=0;i<20;i++)
         {
             SpawnBounsAtRandomGridPosition();
         }
@@ -229,7 +231,7 @@ public class ObjectManager : MonoBehaviour
 
         SpawnBossAtRandomGridPosition();
 
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 25; i++)
         {
             SpawnBounsAtRandomGridPosition();
         }
@@ -384,6 +386,19 @@ public class ObjectManager : MonoBehaviour
             Debug.LogWarning("No objects found in the current GenerationObjects!");
             return;
         }
+        Dictionary<ShapeEnum, float> shapeToActualMass = new();
+
+        for (int i = 0; i < currentGen.objects.Count; i++)
+        {
+            ShapeEnum shape = currentGen.objects[i].GetShapeEnum();
+            float mass = objectStatList[i].mass;
+
+            if (!shapeToActualMass.ContainsKey(shape))
+                shapeToActualMass.Add(shape, mass);
+            else
+                Debug.LogWarning($"Duplicate ShapeEnum in stat list: {shape}");
+        }
+
 
         // 세대당 4레벨씩 루프 돌게 구성
         int localLevel = gameState.GetPlayerCurrentLevel() - (CurrentGenration * 4);
@@ -396,21 +411,26 @@ public class ObjectManager : MonoBehaviour
             if (i < currentGen.objects.Count)
                 limitedList.Add(currentGen.objects[i]);
         }
-
+      
         //  셔플
         for (int i = 0; i < limitedList.Count; i++)
         {
             int randomIndex = UnityEngine.Random.Range(i, limitedList.Count);
             (limitedList[i], limitedList[randomIndex]) = (limitedList[randomIndex], limitedList[i]);
         }
-
+       
         int countToSelect = UnityEngine.Random.Range(1, limitedList.Count + 1);
 
+        Debug.Log("countToSelect " + countToSelect);
         for (int i = 0; i < countToSelect; i++)
         {
             int randomCount = UnityEngine.Random.Range(bonusMinCount, bonusMaxCount + 1);
+            
+  
+            Debug.Log($"[{i}] ObjectMass: {shapeToActualMass[limitedList[i].GetShapeEnum()]}, Shape: {limitedList[i].GetShapeEnum()}");
+           
 
-            BonusObjectsOrgin.Add(limitedList[i].ObjectMass, randomCount);
+            BonusObjectsOrgin.Add(shapeToActualMass[limitedList[i].GetShapeEnum()], randomCount);
             BonusObjectsCnt.Add(limitedList[i].GetShapeEnum(), randomCount);
             FOnBounsWidgetCreated?.Invoke(limitedList[i].GetShapeEnum(), randomCount);
         }
@@ -498,7 +518,7 @@ public class ObjectManager : MonoBehaviour
         if (spawnbomb == null) return;
 
        // Vector2 SpawnLocation = RandomSpawnRange();
-        Vector3 SpawnLocation = GetValidSpawnPosition();
+        Vector3 SpawnLocation = GetValidSpawnPosition(false);
 
 
         //Vector3 spawnPosition = new Vector3(SpawnLocation.x, BombSpawnHeight, SpawnLocation.z);
@@ -516,10 +536,12 @@ public class ObjectManager : MonoBehaviour
 
     }
 
-    private Vector2 RandomSpawnRange()
+    private Vector2 RandomSpawnRange(bool boss)
     {
-       
-       RangeBounds = SpawnRange.bounds;
+       if(!boss)
+            RangeBounds = SpawnRange.bounds;
+       else
+            RangeBounds = SafeSpawnRange.bounds;
         // Plane의 Bounds에서 x, z 좌표의 최소/최대값을 정수 단위로 구합니다.
         int minX = Mathf.CeilToInt(RangeBounds.min.x);
         int maxX = Mathf.FloorToInt(RangeBounds.max.x);
@@ -534,18 +556,18 @@ public class ObjectManager : MonoBehaviour
     }
 
 
-    private Vector3 GetValidSpawnPosition()
+    private Vector3 GetValidSpawnPosition(bool boss)
     {
         int raycastMask = ~IgnoreMask; // ignoreMask에 해당하는 레이어만 제외하고 나머지는 전부 감지
-
-        for (int i = 0; i < 10; i++)
+       
+        for (int i = 0; i < 50; i++)
         {
-            Vector2 randXZ = RandomSpawnRange();
+            Vector2 randXZ = RandomSpawnRange(boss);
             Vector3 origin = new Vector3(randXZ.x, 100f, randXZ.y);
             Vector3 direction = Vector3.down;
             float rayLength = 200f;
 
-            //Debug.DrawRay(origin, direction * rayLength, Color.red, 1.0f);
+            Debug.DrawRay(origin, direction * rayLength, Color.red, 1.0f);
 
             if (Physics.Raycast(origin, direction, out RaycastHit hit, rayLength, raycastMask))
             {
@@ -559,15 +581,18 @@ public class ObjectManager : MonoBehaviour
 
                 if (((1 << hitObj.layer) & groundMask) != 0)
                 {
-                    //Debug.Log($"[Spawn] Ray hit valid GROUND: {hitObj.name}");
+                  // Debug.Log($"[Spawn] Ray hit valid GROUND: {hitObj.name}");
                     return hit.point + Vector3.up * 0.5f;
                 }
 
-                //Debug.Log($"[Spawn] Ray hit something else: {hitObj.name} (Layer: {LayerMask.LayerToName(hitObj.layer)})");
+               // Debug.Log($"[Spawn] Ray hit something else: {hitObj.name} (Layer: {LayerMask.LayerToName(hitObj.layer)})");
             }
             else
             {
-                //Debug.Log("[Spawn] Ray missed everything.");
+                Vector2 safearea = RandomSpawnRange(true);
+                Vector3 newSafeArea = new Vector3(safearea.x, 0.5f, safearea.y);
+                Debug.Log("[Spawn] Ray missed everything. safe " + safearea);
+                return newSafeArea;
             }
         }
 
@@ -585,15 +610,11 @@ public class ObjectManager : MonoBehaviour
         BossObject bossprefab = CurrentGenerationData.Boss;
         if (bossprefab == null) return;
 
-        //Vector2 SpawnLocation = RandomSpawnRange();
-       // Vector3 spawnPosition = new Vector3(SpawnLocation.x, 0.0f, SpawnLocation.y);
+       
 
-
-        Vector3 spawnPosition = GetValidSpawnPosition();
+        Vector3 spawnPosition = GetValidSpawnPosition(true);
         GameObject bossobj = Instantiate(bossprefab.gameObject, spawnPosition, Quaternion.identity);
-        //EarthObjectStatData bossstatdata = null;
-        //if (CurrentGenration < BossStatList.Count)
-         //bossstatdata = bossstatdata;
+      
 
         BossObject boss = bossobj.GetComponent<BossObject>();
         if (boss != null)
@@ -635,7 +656,7 @@ public class ObjectManager : MonoBehaviour
         //Vector2 SpawnLocation = RandomSpawnRange();
         // Vector3 spawnPosition = new Vector3(SpawnLocation.x, BombSpawnHeight +5.0f, SpawnLocation.y);
 
-        Vector3 spawnPosition = GetValidSpawnPosition() + Vector3.up * 5.0f; 
+        Vector3 spawnPosition = GetValidSpawnPosition(false) + Vector3.up * 5.0f; 
         GameObject starobj = Instantiate(starobjectprefab.gameObject, spawnPosition, Quaternion.identity);
 
         StarObject star = starobj.GetComponent<StarObject>();
@@ -659,7 +680,7 @@ public class ObjectManager : MonoBehaviour
         if (spawnbonus == null) return;
 
         
-        Vector3 SpawnLocation = GetValidSpawnPosition();
+        Vector3 SpawnLocation = GetValidSpawnPosition(false);
 
 
         //Vector3 spawnPosition = new Vector3(SpawnLocation.x, BombSpawnHeight, SpawnLocation.z);

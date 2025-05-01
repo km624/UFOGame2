@@ -182,6 +182,8 @@ public class GameState : MonoBehaviour
         if (bossobject != null)
         {
             calculatetime += 10.0f;
+
+            ufoplayer.ResetCameraDistance();
         }
 
         TotalTime += calculatetime;
@@ -201,6 +203,8 @@ public class GameState : MonoBehaviour
 
         // 2n-n = 증가 효과도 포함됨
         float exp = 1.0f * expMultiplier;
+
+        float clampexp = Mathf.Clamp(exp, 0.1f, 2.0f);
 
         return exp;
     }
@@ -429,6 +433,7 @@ public class GameState : MonoBehaviour
         //ufoplayer.CallBack_StopMovement(true);
 
         GamePause(true);
+
         GameManager.Instance.soundManager.PlayBgm(SoundEnum.BGM_GameEnd,0.5f);
         bIsGameEnd = true;
         int converttime = Mathf.RoundToInt(TotalPlayTime);

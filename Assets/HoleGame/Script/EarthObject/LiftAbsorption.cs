@@ -25,11 +25,7 @@ public class LiftAbsorption : MonoBehaviour
   
     private float objectmass;
 
-    //private bool activelift = false;
-
-    private bool bHasLanded = true;
-
-    private int groundlayer = 11;
+    
     public void InitiaLiftAbsorption(Vector3 orginsclale,float mass)
     {
         targetScale = new Vector3(TargetScaleValue, TargetScaleValue, TargetScaleValue);
@@ -47,14 +43,14 @@ public class LiftAbsorption : MonoBehaviour
 
         if((swallowlevel - objectmass) >=0)
         {
-            ScaleTime = 5.0f;
+            ScaleTime = 7.0f;
         }
         else
         {
             ScaleTime = 0.5f;
         }
 
-        bHasLanded = false;
+       // bHasLanded = false;
 
         scaleseq?.Kill();
         swallowobject.ActivateBounce(false);

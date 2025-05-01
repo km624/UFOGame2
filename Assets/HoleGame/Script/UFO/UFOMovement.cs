@@ -11,10 +11,10 @@ public class UFOMovement : MonoBehaviour
     public float GetHoleSpeed() { return HoleSpeed; }
 
     [Header("Á¶ÀÌ½ºÆ½")]
-    public FloatingJoystick joystick;
+    public Joystick joystick;
 
     public UFOMotion motion;
-    public HoleScript Beam;
+    
 
     private bool MoveActive = true;
     private Rigidbody rb;
@@ -37,8 +37,7 @@ public class UFOMovement : MonoBehaviour
         moveX = joystick.Horizontal* 0.01f* HoleSpeed;
         moveZ = joystick.Vertical * 0.01f* HoleSpeed;
 
-        //transform.position += new Vector3(moveX, 0, moveZ);
-
+ 
         Vector3 moveVector = new Vector3(moveX, 0, moveZ);
        
        
@@ -48,8 +47,7 @@ public class UFOMovement : MonoBehaviour
             rb.MovePosition(rb.position + moveVector);
         }
 
-        //rb.MovePosition(transform.position + moveVector);
-
+    
         if (motion != null)
       {
             Vector3 movementDirection = new Vector3(moveX, 0, moveZ);
@@ -57,14 +55,12 @@ public class UFOMovement : MonoBehaviour
             if (movementDirection.sqrMagnitude > 0.0001f)
             {
                 motion.StartWobble(movementDirection);
-                //Beam.StartWobble(movementDirection);
-
-
+                
             }
             else
             {
                 motion.ResetRotation();
-               // Beam.ResetRotation();
+              
             }
       }
        

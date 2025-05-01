@@ -18,6 +18,14 @@ public class StarObject : FallingObject,IDetctable
     {
         FOnStarSwallowed?.Invoke(this);
     }
+
+    public void Update()
+    {
+        if(transform.position.y<-10.0f)
+        {
+            Destroy(gameObject);
+        }
+    }
    /* public void StarSwallow()
     {
         FOnStarSwallowed?.Invoke(this);

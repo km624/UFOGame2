@@ -4,7 +4,7 @@ public class FallingTrigger : MonoBehaviour
 {
     private int currentLevel;
 
-    
+    float BosstargetScale = 0.4f;
     public void SetCurrentLevel(int  level)
     {
         currentLevel = level;
@@ -15,21 +15,12 @@ public class FallingTrigger : MonoBehaviour
         FallingObject fallingobject = other.GetComponent<FallingObject>();
         if (fallingobject != null && fallingobject.gameObject.layer == 10)
         {
+            BossObject boss = fallingobject as BossObject;
+
+            if (boss != null) return;
 
             fallingobject.OnSwallow();
-
-          /*  BossObject boss = other.GetComponent<BossObject>();
-
-            if (boss && currentLevel == boss.ObjectMass)
-            {
-                boss.BossSwallow();
-            }
-
-            StarObject star = other.GetComponent<StarObject>();
-            if (star)
-            {
-                star.StarSwallow();
-            }*/
+   
 
             if(GameManager.Instance!=null)
             {
@@ -41,29 +32,17 @@ public class FallingTrigger : MonoBehaviour
         }
     }
 
-   /* private void OnTriggerStay(Collider other)
+   private void OnTriggerStay(Collider other)
     {
-        //Debug.Log(other.name);
-        FallingObject fallingobject = other.GetComponent<FallingObject>();
-        if (fallingobject != null&& fallingobject.gameObject.layer==10)
+       
+        BossObject bossgobject = other.GetComponent<BossObject>();
+        if (bossgobject != null&& bossgobject.gameObject.layer==10 && bossgobject.transform.localScale.y <= BosstargetScale)
         {
-            
-            fallingobject.OnSwallow();
 
-            BossObject boss = other.GetComponent<BossObject>();
-            
-            if(boss && currentLevel==boss.ObjectMass)
-            {
-                boss.BossSwallow();
-            }
+            bossgobject.OnSwallow();
 
-            StarObject star = other.GetComponent<StarObject>();
-            if(star)
-            {
-                star.StarSwallow();
-            }
 
         }
-    }*/
+    }
  
 }

@@ -206,7 +206,7 @@ GameObject:
   - component: {fileID: 465260959924289128}
   - component: {fileID: 4772193358619889844}
   - component: {fileID: 8489951209034496712}
-  - component: {fileID: 372481708556825538}
+  - component: {fileID: -1552857621436633845}
   m_Layer: 6
   m_Name: BrakiPrefab
   m_TagString: FallingObject
@@ -377,14 +377,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59c1a429540318045b3f565a38015a18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!65 &372481708556825538
+--- !u!65 &-1552857621436633845
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4630711982142995988}
-  m_Material: {fileID: 13400000, guid: 49db833aac648b74695538536bdde390, type: 2}
+  m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -396,8 +396,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.85615647, y: 1.21, z: 1.7593507}
-  m_Center: {x: 0, y: 0.64, z: 0.033464372}
+  m_Size: {x: 1.0464134, y: 1.76, z: 2.1503174}
+  m_Center: {x: 0, y: 0.87, z: 0.040900946}
 --- !u!1 &5103047103258537073
 GameObject:
   m_ObjectHideFlags: 0

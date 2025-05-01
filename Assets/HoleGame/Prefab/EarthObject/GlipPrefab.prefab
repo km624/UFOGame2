@@ -177,7 +177,7 @@ GameObject:
   - component: {fileID: 2293737793964567284}
   - component: {fileID: 8957176961950946795}
   - component: {fileID: 7491797728449565334}
-  - component: {fileID: 3735520806935047869}
+  - component: {fileID: -7215661251036369249}
   m_Layer: 6
   m_Name: GlipPrefab
   m_TagString: FallingObject
@@ -348,14 +348,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59c1a429540318045b3f565a38015a18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!65 &3735520806935047869
+--- !u!65 &-7215661251036369249
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8153845077893392579}
-  m_Material: {fileID: 13400000, guid: 49db833aac648b74695538536bdde390, type: 2}
+  m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -367,8 +367,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.5570549, y: 0.58913034, z: 1.2715842}
-  m_Center: {x: 0, y: 0.2945651, z: -0.19825119}
+  m_Size: {x: 0.8355823, y: 0.8836955, z: 1.9073763}
+  m_Center: {x: 0, y: 0.44184768, z: -0.29737684}
 --- !u!1 &8799314497918502941
 GameObject:
   m_ObjectHideFlags: 0
