@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading.Tasks;
@@ -18,12 +18,12 @@ public class UserDataLoadSave : IUserDataInterface
         {
             UserData newUserData = new UserData(userId);
 
-            //±âº» UFO À¯Àú µ¥ÀÌÅÍ Ãß°¡ ·ÎÁ÷
+            //ê¸°ë³¸ UFO ìœ ì € ë°ì´í„° ì¶”ê°€ ë¡œì§
             if (UFOLoadManager.Instance != null)
             {
                 if(UFOLoadManager.Instance.LoadedUFODataList.Count == 0)
                 {
-                    Debug.Log("UFO ¼¼ÆÃ ¸øÇÔ");
+                    Debug.Log("UFO ì„¸íŒ… ëª»í•¨");
                 }
                 UFOData baseufodata = UFOLoadManager.Instance.LoadedUFODataList[0];
 
@@ -40,10 +40,10 @@ public class UserDataLoadSave : IUserDataInterface
       
         UserData data = JsonUtility.FromJson<UserData>(json);
 
-        //UFO ¿ÜÇü Á÷·ÄÈ­
+        //UFO ì™¸í˜• ì§ë ¬í™”
         data.InitializeUserData();
 
-        Debug.Log("±âÁ¸µ¥ÀÌÅÍ ·Îµå");
+        Debug.Log("ê¸°ì¡´ë°ì´í„° ë¡œë“œ");
         return data;
     }
 
@@ -51,9 +51,10 @@ public class UserDataLoadSave : IUserDataInterface
     {
         string path = GetSavePath(data.userId);
 
-        // À¯´ÏÆ¼ ±âº» JsonUtility »ç¿ë
+   
+        // ìœ ë‹ˆí‹° ê¸°ë³¸ JsonUtility ì‚¬ìš©
         string json = JsonUtility.ToJson(data, prettyPrint: true);
-
+      
         try
         {
             await Task.Run(() =>
@@ -64,13 +65,13 @@ public class UserDataLoadSave : IUserDataInterface
                     writer.Write(json);
                    
                 }
-                //Debug.Log(data.stageClearTimes[0]);
-               // Debug.Log("µ¥ÀÌÅÍ ÀúÀå ¼º°ø: " + path);
+               
+                Debug.Log("ë°ì´í„° ì €ì¥ ì„±ê³µ: " + path);
             });
         }
         catch (Exception ex)
         {
-            Debug.LogError("µ¥ÀÌÅÍ ÀúÀå Áß ¿À·ù ¹ß»ı: " + ex.Message);
+            Debug.LogError("ë°ì´í„° ì €ì¥ ì¤‘ ì˜¤ë¥˜ ë°œìƒ: " + ex.Message);
         }
      
     }

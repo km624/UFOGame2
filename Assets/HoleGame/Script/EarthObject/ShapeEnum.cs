@@ -11,6 +11,7 @@ public enum ShapeEnum
     Rock_Fat,
     Rock_KongBug,
     Rock_Savior,
+    Rock_Memord,
     boomb,
     boss,
     star,

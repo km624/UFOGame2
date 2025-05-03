@@ -30,6 +30,14 @@ public class PlayerHudWidget : MonoBehaviour
     public List<SkillWidget> AllSkillWidgets { get; private set; } = new List<SkillWidget>();
     public GameObject AllSkillWidgetObject;
 
+    [SerializeField]
+    private RectTransform UpPanel;
+    [SerializeField]
+    private RectTransform DownPanel;
+    [SerializeField]
+    private RectTransform PauseButton;
+    [SerializeField]
+    private Joystick joystick;
 
     public TimerWidget timerWidget;
 
@@ -56,6 +64,53 @@ public class PlayerHudWidget : MonoBehaviour
     public TMP_Text fpsText;
     float deltaTime = 0.0f;
 
+
+    public void InitDirectionPostion()
+    {
+        float upheight = UpPanel.rect.height;
+
+        UpPanel.anchoredPosition += Vector2.up * upheight;
+
+        float Downheight = DownPanel.rect.height;
+       
+        DownPanel.anchoredPosition -= Vector2.up * Downheight;
+
+        //¿¹¿Ü
+        PauseButton.anchoredPosition += Vector2.up * upheight;
+
+        SetJoystick(false);
+
+
+    }
+
+    public void OnUIDirection()
+    {
+        Vector2 UPcurrentPos = UpPanel.anchoredPosition;
+        float UPheight = UpPanel.rect.height;
+        Vector2 UPtargetPos = UPcurrentPos - new Vector2(0, UPheight);
+        UpPanel.DOAnchorPos(UPtargetPos, 1.0f).SetEase(Ease.OutQuad);
+
+
+        Vector2 DowncurrentPos = DownPanel.anchoredPosition;
+        float Downheight = DownPanel.rect.height;
+        Vector2 DowntargetPos = DowncurrentPos + new Vector2(0, Downheight);
+        DownPanel.DOAnchorPos(DowntargetPos, 1.0f).SetEase(Ease.OutQuad);
+
+
+        Vector2 pausebuttonPos = PauseButton.anchoredPosition;
+        Vector2 pausetargetPos = pausebuttonPos - new Vector2(0, UPheight);
+        PauseButton.DOAnchorPos(pausetargetPos, 1.0f).SetEase(Ease.OutQuad);
+
+        SetJoystick(true);
+    }
+
+    public void SetJoystick(bool active)
+    {
+        joystick.gameObject.SetActive(active);
+    }
+
+
+
     void Update()
     {
         deltaTime += (Time.unscaledDeltaTime - deltaTime) * 0.1f;
@@ -65,7 +120,7 @@ public class PlayerHudWidget : MonoBehaviour
 
     public void CallBack_CreateShapeWidget(ShapeEnum shapetype , int count)
     {
-        Debug.Log("Create : " + shapetype); 
+        //Debug.Log("Create : " + shapetype); 
         GameObject newWidgetObj = Instantiate(FallingObjectWidgetPrefab, AllShapeWidget.transform);
        
         if (newWidgetObj != null)
@@ -82,6 +137,7 @@ public class PlayerHudWidget : MonoBehaviour
        
         }
     }
+
     public void UpdateAllShapeCount(ShapeEnum shapetype,int count)
     {
         if (AllBonusWidget.ContainsKey(shapetype))
@@ -91,7 +147,6 @@ public class PlayerHudWidget : MonoBehaviour
        
     }
 
-    
     public void SwalloweShapeCount(ShapeEnum shapetype)
     {
         if (AllBonusWidget.ContainsKey(shapetype))

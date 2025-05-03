@@ -23,7 +23,7 @@ public class UFOPlayer : MonoBehaviour, IDetctable
     [SerializeField]
     private float MaxExpGauge = 100.0f;
 
-    float baseExpPerMass = 7.0f;
+    float baseExpPerMass = 50.0f;
 
     public event Action<float> FOnExpAdded;
 
@@ -31,7 +31,6 @@ public class UFOPlayer : MonoBehaviour, IDetctable
     private float TargetfillPercent = 0.0f;
 
     private ExelUFOStatData UFOBaseStatList;
-
     private ExelUFOStatData UFOStatTimeList;
 
 
@@ -72,10 +71,15 @@ public class UFOPlayer : MonoBehaviour, IDetctable
     private FallingTrigger trigger;
     [SerializeField]
     private PossibleTrigger possibleTrigger;
-
-    //TEST
     [SerializeField]
     private BeamColorChangeGradation BeamColor;
+    [SerializeField]
+    private UFODirecting ufodirection;
+
+    public event Action FOnDirectionEnd;
+    public event Action FonGenerationMoved;
+    public event Action FOnWarpDirectionEnd;
+   
 
     private float DefaultCameraDistance = 0.0f;
 
@@ -84,7 +88,7 @@ public class UFOPlayer : MonoBehaviour, IDetctable
     public Vector3 WorldPosition => transform.position;
 
  
-    public void InitUFO(float gametime , UserUFOData userufodata , UFOData selectUFOdata)
+    public void InitUFO(float gametime , UserUFOData userufodata , UFOData selectUFOdata , bool bisdirect)
     {
         LoadPlayerStatList();
 
@@ -128,26 +132,85 @@ public class UFOPlayer : MonoBehaviour, IDetctable
             BeamColor.UpdateLevelSettings(CurrentLevel);
            
         }
-           
 
         EXPGaugeBar.fillAmount = 0.0f;
 
         //레벨 표시
         UpdateSizeText(CurrentLevel);
+       
+        //연출 있으면 시작
+        if(bisdirect)
+         StartUFODirecting();
     }
 
    
    private void LoadPlayerStatList()
-    {
-      
+   {
 
         UFOBaseStatList = CsvLoader.LoadSingleCSV <ExelUFOStatData>("StatData/CSVUFOBaseStat");
-        UFOStatTimeList = CsvLoader.LoadSingleCSV <ExelUFOStatData>("StatData/CSVUFOStatTime");
+        UFOStatTimeList = CsvLoader.LoadSingleCSV<ExelUFOStatData>("StatData/CSVUFOStatTime");
 
+   }
+
+
+    public void StartUFODirecting()
+    {
+        if (ufodirection != null)
+        {
+            ufodirection.OnStartUFODirecct();
+
+        }
+
+        DirectionProgress(true);
+    }
+
+    public void GenerationMoved()
+    {
+        FonGenerationMoved?.Invoke();
+    }
+
+    public void EndUFODirecting()
+    {
+        DirectionProgress(false);
+        FOnDirectionEnd?.Invoke();
 
     }
 
-  
+    public void StartWarpDirecting()
+    {
+        if (ufodirection != null)
+        {
+            ufodirection.OnWarpStart();
+        }
+
+        DirectionProgress(true);
+    }
+
+    public void EndWarpDirecting()
+    {
+        DirectionProgress(false);
+        FOnWarpDirectionEnd?.Invoke();
+    }
+
+    private void DirectionProgress(bool bprogress)
+    {
+        if (bprogress)
+        {
+            ChangeCameraDistance(6.0f);
+
+        }
+        else
+        {
+            ResetCameraDistance();
+        }
+        UFOBeam.SetSwallow(!bprogress);
+        TimeGaugeBar.gameObject.SetActive(!bprogress);
+        TimeGaugeBar2.gameObject.SetActive(!bprogress);
+        LevelText.gameObject.SetActive(!bprogress);
+
+    }
+
+
     void Update()
     {
 
@@ -367,8 +430,6 @@ public class UFOPlayer : MonoBehaviour, IDetctable
                     Material[] originalMaterials = renderer.sharedMaterials;
                     Material[] newMaterials = new Material[originalMaterials.Length];
 
-
-
                     for (int i = 0; i < originalMaterials.Length; i++)
                     {
                         // 원본 머터리얼 복사
@@ -539,7 +600,7 @@ public class UFOPlayer : MonoBehaviour, IDetctable
 
     public void ChangeCameraDistance(float cameradistance)
     {
-        Debug.Log("Changecamera");
+        //Debug.Log("Changecamera");
         CamerapositionComposer.CameraDistance = cameradistance;
     }
 
@@ -556,7 +617,7 @@ public class UFOPlayer : MonoBehaviour, IDetctable
 
     public void ResetCameraDistance()
     {
-        Debug.Log("Rest");
+       
         CamerapositionComposer.CameraDistance = DefaultCameraDistance;
     }
 

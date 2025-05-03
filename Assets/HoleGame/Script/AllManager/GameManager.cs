@@ -63,14 +63,16 @@ public class GameManager : MonoBehaviour
         progress = 0.3f;  // 30%
 
 
-        
         userData = await userDatasaveload.LoadPlayerDataAsync("Guest");
 
         UFOLoadManager.Instance.SetSelectUFODATA(userData.CurrentUFO);
-        progress = 1.0f;  // 100%
+        progress = 0.6f;  // 100%
 
-        //Debug.Log("InitData 완료! progress = 1.0f");
+        AchievementManager.Instance.InitializeManager(userData);
 
+        progress = 1.0f;
+
+        Debug.Log("TEST Init 완료");
     }
 
     public async Task InitData2()
@@ -79,18 +81,18 @@ public class GameManager : MonoBehaviour
 
         // [1] 유저 데이터 로드
         await UFOLoadManager.Instance.LoadAppearanceData();
-        
-        progress = 0.3f;  // 30%
-       
-        // 페이크 딜레이
-        await SimulateDelay(progress, 0.5f, 0.6f);
+        progress = 0.3f;  
+        await SimulateDelay(progress, 0.3f, 0.4f);
 
+        //UFO 데이터 로드
         userData = await userDatasaveload.LoadPlayerDataAsync("Guest");
-
         UFOLoadManager.Instance.SetSelectUFODATA(userData.CurrentUFO);
-        progress = 1.0f; 
+        progress = 6.0f;
+        await SimulateDelay(progress, 0.6f, 0.7f);
 
-        //  마지막 페이크 딜레이
+        //업적 로드
+        AchievementManager.Instance.InitializeManager(userData);
+        progress = 1.0f; 
         await SimulateDelay(progress, 1.0f, 1.0f);
 
         Debug.Log("InitData 완료! progress = 1.0f");

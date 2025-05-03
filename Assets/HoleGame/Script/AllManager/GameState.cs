@@ -2,7 +2,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-
 using UnityEngine;
 
 
@@ -97,13 +96,19 @@ public class GameState : MonoBehaviour
 
         //연료통 위젯 바인딩
         // objectManager.FOnGenerationDataSeted += PlayerHud.CallBack_SetThermometerWidget;
-        PlayerHud.CallBack_SetFuelTankWidget();
         ufoplayer.FOnExpAdded += PlayerHud.CallBack_AddEXPFuelTankWidget;
 
         //UFO에 시간 바인딩
         FOnTotalTimeChanged += ufoplayer.CallBack_SetRemainTime;
-        //스킬 세팅
 
+        //시작 연출 바인딩
+        ufoplayer.FOnDirectionEnd += PlayerHud.OnUIDirection;
+        ufoplayer.FOnDirectionEnd += DirectionEnd;
+
+        //워프 연출 바인딩
+        ufoplayer.FOnWarpDirectionEnd += WarpDirectionEnd;
+        ufoplayer.FonGenerationMoved += objectManager.ChangeGeneration;
+        
         //데이터 불러와서 세팅
         UserUFOData userufodata = null;
         UFOData selectUFOdata = null;
@@ -111,17 +116,21 @@ public class GameState : MonoBehaviour
         {
             if (GameManager.Instance.userData != null)
             {
-
+ 
                 int selectUFOIndex = GameManager.Instance.userData.CurrentUFO;
-               selectUFOdata = UFOLoadManager.Instance.LoadedUFODataList[selectUFOIndex];
+                selectUFOdata = UFOLoadManager.Instance.LoadedUFODataList[selectUFOIndex];
                 if (selectUFOdata != null)
                 {
                    userufodata = GameManager.Instance.userData.serialUFOList.Get(selectUFOdata.UFOName);
                 }
             }
+            
         }
 
-            
+        //연료통 초기값 세팅
+        PlayerHud.CallBack_SetFuelTankWidget();
+
+        //스킬 세팅
         AllSkillManager.SetSkill(ufoplayer, userufodata, selectUFOdata);
         
         //스킬 표시
@@ -138,8 +147,6 @@ public class GameState : MonoBehaviour
 
         //시간 세팅
         PlayerHud.SetTimeWidget(TotalTime,this);
-        StartPlayTimer();
-        StartGameTimer();
         PlayerHud.SetScoreText(TotalScore);
 
         objectManager.InitObjectManager(this);
@@ -148,8 +155,33 @@ public class GameState : MonoBehaviour
         PlayerHud.ChangeGenerationNameText(objectManager.getCurrentGenerationName());
 
         //플레이어 초기화
-        ufoplayer.InitUFO(TotalTime, userufodata, selectUFOdata);
+        bool bdirecting = false;
+        if (GameManager.Instance.userData != null)
+            bdirecting = GameManager.Instance.userData.userSettingData.bIsDirection;
+        ufoplayer.InitUFO(TotalTime, userufodata, selectUFOdata, bdirecting);
+        
+        if (bdirecting)
+            PlayerHud.InitDirectionPostion();
 
+        if(!bdirecting)
+        {
+            StartPlayTimer();
+            StartGameTimer();
+        }
+
+        if(bdirecting)
+        {
+            objectManager.PauseSpawnObjects(true);
+            objectManager.OnBombSpawn(false);
+        }
+
+        if(GameManager.Instance.userData == null)
+            TestLoadDAta();
+    }
+
+    private async void TestLoadDAta()
+    {
+        await GameManager.Instance.InitData();
     }
 
     private void OnDisable()
@@ -164,7 +196,37 @@ public class GameState : MonoBehaviour
         PlayerHud.FOnAllBounusAnimEnded -= objectManager.CallBack_RenewalBonusObject;
         ufoplayer.FOnExpAdded -= PlayerHud.CallBack_AddEXPFuelTankWidget;
 
-        //ufoplayer.FOnExpGagueAdded -= PlayerHud.CallBack_AddEXPThermometerWidget;
+        ufoplayer.FOnDirectionEnd -= PlayerHud.OnUIDirection;
+        ufoplayer.FOnDirectionEnd -= DirectionEnd;
+
+        ufoplayer.FOnWarpDirectionEnd -= WarpDirectionEnd;
+        ufoplayer.FonGenerationMoved -= objectManager.ChangeGeneration;
+
+
+    }
+
+    private void DirectionEnd()
+    {
+
+         StartPlayTimer();
+         StartGameTimer();
+ 
+         objectManager.PauseSpawnObjects(false);
+         objectManager.OnBombSpawn(true);
+       
+    }
+
+    public void WarpDirectionStart()
+    {
+        GamePause(true);
+        PlayerHud.SetJoystick(false);
+        ufoplayer.StartWarpDirecting();
+
+    }
+    private void WarpDirectionEnd()
+    {
+        GamePause(false);
+        PlayerHud.SetJoystick(true);
     }
 
     private void CallBack_ObjectSwallow(FallingObject fallingobject)
@@ -185,12 +247,24 @@ public class GameState : MonoBehaviour
 
             ufoplayer.ResetCameraDistance();
         }
-
         TotalTime += calculatetime;
 
-       // Debug.Log(calculatetime);
-
+ 
         PlayerHud.SetScoreText(TotalScore);
+
+        if(GameManager.Instance.userData!=null)
+        {
+            //타입별 카운트 
+            string shapeId = $"Swallow_{fallingobject.GetShapeEnum()}_Cnt";
+            AchievementManager.Instance.ReportProgress(AchieveEnum.Swallow, shapeId, 1);
+            
+            //누적 흡수 
+            string AllId = $"Swallow_All_Cnt";
+            AchievementManager.Instance.ReportProgress(AchieveEnum.Swallow, AllId, 1);
+
+
+        }
+       
     }
 
     private float CalculateTimeGain(int level, float absorbedMass)
@@ -227,7 +301,7 @@ public class GameState : MonoBehaviour
        
         TotalTime -= minustime;
         GameManager.Instance.soundManager.PlaySfx(SoundEnum.Bomb,0.5f);
-        Camerashake.ShakeCamera();
+        Camerashake.HitShakeCamera();
     }
 
     public void CallBack_BossSpawned(BossObject boss)
@@ -424,13 +498,6 @@ public class GameState : MonoBehaviour
 
     public void GameEnd()
     {
-        /*  GameManager.Instance.vibrationManager.OnPauseVibration(true);
-          AllSkillManager.PauseSkillActive(true);
-          AllObjectStopActive(true);
-          objectManager.StopSpawnObjects();
-          objectManager.OnBombSpawn(false);*/
-
-        //ufoplayer.CallBack_StopMovement(true);
 
         GamePause(true);
 
@@ -448,13 +515,7 @@ public class GameState : MonoBehaviour
         GameManager.Instance.userData.UpdateBestScore(TotalScore);
 
        
-      /*  for(int i=0;i<4;i++)
-        {
-            int cnt = AllSkillManager.ReadAllSkills[i].SkillCount;
-            GameManager.Instance.userData.UpdateSkillCnt(i, cnt);
-        }
-       */
-        
+    
         GameManager.Instance.SaveUserData();
     }
 

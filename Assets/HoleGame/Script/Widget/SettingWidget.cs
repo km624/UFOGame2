@@ -1,4 +1,5 @@
 
+using Lean.Gui;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,6 +9,7 @@ public class SettingWidget : MonoBehaviour
     [SerializeField] private Button vibrationButton;
     [SerializeField] private Button bgmButton;
     [SerializeField] private Button sfxButton;
+    [SerializeField] private LeanToggle direciontoggle;
 
     [Header("ÄÃ·¯")]
     [SerializeField] private Color onColor = Color.white;
@@ -34,6 +36,8 @@ public class SettingWidget : MonoBehaviour
         vibrationButton.onClick.AddListener(ToggleVibration);
         bgmButton.onClick.AddListener(ToggleBgm);
         sfxButton.onClick.AddListener(ToggleSfx);
+        
+       direciontoggle.On = userSettingData.bIsDirection;
     }
 
     private void UpdateAllButtonStates()
@@ -58,6 +62,8 @@ public class SettingWidget : MonoBehaviour
         if(GameManager.Instance!=null)
         {
             GameManager.Instance.vibrationManager.OnVibration(userSettingData.bIsVibration);
+            GameManager.Instance.vibrationManager.Play(VibrationEnum.ButtonClick);
+            GameManager.Instance.soundManager.PlaySfx(SoundEnum.ButtonClick);
         }
     }
 
@@ -67,7 +73,9 @@ public class SettingWidget : MonoBehaviour
         SetButtonColor(bgmButton, userSettingData.bIsBgm);
         if (GameManager.Instance != null)
         {
-            GameManager.Instance.soundManager.SetBgmMute(!userSettingData.bIsBgm);   
+            GameManager.Instance.soundManager.SetBgmMute(!userSettingData.bIsBgm);
+            GameManager.Instance.vibrationManager.Play(VibrationEnum.ButtonClick);
+            GameManager.Instance.soundManager.PlaySfx(SoundEnum.ButtonClick);
         }
     }
 
@@ -76,6 +84,15 @@ public class SettingWidget : MonoBehaviour
         userSettingData.bIsSfx = !userSettingData.bIsSfx;
         SetButtonColor(sfxButton, userSettingData.bIsSfx);
         GameManager.Instance.soundManager.SetSfxMute(!userSettingData.bIsSfx);
+        GameManager.Instance.vibrationManager.Play(VibrationEnum.ButtonClick);
+        GameManager.Instance.soundManager.PlaySfx(SoundEnum.ButtonClick);
+    }
+
+    public void ToogleDirection()
+    {
+        userSettingData.bIsDirection = !userSettingData.bIsDirection;
+        GameManager.Instance.soundManager.PlaySfx(SoundEnum.ButtonClick);
+        GameManager.Instance.vibrationManager.Play(VibrationEnum.ButtonClick);
     }
 
     public void SaveUserdata()

@@ -32,6 +32,7 @@ public class BeamTrigger : MonoBehaviour
         {
             var main = particle.main;
             main.startLifetime = lifetime;
+            
         }
       
     }

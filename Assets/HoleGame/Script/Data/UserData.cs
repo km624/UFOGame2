@@ -9,33 +9,35 @@ public class UserData
 {
     public string userId;
     public int CurrentUFO;
-    //public int currentClearIndex;
-    //public List<int> SkillCnt;
+   
     public int BestScore;
     public int StarCnt;
    
     public SerialUFOList serialUFOList = new();
     
-    public UserSettingData userSettingData = new(); 
+    public UserSettingData userSettingData = new();
 
+    public List<UserAchieveData> Achievements =  new List<UserAchieveData>();
     public UserData()
     {
         userId = "Guest";
         CurrentUFO = 0;
-        //SkillCnt = new List<int> { 2, 3, 4, 5 };
+       
         BestScore = 0;
         StarCnt = 100;
         userSettingData = new UserSettingData();
+       
 
     }
     public UserData(string userid)
     {
         userId = userid;
         CurrentUFO = 0;
-        //SkillCnt = new List<int> { 2, 3, 4, 5 };
+        
         BestScore = 0;
         StarCnt = 100;
         userSettingData = new UserSettingData();
+      
 
     }
 
@@ -80,16 +82,7 @@ public class UserData
        
     }
 
-    /*public void UpdateSkillCnt(int index , int cnt)
-    {
-        int newcnt = 0;
-        if (cnt>=0)
-        {
-            newcnt=cnt;
-        }
-        SkillCnt[index] = newcnt;
-    }*/
-
+    
 
 
     

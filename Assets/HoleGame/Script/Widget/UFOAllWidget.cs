@@ -365,6 +365,7 @@ public class UFOAllWidget : MonoBehaviour
          UserData userdata = GameManager.Instance.userData;
         userdata.SetCurrentUFO(selectindex);
 
+        
         GameManager.Instance.SaveUserData();
     }
     

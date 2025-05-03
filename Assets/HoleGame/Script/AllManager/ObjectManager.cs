@@ -215,12 +215,7 @@ public class ObjectManager : MonoBehaviour
 
     public void ChangeGeneration()
     {
-       /* if (generationList.Count <= CurrentGenration + 1)
-        {
-            Debug.Log("다음 세대 없음");
-            return; 
-        }*/
-
+      
         CurrentGenration += 1;
         
         //세대 스텟 배율 대로 새로 세팅
@@ -427,7 +422,7 @@ public class ObjectManager : MonoBehaviour
             int randomCount = UnityEngine.Random.Range(bonusMinCount, bonusMaxCount + 1);
             
   
-            Debug.Log($"[{i}] ObjectMass: {shapeToActualMass[limitedList[i].GetShapeEnum()]}, Shape: {limitedList[i].GetShapeEnum()}");
+            //Debug.Log($"[{i}] ObjectMass: {shapeToActualMass[limitedList[i].GetShapeEnum()]}, Shape: {limitedList[i].GetShapeEnum()}");
            
 
             BonusObjectsOrgin.Add(shapeToActualMass[limitedList[i].GetShapeEnum()], randomCount);
@@ -636,10 +631,20 @@ public class ObjectManager : MonoBehaviour
 
             //보스 시간 , 점수 추가
             FOnObjectSwallowed(bossObject);
-            //임시 소리
-            //gameState.OnUfoSwallowSound();
-           
-            ChangeGeneration();
+            if (GameManager.Instance.userData!=null)
+            {
+               if(GameManager.Instance.userData.userSettingData.bIsDirection)
+                {
+                    gameState.WarpDirectionStart();
+                }
+                else
+                {
+                    ChangeGeneration();
+                }
+            }
+            else
+                ChangeGeneration();
+
 
             Destroy(bossObject.gameObject);
         }

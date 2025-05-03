@@ -22,7 +22,7 @@ public class MainWidget : MonoBehaviour
     public UFOAllWidget ufoAllWidget;
 
     public TMP_Text StarCntText;
-
+   
     [SerializeField] private SplineContainer splineContainer;
     [SerializeField] private Transform ufomodel;
     [SerializeField] private float moveDuration = 2.0f;
@@ -48,7 +48,7 @@ public class MainWidget : MonoBehaviour
             }
           
         }
-        UFOPathCalculate();
+        //UFOPathCalculate();
 
         int currentLevel = QualitySettings.GetQualityLevel();
         string levelName = QualitySettings.names[currentLevel];
@@ -95,7 +95,7 @@ public class MainWidget : MonoBehaviour
         
     }
 
-    private void UFOPathCalculate()
+    public void StartUFOPathMove()
     {
         // Spline 포인트 → DOTween 경로로 변환
         var spline = splineContainer.Spline;
@@ -130,6 +130,8 @@ public class MainWidget : MonoBehaviour
               //.SetLookAt(0.01f)); // 옵션: 방향 보게 하기
 
         seq.Join(ufomodel.DOScale(UFOTargetScale, moveDuration).SetEase(Ease.InOutSine));
+
+        seq.OnComplete(() => PlayGame());
 
     }
 

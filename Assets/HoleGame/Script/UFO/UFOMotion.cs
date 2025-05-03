@@ -31,7 +31,6 @@ public class UFOMotion : MonoBehaviour
    
     void Start()
     {
-        
         baseY = transform.localPosition.y;
         //StartSpin();
     }
