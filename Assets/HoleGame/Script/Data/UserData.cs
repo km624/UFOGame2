@@ -9,41 +9,42 @@ public class UserData
 {
     public string userId;
     public int CurrentUFO;
-   
+
     public int BestScore;
     public int StarCnt;
-   
+
     public SerialUFOList serialUFOList = new();
-    
+
     public UserSettingData userSettingData = new();
 
-    public List<UserAchieveData> Achievements =  new List<UserAchieveData>();
+    public List<UserAchieveData> Achievements = new List<UserAchieveData>();
+
+    public UserAchievePointData userAchievePointData = new();
     public UserData()
     {
         userId = "Guest";
         CurrentUFO = 0;
-       
+
         BestScore = 0;
         StarCnt = 100;
         userSettingData = new UserSettingData();
-       
+        userAchievePointData = new UserAchievePointData();
 
     }
     public UserData(string userid)
     {
         userId = userid;
         CurrentUFO = 0;
-        
+
         BestScore = 0;
         StarCnt = 100;
         userSettingData = new UserSettingData();
-      
-
+        userAchievePointData = new UserAchievePointData();
     }
 
     public void InitializeUserData()
     {
-        serialUFOList.InitializeFromUFOList(); 
+        serialUFOList.InitializeFromUFOList();
     }
 
     public void SetCurrentUFO(int ufoindex)
@@ -51,14 +52,15 @@ public class UserData
         CurrentUFO = ufoindex;
     }
 
-    public void AddStarCnt(int cnt)
+    public int AddStarCnt(int cnt)
     {
         StarCnt += cnt;
+        return StarCnt;
     }
 
     public int MinusStartCnt(int cnt)
     {
-        if(cnt>StarCnt)
+        if (cnt > StarCnt)
             return -1;
 
         StarCnt -= cnt;
@@ -69,7 +71,7 @@ public class UserData
     {
         if (cnt > StarCnt)
             return false;
-        else 
+        else
             return true;
     }
 
@@ -77,10 +79,13 @@ public class UserData
     {
         if (BestScore < score)
         {
-            BestScore = score;  
+            BestScore = score;
         }
-       
+
     }
+
+   
+
 
     
 

@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: HardCore_SkiiCnt0
   m_EditorClassIdentifier: 
   Id: HardCore_SkiiCnt0
-  Title: "\uD55C \uAC8C\uC784 \uC2A4\uD0AC \uC0AC\uC6A9\uD558\uC9C0 \uC54A\uAE30"
+  Title: "\uD55C \uAC8C\uC784 \uB3D9\uC548 \uC2A4\uD0AC \uC0AC\uC6A9\uD558\uC9C0
+    \uC54A\uAE30"
   AchieveType: 3
   TiersList:
   - TargetValue: 1

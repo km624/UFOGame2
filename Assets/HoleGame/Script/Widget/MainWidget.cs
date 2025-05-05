@@ -21,6 +21,8 @@ public class MainWidget : MonoBehaviour
 
     public UFOAllWidget ufoAllWidget;
 
+    [SerializeField] private AllAchievementWidget allArchievementWidget;
+
     public TMP_Text StarCntText;
    
     [SerializeField] private SplineContainer splineContainer;
@@ -39,6 +41,8 @@ public class MainWidget : MonoBehaviour
                 SetStarCntText(GameManager.Instance.userData.StarCnt);
 
                 ufoAllWidget.InitializedUFOAllWidget();
+
+                allArchievementWidget.InitAllArchiveWidget();
             }
             else
             {
@@ -65,15 +69,13 @@ public class MainWidget : MonoBehaviour
             SetStarCntText(GameManager.Instance.userData.StarCnt);
 
             ufoAllWidget.InitializedUFOAllWidget();
+
+            allArchievementWidget.InitAllArchiveWidget(); 
         }
     }
 
    
-  /* public void ChangeleanSwitch(int change,int select)
-   {
-        leanSwitch.State = change;
-   }*/
-
+  
     public void SetStarCntText(int cnt)
     {
         StarCntText.text= cnt.ToString();
@@ -95,6 +97,11 @@ public class MainWidget : MonoBehaviour
         
     }
 
+    public void Callback_OnRewarded(int currentcnt)
+    {
+        SetStarCntText(currentcnt);
+    }
+
     public void StartUFOPathMove()
     {
         // Spline 포인트 → DOTween 경로로 변환
@@ -109,7 +116,7 @@ public class MainWidget : MonoBehaviour
             Vector3 localPos = spline.EvaluatePosition(t);
             Vector3 worldPos = splineContainer.transform.TransformPoint(localPos);
             
-            Debug.Log(worldPos);
+            //Debug.Log(worldPos);
 
             path.Add(worldPos);
         }

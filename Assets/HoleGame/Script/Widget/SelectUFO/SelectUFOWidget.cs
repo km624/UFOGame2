@@ -81,7 +81,7 @@ public class SelectUFOWidget : MonoBehaviour
         scrollSnap2.SetStartingPanel(selectindex / InBoxCnt);
     }
    
-   UFOButtonWidget CreateUFOButtonWidget(int index, bool bselect , bool bunlock, int price)
+   /*UFOButtonWidget CreateUFOButtonWidget(int index, bool bselect , bool bunlock, int price)
    {
        
         UFOButtonWidget btnWidget = Instantiate(PrefabUFOBtnWidget, SelectUFOContent.transform, false);
@@ -95,7 +95,7 @@ public class SelectUFOWidget : MonoBehaviour
         return btnWidget;
 
         
-    }
+    }*/
 
     public void SelectUFOType(int index,bool bunlock,int ufoprice)
     {
@@ -155,6 +155,16 @@ public class SelectUFOWidget : MonoBehaviour
 
             //강화창 띄우기
             ufoallWidget.OnEnableColorReinForceWidget();
+
+            if (GameManager.Instance.userData != null)
+            {
+                //( 업적 ) UFO 타입 구매
+                string collectufoid = $"Collect_{pruchaseUFOData.UFOName}";
+                AchievementManager.Instance.ReportProgress(AchieveEnum.Collect, collectufoid, 1);
+
+                //누적 흡수 
+              
+            }
 
         }
 

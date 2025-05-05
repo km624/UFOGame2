@@ -254,14 +254,13 @@ public class GameState : MonoBehaviour
 
         if(GameManager.Instance.userData!=null)
         {
-            //타입별 카운트 
+            //( 업적 )타입별 카운트 
             string shapeId = $"Swallow_{fallingobject.GetShapeEnum()}_Cnt";
             AchievementManager.Instance.ReportProgress(AchieveEnum.Swallow, shapeId, 1);
-            
-            //누적 흡수 
+
+            //( 업적 ) 누적 흡수 
             string AllId = $"Swallow_All_Cnt";
             AchievementManager.Instance.ReportProgress(AchieveEnum.Swallow, AllId, 1);
-
 
         }
        

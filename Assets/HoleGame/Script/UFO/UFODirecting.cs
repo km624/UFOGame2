@@ -35,7 +35,7 @@ public class UFODirecting : MonoBehaviour
 
     public void UFOFAlling(float duration)
     {
-        Debug.Log("Shakle");
+        //Debug.Log("Shakle");
         camerashake.ShakeCamera(duration);
         OnSmokeEffect();
     }

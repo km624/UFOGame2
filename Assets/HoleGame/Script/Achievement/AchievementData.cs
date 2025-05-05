@@ -9,8 +9,7 @@ public class AchievementData : ScriptableObject
    
     public AchieveEnum AchieveType;
     public List<AchievementTier> TiersList;
-    public Sprite AchieveIcon;
-   
+  
 }
 
 [System.Serializable]

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efb7deb3c3348d744925a601eaaab24e, type: 3}
   m_Name: Collect_UFO_Fat
   m_EditorClassIdentifier: 
-  Id: Collect_UFO_Fat
+  Id: Collect_UFOFat
   Title: "UFO Fat  \uC218\uC9D1"
   AchieveType: 2
   TiersList:

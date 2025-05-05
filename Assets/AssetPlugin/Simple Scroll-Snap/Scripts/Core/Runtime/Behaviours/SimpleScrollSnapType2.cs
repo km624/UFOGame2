@@ -3,6 +3,7 @@
 
 
 using System;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -1353,6 +1354,9 @@ namespace DanielLochner.Assets.SimpleScrollSnap
         }
         private void SnapToPanel()
         {
+           /* if (Panels == null ||  Panels[CenteredPanel] == null)
+                return;*/
+
             // (수정) 뷰포트 절반 대신 0을 사용하면, '왼쪽' 기준
             float xOffset = 0f;
             float yOffset = 0f;
@@ -1563,6 +1567,16 @@ namespace DanielLochner.Assets.SimpleScrollSnap
                 }
                 Setup();
             }
+        }
+
+        public void ScrollClear()
+        {
+            foreach(var panel in Panels)
+            {
+                DestroyImmediate(panel.gameObject);
+            }
+            Panels = null;
+          
         }
 
         private Vector2 GetDisplacementFromCenter(int index)
