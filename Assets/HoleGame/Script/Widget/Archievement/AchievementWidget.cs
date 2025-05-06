@@ -19,6 +19,8 @@ public class AchievementWidget : MonoBehaviour
 
     public int Reward { get; private set; }
 
+    public bool bisCleared { get; private set; }
+
     [SerializeField] private Image BackGroundImage;
     [SerializeField] private Color TierClearColor = Color.white;
     [SerializeField] private Color NormalColor = Color.white;
@@ -41,6 +43,7 @@ public class AchievementWidget : MonoBehaviour
 
     [SerializeField] private GameObject CompleteImage;
 
+    [SerializeField] private RectTransform MoneyTransform;
     public void InitializeWidget(AllAchievementWidget allwidget, AchieveEnum type, string id, string title, int progress, int target,
         int currentReward, bool bcompleted)
     {
@@ -61,15 +64,13 @@ public class AchievementWidget : MonoBehaviour
 
        
         RewardText.text = currentReward.ToString();
-      
 
-        //progressPanel.SetActive(!tierone);
 
+        bisCleared =  bcompleted;
 
         CheckRewardButton();
-
-
-        CompleteImage.gameObject.SetActive(bcompleted);
+      
+        CompleteImage.gameObject.SetActive(bisCleared);
 
 
 
@@ -77,18 +78,18 @@ public class AchievementWidget : MonoBehaviour
 
 
 
-    public void RenewalProgress(int progress)
+    public bool RenewalProgress(int progress)
     {
         Progress = progress;
         AchieveProgress.text = progress.ToString();
         ProgressBar.fillAmount = Progress / Target;
-        CheckRewardButton();
+        return CheckRewardButton();
     }
 
 
     public void OnclickRewardButton()
     {
-        allArchievementWidget.RewardAchievement(achiveType, achiveID, Reward);
+        allArchievementWidget.RewardAchievement(achiveType, achiveID, Reward , MoneyTransform);
     }
 
     public void NextTierTarget(int newtarget, int newreward)
@@ -99,12 +100,10 @@ public class AchievementWidget : MonoBehaviour
         Reward = newreward;
         RewardText.text = Reward.ToString();
 
-        //ProgressBar.fillAmount = Progress / Target;
-
-       // CheckRewardButton();
+       
     }
 
-    private void CheckRewardButton()
+    private bool CheckRewardButton()
     {
         bool reward = Progress >= Target;
         RewardButton.interactable = reward;
@@ -112,13 +111,20 @@ public class AchievementWidget : MonoBehaviour
         {
             BackGroundImage.color = TierClearColor;
             AchieveIcon.sprite = Clearimage;
+           
+            if (bisCleared)
+                RewardButton.interactable = false;
+
         }
         else
         {
+
             BackGroundImage.color = NormalColor;
             AchieveIcon.sprite = Notimage;
-        }
 
+            
+        }
+        return reward;
 
     }
 }

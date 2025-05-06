@@ -14,14 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PointRewardDatas:
   - type: 0
-    AchievePoint: 20
     Reward: 10
   - type: 0
-    AchievePoint: 40
     Reward: 20
+  - type: 0
+    Reward: 30
   - type: 1
-    AchievePoint: 60
-    Reward: UFOAchieve
-  - type: 2
-    AchievePoint: 100
-    Reward: 1
+    Reward: UFOArchieve
+  MaxPoint: 100

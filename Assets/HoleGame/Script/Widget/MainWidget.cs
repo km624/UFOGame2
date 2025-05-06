@@ -9,6 +9,8 @@ using DG.Tweening;
 using UnityEngine.Splines;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using AssetKits.ParticleImage;
+using System.Collections;
 
 
 
@@ -31,11 +33,28 @@ public class MainWidget : MonoBehaviour
 
 
     [SerializeField] Vector3 UFOTargetScale = new Vector3(0.5f, 0.5f, 0.5f); // 도착 시 크기
+
+
+    [SerializeField] private RectTransform MoneyTransform;
+    [SerializeField] private List<ParticleImage> CoinParticles = new List<ParticleImage>();
+    private Queue<ParticleImage> particleQueue = new Queue<ParticleImage>();
+    [SerializeField] private float ParticlePlayTime = 1.0f;
+
+    private void Awake()
+    {
+        foreach (var obj in CoinParticles)
+        {
+            obj.gameObject.SetActive(false); 
+            particleQueue.Enqueue(obj);
+        }
+    }
     void Start()
     {
        
         if (GameManager.Instance != null)
         {
+
+            GameManager.Instance.soundManager.PlayBgm(SoundEnum.BGM, 0.2f);
             if (GameManager.Instance.userData != null)
             {
                 SetStarCntText(GameManager.Instance.userData.StarCnt);
@@ -97,10 +116,48 @@ public class MainWidget : MonoBehaviour
         
     }
 
-    public void Callback_OnRewarded(int currentcnt)
+    public void Callback_OnRewarded(int currentcnt , RectTransform buttontransform)
     {
         SetStarCntText(currentcnt);
+        PlayParticleAt(buttontransform);
     }
+
+    public void PlayParticleAt(RectTransform startTransform)
+    {
+        if (particleQueue.Count == 0)
+        {
+            Debug.LogWarning("No particle available in pool!");
+            return;
+        }
+
+        var particle = particleQueue.Dequeue();
+
+
+        var rect = particle.GetComponent<RectTransform>();
+        if(startTransform.pivot.x==1.0f)
+        {
+            Vector3 offset = startTransform.TransformVector(Vector3.left * (startTransform.rect.width / 2f));
+            rect.position = startTransform.position + offset;
+        } 
+        else
+            rect.position = startTransform.position;
+
+      
+
+        particle.gameObject.SetActive(true);
+
+        // 일정 시간 후 자동 반환
+        StartCoroutine(ReturnToPoolAfterDelay(particle, ParticlePlayTime)); // ← 파티클 지속시간
+    }
+
+    private IEnumerator ReturnToPoolAfterDelay(ParticleImage particle, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        particle.Stop();
+        particle.gameObject.SetActive(false);
+        particleQueue.Enqueue(particle);
+    }
+
 
     public void StartUFOPathMove()
     {
@@ -116,7 +173,7 @@ public class MainWidget : MonoBehaviour
             Vector3 localPos = spline.EvaluatePosition(t);
             Vector3 worldPos = splineContainer.transform.TransformPoint(localPos);
             
-            //Debug.Log(worldPos);
+           
 
             path.Add(worldPos);
         }
@@ -134,8 +191,7 @@ public class MainWidget : MonoBehaviour
         Sequence seq = DOTween.Sequence();
         seq.Append(ufomodel.DOPath(path.ToArray(), moveDuration, PathType.CatmullRom)
               .SetEase(Ease.InOutSine));
-              //.SetLookAt(0.01f)); // 옵션: 방향 보게 하기
-
+             
         seq.Join(ufomodel.DOScale(UFOTargetScale, moveDuration).SetEase(Ease.InOutSine));
 
         seq.OnComplete(() => PlayGame());

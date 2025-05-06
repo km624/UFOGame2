@@ -59,3 +59,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 233581a5cebdc2a4bb91cab345ed487f, type: 2}
   pointrewardDataList:
   - {fileID: 11400000, guid: 306525926eee2e2488ed14c7a196f4a7, type: 2}
+  - {fileID: 11400000, guid: 933f7f71b12125343a045681e0236bf4, type: 2}

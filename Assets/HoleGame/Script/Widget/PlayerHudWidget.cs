@@ -355,10 +355,12 @@ public class PlayerHudWidget : MonoBehaviour
        
     }
 
+   
+
     public void GoMainScreen()
     {
         DOTween.KillAll();
-        GameManager.Instance.soundManager.PlayBgm(SoundEnum.BGM, 0.2f);
+        //GameManager.Instance.soundManager.PlayBgm(SoundEnum.BGM, 0.2f);
         TransitionManager.Instance().Transition("MainScene", transition, 0.0f);
     }
 

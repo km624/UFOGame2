@@ -1,8 +1,10 @@
-using NUnit.Framework;
+
+using System;
 using System.Collections.Generic;
 using TMPro;
+
 using UnityEngine;
-using UnityEngine.UI;
+
 
 public class AchievePointWidget : MonoBehaviour
 {
@@ -20,16 +22,17 @@ public class AchievePointWidget : MonoBehaviour
 
     private float MaxPointGauge;
 
-    //private float fillSpeed = 2.0f;
-
-    private float TargetfillPercent = 0.0f;
+    private float EachMaxGaguge;
 
     private int currentStep = 0;
 
     private float NormalPointgauge = 0;
   
     private UserAchievePointData userpointData;
-  
+
+    public event Action<int /*currentmoney*/, RectTransform> FonMoneyRewarded;
+
+   
     public void InitPointWidget()
     {
         if (GameManager.Instance.userData == null) return;
@@ -41,121 +44,176 @@ public class AchievePointWidget : MonoBehaviour
         CreatePointWidget();
     }
 
-    /* private void CreatePointWidget()
-     {
-         currentStep = userpointData.Step;
-
-         //현재 티어의 맞게 세팅
-         int tier = 0;
-         var pointDataList = AchievementManager.Instance.ReadPointRewardDataList[currentStep];
-         //int maxtier = pointDataList.Count - 1;
-         MaxPointGauge = pointDataList.MaxPoint;
-
-         float barWidth = ProgressBarTransform.rect.width;
-         foreach (var achievetier in AchievementManager.Instance.ReadPointRewardDataList[currentStep].PointRewardDatas)
-         {
-
-             // 1) 비례 위치 계산
-             float normalized = achievetier.AchievePoint / MaxPointGauge;
-             float posX = barWidth * normalized;
-
-             // 2) 프리팹 생성
-             var rewardWidget = Instantiate(pointrewardPrefab, ProgressBarTransform);
-             rewardWidget.GetComponent<RectTransform>().anchoredPosition = new Vector2(posX, 0f);
-
-             // 3) 필요하다면 데이터 설정 (예: 텍스트, 상태 등)
-             bool rewardComplete = userpointData.Tier <= tier;
-            // rewardWidget.SetData(achievetier, rewardComplete); // 네가 정의한 메서드로
-
-             RewardButtons.Add(rewardWidget);
-             tier++;
-
-
-         }
-
-
-
-         //누적 포인트 계산
-         for (int i = 0; i < userpointData.Step; i++)
-         {
-             int lastpoint = AchievementManager.Instance.ReadPointRewardDataList[i].PointRewardDatas.Count - 1;
-             int stepmax = AchievementManager.Instance.ReadPointRewardDataList[i].PointRewardDatas[lastpoint].AchievePoint;
-             NormalPointgauge += stepmax;
-         }
-         CurrentPointGauge = userpointData.Point;
-         CurrentPointGauge -= NormalPointgauge;
-
-         TargetfillPercent = CurrentPointGauge / MaxPointGauge;
-         PointProgressBar.fillAmount = TargetfillPercent;
-     }*/
-
     private void CreatePointWidget()
     {
         currentStep = userpointData.Step;
 
-        //현재 티어의 맞게 세팅
-        int tier = 0;
+       
         var pointDataList = AchievementManager.Instance.ReadPointRewardDataList[currentStep];
     
         MaxPointGauge = pointDataList.MaxPoint;
 
-        float eachMaxgauge = MaxPointGauge / (pointDataList.PointRewardDatas.Count);
+        EachMaxGaguge = MaxPointGauge / (pointDataList.PointRewardDatas.Count);
 
-
-        foreach (var achievetier in AchievementManager.Instance.ReadPointRewardDataList[currentStep].PointRewardDatas)
+       
+        //누적 포인트 계산
+        for (int i = 0; i < userpointData.Step; i++)
         {
+            int stepmaxtpoint = AchievementManager.Instance.ReadPointRewardDataList[i].MaxPoint;
 
-          
+            NormalPointgauge += stepmaxtpoint;
+        }
+        Debug.Log("currentgague 오차 " + NormalPointgauge);
+        CurrentPointGauge = userpointData.Point- NormalPointgauge;
+
+        currentPointText.text = CurrentPointGauge.ToString();
+
+        int tier = 0;
+        foreach (var achievetier in pointDataList.PointRewardDatas)
+        {
             // 2) 프리팹 생성
             var rewardWidget = Instantiate(pointrewardPrefab, ProgressBarArea);
-           
+            
+            //현재 게이지 계산
           
-            bool rewardComplete = userpointData.Tier <= tier;
-            // rewardWidget.SetData(achievetier, rewardComplete); // 네가 정의한 메서드로
-
+            float eachpoint = (tier + 1) * EachMaxGaguge;
+           
+           
+            bool rewardComplete = userpointData.TierCompleted[tier];
+          
+            rewardWidget.InitRewardWidget(this, tier, rewardComplete, EachMaxGaguge, CurrentPointGauge, eachpoint);
+           
+            
             RewardWidgets.Add(rewardWidget);
             tier++;
 
-
         }
-
-        //누적 포인트 계산
-      for (int i = 0; i < userpointData.Step; i++)
-        {
-            int stepmaxtpoint = AchievementManager.Instance.ReadPointRewardDataList[i].MaxPoint;
-           
-            NormalPointgauge += stepmaxtpoint;
-        }
-        CurrentPointGauge = userpointData.Point;
-        CurrentPointGauge -= NormalPointgauge;
-       
-        currentPointText.text = CurrentPointGauge.ToString();   
-       // TargetfillPercent = CurrentPointGauge / MaxPointGauge;
-        //PointProgressBar.fillAmount = TargetfillPercent;
     }
-    private void Update()
+
+    public bool CheckrewardMark()
     {
-        if (CurrentPointGauge == 0 && TargetfillPercent == 0) return;
-        UpdateGaugeBar();
+       
+        foreach(var widdget in RewardWidgets)
+        {
+            if(widdget.bCanOpen)
+            {
+
+                return true;
+            }
+        }
+        return false;
     }
+  
 
     public void CallBack_UpdatePoint(int point)
     {
         CurrentPointGauge = point - NormalPointgauge;
         currentPointText.text = CurrentPointGauge.ToString();
-        TargetfillPercent = CurrentPointGauge / MaxPointGauge;
+        foreach(var widget in RewardWidgets)
+        {
+            widget.ChangeProgressbar(CurrentPointGauge);
+        }
+        
+     
     }
 
-    private void UpdateGaugeBar()
+    public void RewardBoxOpen(int tier , RectTransform BoxTransform)
     {
+        userpointData.CompleteTier(tier);
+        var pointDataList = AchievementManager.Instance.ReadPointRewardDataList[currentStep];
 
-        //PointProgressBar.fillAmount = Mathf.Lerp(PointProgressBar.fillAmount, TargetfillPercent, Time.deltaTime * fillSpeed);
+        PointRewardEnum type = pointDataList.PointRewardDatas[tier].type;
+        string reward = pointDataList.PointRewardDatas[tier].Reward;
+
+        ReceivedReward(type, reward, BoxTransform);
+
+      
+
+        if (userpointData.CheckAllTierCompleted())
+        {
+           if(AchievementManager.Instance.CheckPossibleNextStep(currentStep + 1))
+            {
+                var nextpointDataList = AchievementManager.Instance.ReadPointRewardDataList[currentStep + 1];
+
+                userpointData.ChangeRewradPointStep(currentStep + 1, nextpointDataList.PointRewardDatas.Count);
+                Debug.Log("새로운 포인트 리워드 세팅");
+
+                foreach(var rewardwidget in RewardWidgets)
+                {
+                    Destroy(rewardwidget.gameObject);
+                }
+                RewardWidgets.Clear();
+                CreatePointWidget();
+                
+            }
+            else
+            {
+                Debug.Log("다음 포인트 리워드 세팅 없음");
+            }
+        }
+
+        if(!CheckrewardMark())
+        {
+            allAchievementWidget.CallBack_RewardMaskFalse();
+        }
+
+        //리워드 받으면 저장
+        GameManager.Instance.SaveUserData();
     }
+
+    private void ReceivedReward(PointRewardEnum rewardtype ,string reward,RectTransform boxtransform)
+    {
+        switch (rewardtype)
+        {
+            case PointRewardEnum.Money:
+                {
+                    if (int.TryParse(reward, out int moneyAmount))
+                    {
+                        //Debug.Log($"돈 획득: {moneyAmount}원");
+                       int currentStar =  GameManager.Instance.userData.AddStarCnt(moneyAmount);
+                        GameManager.Instance.soundManager.PlaySfx(SoundEnum.AddMoney,  1.0f);
+                      FonMoneyRewarded?.Invoke(currentStar, boxtransform);
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"Money 형변환 실패: {reward}");
+                    }
+                    break;
+                }
+
+            case PointRewardEnum.Color:
+                {
+                    if (int.TryParse(reward, out int colorIndex))
+                    {
+                        Debug.Log($"컬러 인덱스 해금: {colorIndex}");
+                        // GameManager.Instance.userData.UnlockColor(colorIndex);
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"Color 형변환 실패: {reward}");
+                    }
+                    break;
+                }
+
+            case PointRewardEnum.UFO:
+                {
+                    Debug.Log($"UFO 해금: {reward}");
+                    // GameManager.Instance.userData.UnlockUFO(reward); // reward는 UFO 이름
+                    break;
+                }
+
+            default:
+                Debug.LogWarning($"알 수 없는 보상 타입: {rewardtype}");
+                break;
+        }
+    }
+
+   
 
     public void OnDisable()
     {
         AchievementManager.Instance.FOnPointChanged -= CallBack_UpdatePoint;
     }
 
-    //public bool Next
+  
 }

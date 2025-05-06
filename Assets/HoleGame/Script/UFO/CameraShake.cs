@@ -11,8 +11,8 @@ public class CameraShake : MonoBehaviour
 
     [Header("Shake Settings")]
     private float shakeDuration = 1.0f;
-    private float shakeAmplitude = 7.5f;
-    private float shakeFrequency = 7.5f;
+    private float shakeAmplitude = 10.0f;
+    private float shakeFrequency = 10.0f;
     
     private Tween resetTween;
     private void Awake()
@@ -27,7 +27,6 @@ public class CameraShake : MonoBehaviour
 
     public void HitShakeCamera()
     {
-        resetTween?.Kill();
 
         PostEffectController.Instance.ActiveHitEffect(true);
         // 카메라 흔들기 시작
@@ -38,24 +37,7 @@ public class CameraShake : MonoBehaviour
         DOVirtual.Float(shakeAmplitude, 0, shakeDuration, (value) => noise.AmplitudeGain = value)
                  .SetEase(Ease.OutCubic).OnComplete(() => PostEffectController.Instance.ActiveHitEffect(false));
     }
-    public void ShakeCamera(float duration)
-    {
-        resetTween?.Kill();
-
-        // 일정 강도로 설정
-        noise.AmplitudeGain = 0.5f;
-        noise.FrequencyGain = 1.0f;
-
-        // duration이 지나면 원상 복구
-        resetTween = DOVirtual.DelayedCall(duration, ResetCameraShake);
-    }
-
-    public void ShakeCameraOneShot(float amplitudegain)
-    {
-        noise.AmplitudeGain = amplitudegain;
-        DOVirtual.Float(shakeAmplitude, 0, 0.5f, (value) => noise.AmplitudeGain = value);
-                
-    }
+    
 
     
     public void ResetCameraShake()

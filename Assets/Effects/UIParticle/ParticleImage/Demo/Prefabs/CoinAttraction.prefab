@@ -186,12 +186,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2643071852801193329}
+  - {fileID: 8828465427729349194}
   m_Father: {fileID: 4974518237577479983}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -199}
+  m_AnchoredPosition: {x: -45, y: -264}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4596038176438582089
@@ -231,7 +231,7 @@ MonoBehaviour:
   _emitterConstraintTransform: {fileID: 0}
   _shape: 1
   _spread: 0
-  _spreadLoop: 1
+  _spreadLoop: 3
   _startDelay: 0
   _radius: 50
   _width: 100
@@ -243,8 +243,8 @@ MonoBehaviour:
   _emitterThickness: 0
   _loop: 0
   _prewarm: 0
-  _duration: 0.3
-  _playMode: 2
+  _duration: 0.2
+  _playMode: 0
   _startSize:
     separable: 1
     separated: 0
@@ -264,7 +264,7 @@ MonoBehaviour:
         m_PostInfinity: 2
         m_RotationOrder: 4
       m_ConstantMin: 0
-      m_ConstantMax: 60
+      m_ConstantMax: 30
     xCurve:
       m_Mode: 0
       m_CurveMultiplier: 0
@@ -413,7 +413,7 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
     m_ConstantMin: 1
-    m_ConstantMax: 15
+    m_ConstantMax: 2
   _colorOverLifetime:
     m_Mode: 1
     m_GradientMin:
@@ -1162,8 +1162,8 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.23662984
-        value: -0.16690838
+        time: 0.0895046
+        value: -0.21796429
         inSlope: -0.18505974
         outSlope: -0.18505974
         tangentMode: 0
@@ -1171,8 +1171,8 @@ MonoBehaviour:
         inWeight: 0.33333334
         outWeight: 0.3690642
       - serializedVersion: 3
-        time: 0.30901414
-        value: 0.06097493
+        time: 0.15229112
+        value: 0.2214211
         inSlope: -0.48188597
         outSlope: -0.48188597
         tangentMode: 0
@@ -1180,13 +1180,13 @@ MonoBehaviour:
         inWeight: 0.5200996
         outWeight: 0.7047364
       - serializedVersion: 3
-        time: 0.3598097
-        value: 0
-        inSlope: 0.0051522027
-        outSlope: 0.0051522027
+        time: 0.32141858
+        value: -0.014587402
+        inSlope: -0.755187
+        outSlope: -0.755187
         tangentMode: 0
         weightedMode: 1
-        inWeight: 0.37683383
+        inWeight: 1
         outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
@@ -1215,7 +1215,7 @@ MonoBehaviour:
     enabled: 1
   _attractorTarget: {fileID: 813211192727349144}
   _toTarget:
-    m_Mode: 2
+    m_Mode: 1
     m_CurveMultiplier: 1
     m_CurveMin:
       serializedVersion: 2
@@ -1245,8 +1245,8 @@ MonoBehaviour:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
-        time: 0.69418335
-        value: -0.0020141602
+        time: 0.20091176
+        value: -0.0006656833
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -1254,8 +1254,8 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 1
-        value: 1
+        time: 0.8028128
+        value: 1.0019912
         inSlope: 4.5544767
         outSlope: 4.5544767
         tangentMode: 0
@@ -1354,8 +1354,8 @@ MonoBehaviour:
           inWeight: 0.33333334
           outWeight: 0.33333334
         - serializedVersion: 3
-          time: 1.0213338
-          value: -0.0072170496
+          time: 0.61090004
+          value: -0.0072167236
           inSlope: 0
           outSlope: 0
           tangentMode: 0
@@ -1420,8 +1420,8 @@ MonoBehaviour:
     m_ConstantMin: 0
     m_ConstantMax: 0
   _sheetModule:
-    enabled: 1
-  _textureTile: {x: 4, y: 4}
+    enabled: 0
+  _textureTile: {x: 1, y: 1}
   _sheetType: 2
   _frameOverTime:
     m_Mode: 0
@@ -1456,22 +1456,22 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
     m_ConstantMin: 0
-    m_ConstantMax: 0
+    m_ConstantMax: 1
   _frameSpeedRange:
     from: 0
     to: 1
   _textureSheetFPS: 25
   _textureSheetCycles: 1
-  _rate: 75
+  _rate: 50
   _rateOverLifetime: 0
   _rateOverDistance: 0
   _bursts: []
-  _particleTrailRenderer: {fileID: 8980341935882555505}
+  _particleTrailRenderer: {fileID: 4816376612396653240}
   _trailModule:
     enabled: 1
   _trailWidth:
     m_Mode: 1
-    m_CurveMultiplier: 1
+    m_CurveMultiplier: 0.5
     m_CurveMin:
       serializedVersion: 2
       m_Curve: []
@@ -1637,7 +1637,7 @@ MonoBehaviour:
   _trailMaterial: {fileID: 0}
   _inheritParticleColor: 1
   _dieWithParticle: 1
-  _trailRatio: 0.74
+  _trailRatio: 0.2
   _noiseOffset: {x: 0, y: 0}
   _noiseFrequency: 1
   _noiseStrength: 1
@@ -1663,74 +1663,9 @@ MonoBehaviour:
   moduleParticleFoldout: 1
   moduleMovementFoldout: 1
   moduleEventsFoldout: 0
-  moduleAdvancedFoldout: 0
-  m_Sprite: {fileID: 21300000, guid: 3d0ff5cd33461428eb7ad93dcdabac65, type: 3}
+  moduleAdvancedFoldout: 1
+  m_Sprite: {fileID: 21300000, guid: 62caf8fa8077346f98e18477f3872a95, type: 3}
   m_Texture: {fileID: 0}
---- !u!1 &5165783055400688864
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2643071852801193329}
-  - component: {fileID: 8475130069608854378}
-  - component: {fileID: 8980341935882555505}
-  m_Layer: 0
-  m_Name: Trails
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &2643071852801193329
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5165783055400688864}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 4596038176438582091}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &8475130069608854378
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5165783055400688864}
-  m_CullTransparentMesh: 1
---- !u!114 &8980341935882555505
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5165783055400688864}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2cdcbea113a9c4099991e8fe2c9706b5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &5645208449297816031
 GameObject:
   m_ObjectHideFlags: 0
@@ -1806,6 +1741,71 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &7949241390768884289
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8828465427729349194}
+  - component: {fileID: 7362440758069359834}
+  - component: {fileID: 4816376612396653240}
+  m_Layer: 0
+  m_Name: Trails
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &8828465427729349194
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7949241390768884289}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4596038176438582091}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &7362440758069359834
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7949241390768884289}
+  m_CullTransparentMesh: 1
+--- !u!114 &4816376612396653240
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7949241390768884289}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2cdcbea113a9c4099991e8fe2c9706b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &8236639517476419605
 GameObject:
   m_ObjectHideFlags: 0

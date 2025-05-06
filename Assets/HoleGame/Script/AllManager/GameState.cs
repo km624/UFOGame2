@@ -476,7 +476,8 @@ public class GameState : MonoBehaviour
     {
         //OnSoundPause(active);
         ufoplayer.CallBack_StopMovement(active);
-        GameManager.Instance.vibrationManager.OnPauseVibration(active);
+        GameManager.Instance.vibrationManager.OnStopVibration();
+        //GameManager.Instance.vibrationManager.OnPauseVibration(active);
         AllSkillManager.PauseSkillActive(active);
         objectManager.PauseSpawnObjects(active);
         AllObjectStopActive(active);
@@ -486,14 +487,18 @@ public class GameState : MonoBehaviour
         PlayerHud.OnPauseSkillWidget(active);
        
     }
-    
+
     public void OnSoundPause(bool active)
     {
         if (GameManager.Instance != null)
         {
             GameManager.Instance.soundManager.OnSoundPauseActive(active);
         }
+
+
     }
+    
+    
 
     public void GameEnd()
     {
@@ -513,8 +518,6 @@ public class GameState : MonoBehaviour
         GameManager.Instance.userData.AddStarCnt(StarCnt);
         GameManager.Instance.userData.UpdateBestScore(TotalScore);
 
-       
-    
         GameManager.Instance.SaveUserData();
     }
 

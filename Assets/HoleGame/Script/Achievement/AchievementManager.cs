@@ -38,7 +38,6 @@ public class AchievementManager : MonoBehaviour
             return;
         }
 
-  
     }
 
     public void InitializeManager(UserData user)
@@ -214,6 +213,13 @@ public class AchievementManager : MonoBehaviour
         }
 
         GameManager.Instance.SaveUserData();
+    }
+
+    public bool CheckPossibleNextStep(int nextstep)
+    {
+
+        return nextstep < ReadPointRewardDataList.Count;
+      
     }
 
 }

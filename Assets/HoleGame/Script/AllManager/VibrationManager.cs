@@ -21,6 +21,12 @@ public class VibrationManager : MonoBehaviour
             Vibration.Cancel();
     }
 
+    public void OnStopVibration()
+    {
+        StopLiftLoopVibration();
+        Vibration.Cancel();
+    }
+
     public void OnPauseVibration(bool active)
     {
         if (active)

@@ -14,5 +14,13 @@ public enum SoundEnum
     Bomb,
     BonusClear,
     LevelUp,
-    BGM_GameEnd
+    BGM_GameEnd,
+    AddMoney,
+    SFX_Warp,
+    SFX_Smoke,
+    SFX_GroundHit,
+    SFX_Appeared,
+    GetReward
+    
+
 }

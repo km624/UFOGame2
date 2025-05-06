@@ -29,6 +29,14 @@ public class UserDataLoadSave : IUserDataInterface
 
                 UserUFOData baseuserufodata = new UserUFOData(baseufodata);
                 newUserData.serialUFOList.AddUFO(baseuserufodata);
+
+                if(AchievementManager.Instance != null)
+                {
+                    int tier = AchievementManager.Instance.ReadPointRewardDataList[0].PointRewardDatas.Count;
+                    newUserData.userAchievePointData.InitTierList(tier);
+                }
+                   
+
                 return newUserData;
             }
 

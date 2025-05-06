@@ -36,7 +36,7 @@ public class UFODirecting : MonoBehaviour
     public void UFOFAlling(float duration)
     {
         //Debug.Log("Shakle");
-        camerashake.ShakeCamera(duration);
+        //camerashake.ShakeCamera(duration);
         OnSmokeEffect();
     }
 
@@ -44,6 +44,8 @@ public class UFODirecting : MonoBehaviour
     {
         GameObject groundhit = Instantiate(hitgroundpartice.gameObject, UFOModel.transform);
         groundhit.gameObject.transform.localPosition += Vector3.up*1.0f;
+        GameManager.Instance.vibrationManager.Play(VibrationEnum.UFOHit);
+        GameManager.Instance.soundManager.PlaySfx(SoundEnum.SFX_GroundHit,0.5f);
     }
 
     public void OnSmokeEffect()
@@ -60,6 +62,8 @@ public class UFODirecting : MonoBehaviour
     {
         Instantiate(hitparticle.gameObject,UFOModel.transform);
         hitparticle.gameObject.transform.localPosition = new Vector3(-0.5f,1.5f,0.0f);
+        GameManager.Instance.vibrationManager.Play(VibrationEnum.UFOHit);
+        GameManager.Instance.soundManager.PlaySfx(SoundEnum.SFX_Smoke, 0.5f);
     }
 
     public void EndUFOSmokeEffect()
@@ -97,7 +101,8 @@ public class UFODirecting : MonoBehaviour
         UFOAnimator.SetTrigger("UFOWarp");
         WarpEffectInstance = Instantiate(Warpparticle.gameObject, owner.transform);
         WarpEffectInstance.transform.localPosition = new Vector3(0, 0, 0);
-
+        GameManager.Instance.vibrationManager.StartLiftLoopVibration();
+        GameManager.Instance.soundManager.PlaySfx(SoundEnum.SFX_Warp, 0.5f);
     }
 
     public void DisapperEffect()
@@ -111,8 +116,16 @@ public class UFODirecting : MonoBehaviour
 
     public void AppearEffect()
     {
+        GameManager.Instance.vibrationManager.StopLiftLoopVibration();
         GameObject appear = Instantiate(appearparticle.gameObject, owner.transform);
         appear.transform.position = UFOModel.transform.position;
+
+    }
+
+    public void UFOAppeared()
+    {
+        GameManager.Instance.vibrationManager.Play(VibrationEnum.ButtonClick);
+        GameManager.Instance.soundManager.PlaySfx(SoundEnum.SFX_Appeared,0.5f);
     }
 
     public void WarpEffectEnd()

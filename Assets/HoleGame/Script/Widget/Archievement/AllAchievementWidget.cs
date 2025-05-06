@@ -2,6 +2,7 @@ using DanielLochner.Assets.SimpleScrollSnap;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class AllAchievementWidget : MonoBehaviour
 {
@@ -11,48 +12,86 @@ public class AllAchievementWidget : MonoBehaviour
     [SerializeField] private AchievementWidget achivementPrefab;
 
     [SerializeField] private GameObject AchieveContent;
+    [SerializeField] private GameObject tempParent;
+
+
 
     [SerializeField] private SimpleScrollSnapType2 scrollSnapType2;
     
-    
+    private List<AchievementWidget> Instancewidgets = new List<AchievementWidget>();
     private Dictionary<string, AchievementWidget> achievementWidgets =new Dictionary<string, AchievementWidget>();
 
-    public event Action<int/*starcnt*/> FOnRewarded;
+    public event Action<int/*starcnt*/ ,RectTransform> FOnRewarded;
 
 
     [SerializeField] private AchievePointWidget achievePointWidget;
+
+    [SerializeField] private GameObject AchieveMark;
+
+    private bool AchieveMarkActive = false;
+    
     
     public void InitAllArchiveWidget()
     {
         if (GameManager.Instance.userData == null) return;
         if (AchievementManager.Instance == null) return;
        
+        AchieveMark.SetActive(false);
         AchievementManager.Instance.FOnProgressChanged -= CallBack_RenewalAchieve;
         AchievementManager.Instance.FOnProgressChanged += CallBack_RenewalAchieve;
+      
+        CreateInstancewidgets();
+
+        ArrayAllArchiveWidget();
         FOnRewarded += mainWidget.Callback_OnRewarded;
-        
-        CreateAllArchiveWidget();
 
         achievePointWidget.InitPointWidget();
+        achievePointWidget.FonMoneyRewarded += mainWidget.Callback_OnRewarded;
+
+        if(achievePointWidget.CheckrewardMark())
+            AchieveMark.SetActive(true);
     }
 
-    private void CreateAllArchiveWidget()
+    public void CallBack_RewardMaskFalse()
+    {
+       if(!AchieveMarkActive)
+            AchieveMark.SetActive(false);
+    }
+
+    private void CreateInstancewidgets()
+    {
+        foreach (var achieve in AchievementManager.Instance.ReadAchiveDict)
+        {
+            foreach (var achievement in achieve.Value)
+            {
+                AchievementWidget achievewidget = Instantiate(achivementPrefab, tempParent.transform,false);
+                Instancewidgets.Add(achievewidget);
+                achievewidget.gameObject.SetActive(false);
+            }
+        }
+    }
+
+
+    private void ArrayAllArchiveWidget()
     {
        
         Dictionary<string, AchievementWidget> Allcompleteachievement = new Dictionary<string, AchievementWidget>();
         Dictionary<string, AchievementWidget> Prgrosschievement = new Dictionary<string, AchievementWidget>();  
         Dictionary<string, AchievementWidget> tiercompleteachievement = new Dictionary<string, AchievementWidget>();
-       
-        foreach(var achieve in AchievementManager.Instance.ReadAchiveDict)
+
+        int index = 0;
+        AchieveMarkActive=false;
+        foreach (var achieve in AchievementManager.Instance.ReadAchiveDict)
         {
             foreach (var achievement in achieve.Value) 
             {
-                
+                Debug.Log("Àç¹è¿­");
                 UserAchieveData userachievedata = AchievementManager.Instance.ReadprogressDict[achievement.Key];
 
-                AchievementWidget achievewidget = Instantiate(achivementPrefab);
-              
+                //AchievementWidget achievewidget = Instantiate(achivementPrefab);
+                AchievementWidget achievewidget = Instancewidgets[index];
 
+                
                 int rewardtier = userachievedata.IsCompleted? (userachievedata.RewardTierIndex-1) : userachievedata.RewardTierIndex;
                 int target = achievement.Value.TiersList[rewardtier].TargetValue;
                 int reward = achievement.Value.TiersList[rewardtier].Rewardcnt;
@@ -69,6 +108,8 @@ public class AllAchievementWidget : MonoBehaviour
                 } 
                 else if(target <= userachievedata.CurrentValue)
                 {
+                    AchieveMarkActive = true;
+                    AchieveMark.SetActive(AchieveMarkActive);
                     tiercompleteachievement.Add(userachievedata.Id, achievewidget);
                 }
                 else
@@ -77,23 +118,26 @@ public class AllAchievementWidget : MonoBehaviour
                     Prgrosschievement.Add(userachievedata.Id, achievewidget);
                    
                 }
-
+                index++;
             }
         }
         foreach (var achievement in tiercompleteachievement)
         {
             achievement.Value.transform.SetParent(AchieveContent.transform, false);
+            achievement.Value.gameObject.SetActive(true);
             achievementWidgets.Add(achievement.Key, achievement.Value);
         }
         foreach (var achievement in Prgrosschievement)
         {
             achievement.Value.transform.SetParent(AchieveContent.transform, false);
+            achievement.Value.gameObject.SetActive(true);
             achievementWidgets.Add(achievement.Key, achievement.Value);
         }
 
         foreach (var achievement in Allcompleteachievement)
         {
             achievement.Value.transform.SetParent(AchieveContent.transform, false);
+            achievement.Value.gameObject.SetActive(true);
             achievementWidgets.Add(achievement.Key, achievement.Value);
         }
         
@@ -101,23 +145,25 @@ public class AllAchievementWidget : MonoBehaviour
         Prgrosschievement.Clear();
         Allcompleteachievement.Clear();
 
+        
 
         scrollSnapType2.SetStartingPanel(0);
 
     }
 
-    public void RewardAchievement(AchieveEnum type , string id , int reward)
+    public void RewardAchievement(AchieveEnum type , string id , int reward ,RectTransform buttontransform)
     {
+       
         AchievementManager.Instance.rewadCompleted(type, id);
         
         int currentstarcnt = GameManager.Instance.userData.AddStarCnt(reward);
 
-        FOnRewarded?.Invoke(currentstarcnt);
+        FOnRewarded?.Invoke(currentstarcnt , buttontransform);
 
         if (AchievementManager.Instance.ReadprogressDict[id].IsCompleted)
         {
             AllWidgetClear();
-            CreateAllArchiveWidget();
+            ArrayAllArchiveWidget();
         }
         else
         {
@@ -134,7 +180,7 @@ public class AllAchievementWidget : MonoBehaviour
             if(newtarget>progress)
             {
                 AllWidgetClear();
-                CreateAllArchiveWidget();
+                ArrayAllArchiveWidget();
             }
             else
             {
@@ -147,18 +193,26 @@ public class AllAchievementWidget : MonoBehaviour
 
     public void CallBack_RenewalAchieve(AchieveEnum type, string id,int progress)
     {
-        achievementWidgets[id].RenewalProgress(progress);
+        if(achievementWidgets[id].RenewalProgress(progress))
+        {
+            AllWidgetClear();
+            ArrayAllArchiveWidget();
+        }
     }
 
     private void AllWidgetClear()
     {
         foreach(var widget in achievementWidgets)
         {
-            DestroyImmediate(widget.Value.gameObject);
+            //DestroyImmediate(widget.Value.gameObject);
+            widget.Value.gameObject.SetActive(false);   
+            widget.Value.transform.SetParent(tempParent.transform, false);
+
         }
+
         achievementWidgets.Clear();
 
-        FOnRewarded -= mainWidget.Callback_OnRewarded;
+        
     }
 
 
