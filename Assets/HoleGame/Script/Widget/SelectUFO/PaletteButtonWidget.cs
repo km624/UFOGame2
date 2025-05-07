@@ -11,15 +11,19 @@ public class PaletteButtonWidget : MonoBehaviour
     [SerializeField] private Image LockImage;
     [SerializeField] private Button ColorPurchasebutton;
     [SerializeField] private TMP_Text PriceText;
+    [SerializeField] private Sprite RewardIcon;
     private int ColorPrice;
 
     private Color LockColor = new Color32(64, 64, 64, 255);
     private Color UnlockColor = new Color32(255, 255, 255, 255);
     private bool bIsUnlocked;
 
+    private bool bIsReward;
 
 
-    public void InitializePaletteButton(SelectPaletteWidget selectpalette, int index, Color32 iconcolor,int price, bool bselect,bool bIsUnlock)
+
+    public void InitializePaletteButton(SelectPaletteWidget selectpalette, int index, Color32 iconcolor,int price, bool bselect,bool bIsUnlock,
+        bool bisreward)
     {
         selectpaletteWidget = selectpalette;
         colorindex = index;
@@ -32,8 +36,11 @@ public class PaletteButtonWidget : MonoBehaviour
         PriceText.text = ColorPrice.ToString();
 
         bIsUnlocked = bIsUnlock;
+        bIsReward = bisreward;
 
-       
+        if (bIsReward)
+            LockImage.sprite = RewardIcon;
+
         LockImage.gameObject.SetActive(!bIsUnlock);
 
         ColorSelectbutton.interactable = !bselect;
@@ -47,12 +54,18 @@ public class PaletteButtonWidget : MonoBehaviour
 
         ColorSelectbutton.interactable = false;
 
-        LockImage.gameObject.SetActive(false);
+        if(!bIsReward)
+            LockImage.gameObject.SetActive(false);
 
         selectpaletteWidget.SelectColor(colorindex,bIsUnlocked);
 
         if (!bIsUnlocked)
-            ColorPurchasebutton.gameObject.SetActive(!bIsUnlocked);
+        {
+            if(!bIsReward)
+                ColorPurchasebutton.gameObject.SetActive(!bIsUnlocked);
+           
+        }
+           
     }
 
     public void UnSelect()

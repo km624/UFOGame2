@@ -4,7 +4,7 @@ public class FallingTrigger : MonoBehaviour
 {
     private int currentLevel;
 
-    float BosstargetScale = 0.4f;
+    float BosstargetScale = 0.3f;
     public void SetCurrentLevel(int  level)
     {
         currentLevel = level;

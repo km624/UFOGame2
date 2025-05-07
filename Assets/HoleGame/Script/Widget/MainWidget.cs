@@ -62,6 +62,10 @@ public class MainWidget : MonoBehaviour
                 ufoAllWidget.InitializedUFOAllWidget();
 
                 allArchievementWidget.InitAllArchiveWidget();
+
+                // 업적 포인트 보상 해금 바인딩
+                allArchievementWidget.FOnUfoRewarded += ufoAllWidget.CallBack_UFORewardCompleted;
+                allArchievementWidget.FOnUfoColorRewarded += ufoAllWidget.CallBack_UFOColorCompleted;
             }
             else
             {
@@ -89,7 +93,10 @@ public class MainWidget : MonoBehaviour
 
             ufoAllWidget.InitializedUFOAllWidget();
 
-            allArchievementWidget.InitAllArchiveWidget(); 
+            allArchievementWidget.InitAllArchiveWidget();
+
+            allArchievementWidget.FOnUfoRewarded += ufoAllWidget.CallBack_UFORewardCompleted;
+            allArchievementWidget.FOnUfoColorRewarded += ufoAllWidget.CallBack_UFOColorCompleted;
         }
     }
 

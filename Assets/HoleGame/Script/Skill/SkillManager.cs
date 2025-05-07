@@ -16,6 +16,8 @@ public class SkillManager : MonoBehaviour
 
     private Dictionary<SkillEnum, SkillBase> skillDict;
 
+    public int Skillcount { get; private set; } = 0;
+
     private void Awake()
     {
         
@@ -65,6 +67,7 @@ public class SkillManager : MonoBehaviour
                 FOnSkillActivated?.Invoke(num, CurrentSkillCount);
             }
 
+            Skillcount++;
         }
     }
     

@@ -142,7 +142,6 @@ public class HoleScript : MonoBehaviour
                
             rb.AddForce(pullDir * absorbStrength, ForceMode.Acceleration);
             rb.linearVelocity = Vector3.Lerp(rb.linearVelocity, pullDir * absorbStrength, Time.deltaTime * 3f);
-          
 
         }
 

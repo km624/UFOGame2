@@ -20,5 +20,5 @@ MonoBehaviour:
   - type: 0
     Reward: 30
   - type: 1
-    Reward: UFOArchieve
+    Reward: UFOAchieve
   MaxPoint: 100

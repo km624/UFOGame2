@@ -117,8 +117,9 @@ public class GameState : MonoBehaviour
             if (GameManager.Instance.userData != null)
             {
  
-                int selectUFOIndex = GameManager.Instance.userData.CurrentUFO;
-                selectUFOdata = UFOLoadManager.Instance.LoadedUFODataList[selectUFOIndex];
+              
+                string selectUFOname = GameManager.Instance.userData.SelectUFOName;
+                selectUFOdata = UFOLoadManager.Instance.ReadLoadedUFODataDic[selectUFOname];
                 if (selectUFOdata != null)
                 {
                    userufodata = GameManager.Instance.userData.serialUFOList.Get(selectUFOdata.UFOName);
@@ -231,11 +232,11 @@ public class GameState : MonoBehaviour
 
     private void CallBack_ObjectSwallow(FallingObject fallingobject)
     {
-
- 
+        Debug.Log("흡수 : "  + fallingobject.gameObject.name);
         PlayerHud.SetScoreText(TotalScore);
         
         ufoplayer.AddEXPGauge(fallingobject.Score, fallingobject.ObjectMass);
+
         //Debug.Log("흡수함");
         TotalScore += fallingobject.Score;
 
@@ -292,8 +293,17 @@ public class GameState : MonoBehaviour
             score *= item.Value;
             TotalScore += score;
             //Debug.Log("점수 추가 : " + score);
+        }
+
+        if (GameManager.Instance.userData != null)
+        {
+            //( 업적 )보너스 클리어 카운트 
+            string AchieveBonusId = $"Behavior_Bouns_Cnt";
+            AchievementManager.Instance.ReportProgress(AchieveEnum.Behavior, AchieveBonusId, 1);
+
 
         }
+
     }
     private void CallBack_BombSwallow(float minustime)
     {
@@ -513,6 +523,22 @@ public class GameState : MonoBehaviour
         SaveUserData();
     }
 
+    private void CheckHardCoreAchivemet()
+    {
+        if (GameManager.Instance.userData != null)
+        {
+            //( 업적 )시대 이동 누적 카운트 
+            if(AllSkillManager.Skillcount == 0)
+            {
+                string Skillcnt0Id = $"HardCore_SkiiCnt0";
+                AchievementManager.Instance.ReportProgress(AchieveEnum.HardCore, Skillcnt0Id, 1);
+            }
+          
+
+        }
+
+    }
+
     private void SaveUserData()
     {
         GameManager.Instance.userData.AddStarCnt(StarCnt);
@@ -520,5 +546,6 @@ public class GameState : MonoBehaviour
 
         GameManager.Instance.SaveUserData();
     }
+
 
 }

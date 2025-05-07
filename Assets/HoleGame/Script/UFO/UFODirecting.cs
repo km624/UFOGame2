@@ -50,7 +50,7 @@ public class UFODirecting : MonoBehaviour
 
     public void OnSmokeEffect()
     {
-        Debug.Log("Smoke");
+        //Debug.Log("Smoke");
         GameObject smoke1 = Instantiate(smokeparticle.gameObject, UFOModel.transform);
         smoke1.transform.localPosition = new Vector3(-0.5f,0.5f,0f);
 

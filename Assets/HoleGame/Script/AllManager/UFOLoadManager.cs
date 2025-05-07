@@ -15,9 +15,9 @@ public class UFOLoadManager : MonoBehaviour
     [SerializeField]
     private UFOAllData AllUfodataList;
 
-    // 캐시: 키는 appearanceID, 값은 로드된 SpaceshipAppearanceData
-    //private Dictionary<string, UFOData> appearanceCache = new Dictionary<string, UFOData>();
-
+    private Dictionary<string, UFOData> loadedUFODataDic = new Dictionary<string, UFOData>();
+    public IReadOnlyDictionary<string, UFOData> ReadLoadedUFODataDic => loadedUFODataDic;
+    //public List<UFOData> LoadedUFODataList { get; private set; } = new List<UFOData>();
     public UFOData selectUFOData { get; private set; }
 
     void Awake()
@@ -34,25 +34,26 @@ public class UFOLoadManager : MonoBehaviour
         }
     }
 
-    public List<UFOData> LoadedUFODataList { get; private set; } = new List<UFOData>();
+    
 
    
     public void UnloadAllStageData()
     {
-        foreach (var stage in LoadedUFODataList)
+        foreach (var stage in loadedUFODataDic)
         {
             Addressables.Release(stage);
         }
-        LoadedUFODataList.Clear();
+        loadedUFODataDic.Clear();
         
     }
 
-    public  void SetSelectUFODATA(int selectnum)
+    public  void SetSelectUFODATA(string ufoname)
     {
-        if(selectnum < LoadedUFODataList.Count)
+        if(loadedUFODataDic.ContainsKey(ufoname))
         {
-            selectUFOData = LoadedUFODataList[selectnum];
-            GameManager.Instance.userData.CurrentUFO = selectnum;
+            selectUFOData = loadedUFODataDic[ufoname];
+
+            GameManager.Instance.userData.SetCurrentUFO(ufoname);
 
             //GameManager.Instance.userDatasaveload.SavePlayerDataAsync()
         }
@@ -72,7 +73,7 @@ public class UFOLoadManager : MonoBehaviour
             if (ufohandle.Status == AsyncOperationStatus.Succeeded)
             {
                 UFOData ufo = ufohandle.Result;
-                LoadedUFODataList.Add(ufo);
+                loadedUFODataDic.Add(ufo.UFOName, ufo);
               
                 Debug.Log(ufo.UFOName + "로딩 완료");
             }

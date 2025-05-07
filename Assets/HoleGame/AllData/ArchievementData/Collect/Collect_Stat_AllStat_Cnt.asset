@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Collect_Stat_AllStat_Cnt
   m_EditorClassIdentifier: 
   Id: Collect_Stat_AllStat_Cnt
-  Title: "\uAC1C\uBCC4UFO \uBAA8\uB4E0 \uB2A5\uB825\uCE58 \uAC15\uD654"
+  Title: "UFO \uBAA8\uB4E0 \uB2A5\uB825\uCE58 \uAC15\uD654"
   AchieveType: 2
   TiersList:
   - TargetValue: 1
@@ -22,4 +22,3 @@ MonoBehaviour:
     Rewardcnt: 100
   - TargetValue: 3
     Rewardcnt: 100
-  AchieveIcon: {fileID: 21300000, guid: 7db743b93dade514db095dcd5df69149, type: 3}

@@ -8,4 +8,5 @@ public class UFOColorData
     public List<Material> Materials = new();
     
     public int ColorPrice = 0;
+    public bool bIsreward = false;
 }

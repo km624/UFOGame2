@@ -32,6 +32,8 @@ public class AchievePointWidget : MonoBehaviour
 
     public event Action<int /*currentmoney*/, RectTransform> FonMoneyRewarded;
 
+    [SerializeField] private LastRewardWidget lastRewardWidget;
+
    
     public void InitPointWidget()
     {
@@ -63,7 +65,7 @@ public class AchievePointWidget : MonoBehaviour
 
             NormalPointgauge += stepmaxtpoint;
         }
-        Debug.Log("currentgague 오차 " + NormalPointgauge);
+        //Debug.Log("currentgague 오차 " + NormalPointgauge);
         CurrentPointGauge = userpointData.Point- NormalPointgauge;
 
         currentPointText.text = CurrentPointGauge.ToString();
@@ -113,8 +115,7 @@ public class AchievePointWidget : MonoBehaviour
         {
             widget.ChangeProgressbar(CurrentPointGauge);
         }
-        
-     
+ 
     }
 
     public void RewardBoxOpen(int tier , RectTransform BoxTransform)
@@ -126,8 +127,6 @@ public class AchievePointWidget : MonoBehaviour
         string reward = pointDataList.PointRewardDatas[tier].Reward;
 
         ReceivedReward(type, reward, BoxTransform);
-
-      
 
         if (userpointData.CheckAllTierCompleted())
         {
@@ -183,22 +182,52 @@ public class AchievePointWidget : MonoBehaviour
 
             case PointRewardEnum.Color:
                 {
-                    if (int.TryParse(reward, out int colorIndex))
+                    string ufoname = null;
+                    int ColorIndex = 0;
+                    string[] split = reward.Split('_');
+
+                    if (split.Length == 2)
                     {
-                        Debug.Log($"컬러 인덱스 해금: {colorIndex}");
-                        // GameManager.Instance.userData.UnlockColor(colorIndex);
+                        ufoname = split[0];
+                        if (int.TryParse(split[1], out int colorIndex))
+                        {
+                            ColorIndex = colorIndex;
+                            allAchievementWidget.OnEvenetRewardComplete(rewardtype, ufoname, ColorIndex);
+                            UFOData currentUFOData = UFOLoadManager.Instance.ReadLoadedUFODataDic[ufoname];
+                            UserUFOData userufodata = GameManager.Instance.userData.serialUFOList.Get(currentUFOData.UFOName);
+                            if (userufodata != null)
+                            {
+                                userufodata.AddColor(colorIndex);
+                                lastRewardWidget.SetLastRewardWidget(rewardtype, ufoname, colorIndex);
+                            }
+                            else
+                            {
+                                Debug.Log($"{ufoname} 해금 되지 않음");
+                            }
+         
+                        }
+                        else
+                        {
+                            Debug.LogWarning($"Color Index 파싱 실패: {split[1]}");
+                        }
                     }
                     else
                     {
-                        Debug.LogWarning($"Color 형변환 실패: {reward}");
+                        Debug.LogWarning($"Color 보상 문자열 형식 오류: {reward}");
                     }
+                  
                     break;
                 }
 
             case PointRewardEnum.UFO:
                 {
                     Debug.Log($"UFO 해금: {reward}");
-                    // GameManager.Instance.userData.UnlockUFO(reward); // reward는 UFO 이름
+                    allAchievementWidget.OnEvenetRewardComplete(rewardtype, reward, 0);
+                    
+                    UFOData rewardUFOData = UFOLoadManager.Instance.ReadLoadedUFODataDic[reward];
+                    UserUFOData newuserUFOData = new UserUFOData(rewardUFOData);
+                    GameManager.Instance.userData.serialUFOList.AddUFO(newuserUFOData);
+                    lastRewardWidget.SetLastRewardWidget(rewardtype, reward,0);
                     break;
                 }
 

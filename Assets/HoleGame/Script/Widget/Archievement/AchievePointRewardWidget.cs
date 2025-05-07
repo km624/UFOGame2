@@ -40,7 +40,7 @@ public class AchievePointRewardWidget : MonoBehaviour
         maxgaugebar = maxgague;
         currentgaugebar = CacluateCurrentGauge(realcurrentgaguge);
         
-        Debug.Log(RewardTier + " 맥스 게이지바 : "+ maxgaugebar + " 현재 게이지  " + currentgaugebar + "실제 게이지: " + realcurrentgaguge);
+        //Debug.Log(RewardTier + " 맥스 게이지바 : "+ maxgaugebar + " 현재 게이지  " + currentgaugebar + "실제 게이지: " + realcurrentgaguge);
         
         ProgressBar.fillAmount = currentgaugebar / maxgaugebar;
 

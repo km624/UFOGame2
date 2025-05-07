@@ -1,4 +1,4 @@
-using TMPro;
+
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,24 +6,27 @@ public class UFOButtonWidget : MonoBehaviour
 {
     
     private SelectUFOWidget selectUFOWidget;
-    private int ufoindex;
+    private string ufoName;
     [SerializeField] private Image UFOIcon;
     [SerializeField]private Button UfoSelectbutton;
     [SerializeField] private Image LockImage;
     [SerializeField] private Image SelectFrame;
+    [SerializeField] private Sprite RewardIcon;
 
     private int ufoPrice;
 
     private Color LockColor = new Color32(64, 64, 64, 255);
     private Color UnlockColor = new Color32(255,255, 255, 255); 
     private bool bIsUnlocked;
+
+    private bool bIsReward;
     
 
 
-    public void InitializeUFOButton(SelectUFOWidget selectufo, int index, Sprite ufoicon , bool bIsunlock , bool bselect,int price)
+    public void InitializeUFOButton(SelectUFOWidget selectufo, string ufoname, Sprite ufoicon , bool bIsunlock , bool bselect,int price ,bool bisreward)
     {
         selectUFOWidget = selectufo;
-        ufoindex=index;
+        ufoName = ufoname;
 
         if (ufoicon != null)
             UFOIcon.sprite = ufoicon;
@@ -33,14 +36,21 @@ public class UFOButtonWidget : MonoBehaviour
        
 
         bIsUnlocked =  bIsunlock;
-       if(!bIsUnlocked)
+        bIsReward = bisreward;
+
+        if (!bIsUnlocked)
             UFOIcon.color = LockColor;
+
+        if (bIsReward)
+            LockImage.sprite = RewardIcon;
 
         UfoSelectbutton.interactable = !bselect;
 
+       
+
         SelectFrame.gameObject.SetActive(bselect);
         LockImage.gameObject.SetActive(!bIsUnlocked);
-
+        
 
     }
 
@@ -49,10 +59,16 @@ public class UFOButtonWidget : MonoBehaviour
 
         UfoSelectbutton.interactable = false;
         SelectFrame.gameObject.SetActive(true);
-        selectUFOWidget.SelectUFOType(ufoindex, bIsUnlocked , ufoPrice);
+        selectUFOWidget.SelectUFOType(ufoName, bIsUnlocked , ufoPrice , bIsReward);
 
 
     }
+
+    public void OnSelect()
+    {
+        SelectFrame.gameObject.SetActive(true);
+    }
+
     public void UnSelect()
     {
        

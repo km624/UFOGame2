@@ -20,6 +20,8 @@ public class UFOData : ScriptableObject
 
     public List<UFOStatData> StatList = new();
 
+    public bool bIsReward = false;
+
 #if UNITY_EDITOR
     private void OnValidate()
     {

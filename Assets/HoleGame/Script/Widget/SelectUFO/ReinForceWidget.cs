@@ -90,6 +90,16 @@ public class ReinForceWidget : MonoBehaviour
             Texture baseMap = colorSet.Materials[0].GetTexture("_BaseMap");
 
             FOnFullStated?.Invoke(currentUFOData, baseMap);
+
+            if (GameManager.Instance.userData != null)
+            {
+                //( 업적 )시대 이동 누적 카운트 
+                string FullStatcntId = $"Collect_Stat_AllStat_Cnt";
+                AchievementManager.Instance.ReportProgress(AchieveEnum.Collect, FullStatcntId, 1);
+
+
+            }
+
         }
            
 

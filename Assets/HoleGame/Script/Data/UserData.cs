@@ -8,8 +8,8 @@ using System.Collections.Generic;
 public class UserData
 {
     public string userId;
-    public int CurrentUFO;
-
+    //public int CurrentUFO;
+    public string SelectUFOName;
     public int BestScore;
     public int StarCnt;
 
@@ -23,7 +23,7 @@ public class UserData
     public UserData()
     {
         userId = "Guest";
-        CurrentUFO = 0;
+        SelectUFOName = "UFONormal";
 
         BestScore = 0;
         StarCnt = 100;
@@ -34,7 +34,7 @@ public class UserData
     public UserData(string userid)
     {
         userId = userid;
-        CurrentUFO = 0;
+        SelectUFOName = "UFONormal";
 
         BestScore = 0;
         StarCnt = 100;
@@ -47,9 +47,9 @@ public class UserData
         serialUFOList.InitializeFromUFOList();
     }
 
-    public void SetCurrentUFO(int ufoindex)
+    public void SetCurrentUFO(string ufoname)
     {
-        CurrentUFO = ufoindex;
+        SelectUFOName = ufoname;
     }
 
     public int AddStarCnt(int cnt)

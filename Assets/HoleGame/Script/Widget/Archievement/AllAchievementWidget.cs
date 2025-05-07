@@ -2,7 +2,6 @@ using DanielLochner.Assets.SimpleScrollSnap;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SocialPlatforms.Impl;
 
 public class AllAchievementWidget : MonoBehaviour
 {
@@ -29,7 +28,9 @@ public class AllAchievementWidget : MonoBehaviour
     [SerializeField] private GameObject AchieveMark;
 
     private bool AchieveMarkActive = false;
-    
+
+    public event Action<string /*ufoname*/> FOnUfoRewarded;
+    public event Action<string /*ufoname*/,int/*colorindex*/> FOnUfoColorRewarded;
     
     public void InitAllArchiveWidget()
     {
@@ -81,11 +82,12 @@ public class AllAchievementWidget : MonoBehaviour
 
         int index = 0;
         AchieveMarkActive=false;
+        Debug.Log("재배열");
         foreach (var achieve in AchievementManager.Instance.ReadAchiveDict)
         {
             foreach (var achievement in achieve.Value) 
             {
-                Debug.Log("재배열");
+               
                 UserAchieveData userachievedata = AchievementManager.Instance.ReadprogressDict[achievement.Key];
 
                 //AchievementWidget achievewidget = Instantiate(achivementPrefab);
@@ -212,7 +214,14 @@ public class AllAchievementWidget : MonoBehaviour
 
         achievementWidgets.Clear();
 
-        
+    }
+
+    public void OnEvenetRewardComplete(PointRewardEnum rewardtype ,string UFOName , int colorindex)
+    {
+        if (rewardtype == PointRewardEnum.UFO)
+            FOnUfoRewarded?.Invoke(UFOName);
+        else
+            FOnUfoColorRewarded?.Invoke(UFOName,colorindex);
     }
 
 

@@ -211,6 +211,15 @@ public class ObjectManager : MonoBehaviour
         {
             GameManager.Instance.soundManager.PlayBgm(CurrentGenerationData.GenerationBGM,1.0f);
         }
+
+        if (GameManager.Instance.userData != null)
+        {
+            //( 업적 ) 시대별 방분 
+            string GenerationMoveId = $"Behavior_Generation_{currentgeneration}"; ;
+            AchievementManager.Instance.ReportProgress(AchieveEnum.Behavior, GenerationMoveId, 1);
+
+           
+        }
     }
 
     public void ChangeGeneration()
@@ -234,6 +243,13 @@ public class ObjectManager : MonoBehaviour
         FOnGenerationChanged?.Invoke(CurrentGenration);
         Debug.Log(CurrentGenration + " : 현재 세대");
 
+        if (GameManager.Instance.userData != null)
+        {
+            //( 업적 )시대 이동 누적 카운트 
+            string GenerationMovecntId = $"Behavior_Generation_Cnt"; 
+            AchievementManager.Instance.ReportProgress(AchieveEnum.Behavior, GenerationMovecntId, 1);
+
+        }
 
     }
 

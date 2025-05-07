@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Behavior_Generation_Cnt
   m_EditorClassIdentifier: 
   Id: Behavior_Generation_Cnt
-  Title: "\uD55C \uAC8C\uC784\uC5D0  \uC2DC\uB300 \uC774\uB3D9"
+  Title: "\uC2DC\uB300 \uC774\uB3D9"
   AchieveType: 1
   TiersList:
   - TargetValue: 2
@@ -22,4 +22,3 @@ MonoBehaviour:
     Rewardcnt: 150
   - TargetValue: 6
     Rewardcnt: 200
-  AchieveIcon: {fileID: 21300000, guid: 7db743b93dade514db095dcd5df69149, type: 3}

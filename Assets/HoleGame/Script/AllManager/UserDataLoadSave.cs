@@ -21,11 +21,11 @@ public class UserDataLoadSave : IUserDataInterface
             //기본 UFO 유저 데이터 추가 로직
             if (UFOLoadManager.Instance != null)
             {
-                if(UFOLoadManager.Instance.LoadedUFODataList.Count == 0)
+                if(UFOLoadManager.Instance.ReadLoadedUFODataDic.Count == 0)
                 {
                     Debug.Log("UFO 세팅 못함");
                 }
-                UFOData baseufodata = UFOLoadManager.Instance.LoadedUFODataList[0];
+                UFOData baseufodata = UFOLoadManager.Instance.ReadLoadedUFODataDic[newUserData.SelectUFOName];
 
                 UserUFOData baseuserufodata = new UserUFOData(baseufodata);
                 newUserData.serialUFOList.AddUFO(baseuserufodata);
