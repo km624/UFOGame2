@@ -369,7 +369,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7793a7cfdb1e48040995a53602016aec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Shape: 10
+  Shape: 11
   bMovement: 0
   ForceStatData: {fileID: 0}
   CanvasGameObject: {fileID: 2921677292379171295}

@@ -7,8 +7,8 @@ public class MapChange : MonoBehaviour
     [SerializeField]
     private List<MeshRenderer> mRenderers = new List<MeshRenderer>();
     
-    [SerializeField]
-    private GameObject SpawnMapObject;
+   
+    private List<GameObject> SpawnMapObject;
     
     public void ChangeMap(GenerationObjects currentgenerationdata)
     {

@@ -91,8 +91,8 @@ public class ObjectSpawnPoint : MonoBehaviour
                         
                         falling.SetStatData(objectdata);
 
-                        falling.AddGenerationMass(objectManager.CurrentGenration);
-                        falling.onSwallowed.AddListener(objectManager.RemoveSpawnedObject);
+                        falling.InitObject();
+                        falling.onSwallowed.AddListener(objectManager.CallBack_RemoveSpawnedObject);
                     }
                 }
             }
@@ -141,6 +141,7 @@ public class ObjectSpawnPoint : MonoBehaviour
         //Debug.Log("randomValue : " + randomValue);
         for (int i = 0; i < generation.objects.Count; i++)
         {
+           // Debug.Log("PrefabSelect");
             cumulativeWeight += earthObjectDatas[i].SpawnWeight;
             if (randomValue <= cumulativeWeight)
             {

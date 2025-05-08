@@ -433,7 +433,8 @@ public class GameState : MonoBehaviour
         StarCnt++;
 
         //임시 소리 
-        OnUfoSwallowSound();
+        if (GameManager.Instance != null)
+            GameManager.Instance.soundManager.PlaySfx(SoundEnum.AddMoney);
 
         PlayerHud.CallBack_RemoveDetectTarget(star);
       

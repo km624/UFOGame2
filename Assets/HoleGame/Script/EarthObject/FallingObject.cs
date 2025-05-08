@@ -101,7 +101,7 @@ public class FallingObject : MonoBehaviour
 
     }
 
-    public virtual void AddGenerationMass(int generation)
+    public void InitObject()
     {
         if (ForceStatData == null)
         {

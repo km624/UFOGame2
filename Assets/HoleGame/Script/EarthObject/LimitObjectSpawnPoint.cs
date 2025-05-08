@@ -49,7 +49,7 @@ public class LimitObjectSpawnPoint : ObjectSpawnPoint
                     {
                         objectManager.RegisterSpawnedObject(falling);
                         falling.SetStatData(objectdata);
-                        falling.AddGenerationMass(objectManager.CurrentGenration);
+                        falling.InitObject();
 
                         
                         mySpawnedList.Add(falling);
@@ -68,7 +68,7 @@ public class LimitObjectSpawnPoint : ObjectSpawnPoint
     private void OnMyObjectRemoved(FallingObject obj)
     {
         mySpawnedList.Remove(obj);
-        objectManager.RemoveSpawnedObject(obj);
+        objectManager.CallBack_RemoveSpawnedObject(obj);
     }
 
     private void CleanupDeadObjects()

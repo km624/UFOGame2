@@ -1,6 +1,6 @@
 ﻿
 using System;
-using System.Collections;
+
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -22,17 +22,16 @@ public class ObjectManager : MonoBehaviour
     private GenerationObjects CurrentGenerationData = null;
     public int CurrentGenration { get; private set; } = 0;
 
-
     private List<ExelEarthObjectData> ExelEarthObjectStatList = new List<ExelEarthObjectData>();
     private List<EarthObjectStatData> objectStatList = new List<EarthObjectStatData>();
     public IReadOnlyList<EarthObjectStatData> ObjectStatList => objectStatList;
 
     public ExelEarthObjectData ObjecstStatTime { get; private set; } = null;
 
-    private EarthObjectStatData bossStat = null;
+  
 
     private ExelBombStatData ExelBombstat = null;
-    public EarthObjectStatData BombStatData { get; private set; } = null;
+   
     public ExelBombStatData BombStatTime { get; private set; } = null;
   
     public event Action<int /*currentgeneraetion*/> FOnGenerationChanged;
@@ -50,29 +49,17 @@ public class ObjectManager : MonoBehaviour
     [SerializeField]
     private Renderer SafeSpawnRange;
 
-    Bounds RangeBounds;
-    
-    [Header("폭탄")]
-    //[SerializeField]
-    //private float BombSpawnHeight=1.0f;
-    [SerializeField] 
-    private int BombPostionInterval = 1; 
-    //[SerializeField]
-    float BombSpawnTime = 5.0f;
-
-    [Header("스폰시간")]
+   
+    [Header("오브젝트 스폰시간")]
     [SerializeField]
     private float SpawnTime = 5.0f;
     [SerializeField]
     private float variation = 1.0f;
 
-    private Coroutine BombCoroutine;
-
     public event Action<FallingObject> FOnObjectSwallowed;
     public event Action<Vector3 /*아이콘 생성 위치*/, ShapeEnum> FOnBonusSwallowed;
     public event Action<float /*minustime*/> FOnBomnbSwallowed;
     
-
     private Dictionary<float/*objectsmass*/, int> BonusObjectsOrgin = new Dictionary<float, int>();
     private Dictionary<ShapeEnum, int> BonusObjectsCnt = new Dictionary<ShapeEnum, int>();
     public event Action< ShapeEnum, int /*count*/> FOnBounsWidgetCreated;
@@ -91,19 +78,26 @@ public class ObjectManager : MonoBehaviour
     }
     
     [Header("보너스")]
-  
-
+ 
     [SerializeField]
     private int bonusMinCount = 1;
     [SerializeField]
     private int bonusMaxCount = 5;
-
     
     [Header("재화 오브젝트")]
     [SerializeField]
     private StarObject starobjectprefab;
 
     public event Action<IDetctable> FOnStartSpawned;
+
+    [Header("랜덤스포너")]
+    [SerializeField] RandomSpawner bombSpawner;
+    [SerializeField] RandomSpawner bossSpawner;
+    [SerializeField] RandomSpawner moneySpawner;
+    [SerializeField] RandomSpawner bonusSpawner;
+
+
+
 
     [Header("맵")]
     [SerializeField]
@@ -116,18 +110,37 @@ public class ObjectManager : MonoBehaviour
         LoadStatList();
 
         CollectSpawnPoints();
-        
+
+        InitRandomSpawner();
+
         SetUpGeneration(CurrentGenration);
 
+        StatRenewalGeneration(CurrentGenration);
+
         CreateBonusObjects();
+
+        InitSpawnPoints();
         StartSpawnObjects();
-        StartBombSapwn();
-        SpawnBossAtRandomGridPosition();
+
+        bombSpawner.OnRandomSpawn(true);
+        bossSpawner.OnRandomSpawn(true);
         
         for(int i=0;i<20;i++)
         {
-            SpawnBounsAtRandomGridPosition();
+            bonusSpawner.OnRandomSpawn(true);
         }
+    }
+
+    private void InitRandomSpawner()
+    {
+        bombSpawner.Initialize(this, SpawnRange,SafeSpawnRange);
+
+        bossSpawner.Initialize(this, SpawnRange, SafeSpawnRange);
+
+        bonusSpawner.Initialize(this, SpawnRange, SafeSpawnRange);
+
+        moneySpawner.Initialize(this, SpawnRange, SafeSpawnRange);
+        moneySpawner.SetSpawnStatData(starobjectprefab, null);
     }
 
     private void CollectSpawnPoints()
@@ -139,6 +152,19 @@ public class ObjectManager : MonoBehaviour
             // 자기 자신에 붙어 있으면 제외하고, 자식만
             if (p.transform != this.transform)
                 objectspawnPoints.Add(p);
+    }
+
+    private void InitSpawnPoints()
+    {
+        foreach (var spawnPoint in objectspawnPoints)
+        {
+            if (CurrentGenerationData != null)
+            {
+                spawnPoint.SetGeneration(CurrentGenerationData, this, SpawnTime, variation);
+               
+            }
+
+        }
     }
 
     //CSV 오브젝트 ,보스 스텟 파일 로드
@@ -156,12 +182,10 @@ public class ObjectManager : MonoBehaviour
         BombStatTime = CsvLoader.LoadSingleCSV<ExelBombStatData>("StatData/CSVBombStatTime");
 
 
-        StatRenewalGeneration(CurrentGenration);
-
     }
 
 
-    //무조건 바꿔야함
+    
     public int GetBounusScoreData(float objectmass)
     {
        
@@ -196,17 +220,7 @@ public class ObjectManager : MonoBehaviour
            
         }
         mapChange.ChangeMap(CurrentGenerationData);
-       
-        foreach (var spawnPoint in objectspawnPoints)
-        {
-            if (CurrentGenerationData != null)
-            {
-                spawnPoint.SetGeneration(CurrentGenerationData, this,SpawnTime,variation);
-                spawnPoint.SpawnPrefab();
-            }
-            
-        }
-
+   
         if(GameManager.Instance!=null)
         {
             GameManager.Instance.soundManager.PlayBgm(CurrentGenerationData.GenerationBGM,1.0f);
@@ -218,7 +232,6 @@ public class ObjectManager : MonoBehaviour
             string GenerationMoveId = $"Behavior_Generation_{currentgeneration}"; ;
             AchievementManager.Instance.ReportProgress(AchieveEnum.Behavior, GenerationMoveId, 1);
 
-           
         }
     }
 
@@ -227,20 +240,27 @@ public class ObjectManager : MonoBehaviour
       
         CurrentGenration += 1;
         
-        //세대 스텟 배율 대로 새로 세팅
-        StatRenewalGeneration(CurrentGenration);
+       
 
         //스폰 포인트에 현재 세대 세팅
         SetUpGeneration(CurrentGenration);
+        
+        //세대 스텟 배율 대로 새로 세팅
+        StatRenewalGeneration(CurrentGenration);
 
-        SpawnBossAtRandomGridPosition();
+        InitSpawnPoints();
+        StartSpawnObjects();
 
-        for (int i = 0; i < 25; i++)
+        //SpawnBossAtRandomGridPosition();
+        bossSpawner.OnRandomSpawn(true);
+
+        for (int i = 0; i < 15; i++)
         {
-            SpawnBounsAtRandomGridPosition();
+            bonusSpawner.OnRandomSpawn(true);
         }
 
         FOnGenerationChanged?.Invoke(CurrentGenration);
+
         Debug.Log(CurrentGenration + " : 현재 세대");
 
         if (GameManager.Instance.userData != null)
@@ -284,10 +304,21 @@ public class ObjectManager : MonoBehaviour
             if (i == ExelEarthObjectStatList.Count - 1)
             {
                 earthojectdata.EXPCnt = 0;
-                bossStat = earthojectdata;
-            }  
-            else
+                //보스 스텟 세팅
+                //bossStat = earthojectdata;
+                bossSpawner.SetSpawnStatData(CurrentGenerationData.Boss, earthojectdata);
+            }
+            else if(i == 0)
+            {
+                bonusSpawner.SetSpawnStatData(CurrentGenerationData.objects[i], earthojectdata);
                 objectStatList.Add(earthojectdata);
+            }
+            else
+            {
+                objectStatList.Add(earthojectdata);
+               //Debug.Log("스텟 세팅");
+            }
+               
         }
         
 
@@ -299,11 +330,13 @@ public class ObjectManager : MonoBehaviour
         bombdata.Score = 0;
         bombdata.TimeCnt = ExelBombstat.MinusTime + (currentgeneration * BombStatTime.MinusTime);
         bombdata.EXPCnt = 0;
-        bombdata.SpawnWeight = 0;
-        
-        BombSpawnTime = ExelBombstat.SpawnInterval + (currentgeneration * BombStatTime.SpawnInterval);
+        bombdata.SpawnWeight = ExelBombstat.SpawnInterval + (currentgeneration * BombStatTime.SpawnInterval);
 
-        BombStatData = bombdata;
+       // BombSpawnTime = ExelBombstat.SpawnInterval + (currentgeneration * BombStatTime.SpawnInterval);
+        //BombStatData = bombdata;
+
+        //폭탄 스텟 세팅
+        bombSpawner.SetSpawnStatData(CurrentGenerationData.bomb, bombdata);
 
         Debug.Log(currentgeneration + " 세대 스텟 세팅 완료");
     }
@@ -347,7 +380,7 @@ public class ObjectManager : MonoBehaviour
         AllSpawnObjects.Add(spawnedObj);
 
     }
-    public void RemoveSpawnedObject(FallingObject destroyoBj)
+    public void CallBack_RemoveSpawnedObject(FallingObject destroyoBj)
     {
         if (GameState.Instance != null)
         {
@@ -399,9 +432,10 @@ public class ObjectManager : MonoBehaviour
         }
         Dictionary<ShapeEnum, float> shapeToActualMass = new();
 
-        for (int i = 0; i < currentGen.objects.Count; i++)
+        for (int i = 0; i < currentGen.objects.Count-1; i++)
         {
             ShapeEnum shape = currentGen.objects[i].GetShapeEnum();
+            //Debug.Log( shape.ToString() + " mass세팅");
             float mass = objectStatList[i].mass;
 
             if (!shapeToActualMass.ContainsKey(shape))
@@ -479,7 +513,8 @@ public class ObjectManager : MonoBehaviour
         BonusObjectsCnt.Clear();
 
         //별(재화) 생성
-        SpawnStarAtRandomGridPosition();
+        //SpawnStarAtRandomGridPosition();
+       moneySpawner.OnRandomSpawn(true);
 
         //보너스 목표 재생성
         CreateBonusObjects();
@@ -491,16 +526,9 @@ public class ObjectManager : MonoBehaviour
 
     public void OnBombSpawn(bool active)
     {
-        if(active)
-        {
-            StartBombSapwn();
-        }
-        else
-        {
-            StopBombSpawn();
-        }
+        bombSpawner.OnRandomSpawn(active);
     }
-
+    /*
     private void StartBombSapwn()
     {
         
@@ -528,26 +556,26 @@ public class ObjectManager : MonoBehaviour
         FallingObject spawnbomb = CurrentGenerationData.bomb;
         if (spawnbomb == null) return;
 
-       // Vector2 SpawnLocation = RandomSpawnRange();
+       
         Vector3 SpawnLocation = GetValidSpawnPosition(false);
 
 
-        //Vector3 spawnPosition = new Vector3(SpawnLocation.x, BombSpawnHeight, SpawnLocation.z);
+      
         GameObject bombobj = Instantiate(spawnbomb.gameObject, SpawnLocation, Quaternion.identity);
-        //GameObject bombobj = Instantiate(spawnbomb.gameObject, spawnPosition, Quaternion.identity);
+      
        
         FallingObject bombfall = bombobj.GetComponent<FallingObject>();
         if (bombfall != null)
         {
             bombfall.SetStatData(BombStatData);
             bombfall.SetBomb();
-            bombfall.AddGenerationMass(CurrentGenration);
-            bombfall.onSwallowed.AddListener(RemoveSpawnedObject);
+            bombfall.InitObject();
+            bombfall.onSwallowed.AddListener(CallBack_RemoveSpawnedObject);
         }
 
     }
-
-    private Vector2 RandomSpawnRange(bool boss)
+*/
+  /*  private Vector2 RandomSpawnRange(bool boss)
     {
        if(!boss)
             RangeBounds = SpawnRange.bounds;
@@ -610,12 +638,19 @@ public class ObjectManager : MonoBehaviour
         //Debug.LogWarning("[Spawn] Failed to find valid spawn point. Returning fallback position.");
         return transform.position;
     }
-
+*/
     #endregion
 
     #region 보스
 
-    void SpawnBossAtRandomGridPosition()
+    public void Callback_BossSpawn(BossObject bossobject)
+    {
+        
+        currentBoss = bossobject;
+        gameState.CallBack_BossSpawned(bossobject);
+    }
+
+   /* void SpawnBossAtRandomGridPosition()
     {
         //BossObject bossprefab = generationList[CurrentGenration].Boss;
         BossObject bossprefab = CurrentGenerationData.Boss;
@@ -631,7 +666,7 @@ public class ObjectManager : MonoBehaviour
         if (boss != null)
         {
             boss.SetStatData(bossStat);
-            boss.AddGenerationMass(CurrentGenration);
+            boss.InitObject();
             boss.FOnBossSwallowed += CallBacK_BossSwallow;
             currentBoss = boss;
             gameState.CallBack_BossSpawned(boss);
@@ -639,8 +674,8 @@ public class ObjectManager : MonoBehaviour
 
         }
     }
-
-    void CallBacK_BossSwallow(BossObject bossObject)
+*/
+    public void CallBacK_BossSwallow(BossObject bossObject)
     {
         if(bossObject!=null)
         {
@@ -669,32 +704,40 @@ public class ObjectManager : MonoBehaviour
     #endregion
 
     #region 별
-    void SpawnStarAtRandomGridPosition()
+    /* void SpawnStarAtRandomGridPosition()
+     {
+
+         if (starobjectprefab == null) return;
+
+
+         Vector3 spawnPosition = GetValidSpawnPosition(false) + Vector3.up * 5.0f; 
+         GameObject starobj = Instantiate(starobjectprefab.gameObject, spawnPosition, Quaternion.identity);
+
+         StarObject star = starobj.GetComponent<StarObject>();
+         if (star != null)
+         {
+             star.InitObject();
+             star.FOnStarSwallowed += gameState.CallBack_StartSwallowed;
+
+             //star spawn 이벤트 발생
+
+             FOnStartSpawned?.Invoke(star);
+         }
+     }*/
+
+    public void Callback_StarSpawned(StarObject starobject) 
     {
-       
-        if (starobjectprefab == null) return;
-
-        //Vector2 SpawnLocation = RandomSpawnRange();
-        // Vector3 spawnPosition = new Vector3(SpawnLocation.x, BombSpawnHeight +5.0f, SpawnLocation.y);
-
-        Vector3 spawnPosition = GetValidSpawnPosition(false) + Vector3.up * 5.0f; 
-        GameObject starobj = Instantiate(starobjectprefab.gameObject, spawnPosition, Quaternion.identity);
-
-        StarObject star = starobj.GetComponent<StarObject>();
-        if (star != null)
-        {
-            star.AddGenerationMass(0);
-            star.FOnStarSwallowed += gameState.CallBack_StartSwallowed;
-
-            //star spawn 이벤트 발생
-           
-            FOnStartSpawned?.Invoke(star);
-        }
+        FOnStartSpawned?.Invoke(starobject);
     }
 
+    public void CallBack_StartSwallowed(StarObject starobject)
+    {
+        gameState.CallBack_StartSwallowed(starobject);
+      
+    }
     #endregion
 
-    private void SpawnBounsAtRandomGridPosition()
+  /*  private void SpawnBounsAtRandomGridPosition()
     {
         //FallingObject spawnbomb = generationList[CurrentGenration].bomb;
         FallingObject spawnbonus = CurrentGenerationData.objects[0];
@@ -703,21 +746,18 @@ public class ObjectManager : MonoBehaviour
         
         Vector3 SpawnLocation = GetValidSpawnPosition(false);
 
-
-        //Vector3 spawnPosition = new Vector3(SpawnLocation.x, BombSpawnHeight, SpawnLocation.z);
         GameObject bonusobj = Instantiate(spawnbonus.gameObject, SpawnLocation, Quaternion.identity);
-        //GameObject bombobj = Instantiate(spawnbomb.gameObject, spawnPosition, Quaternion.identity);
-
+   
         FallingObject bonusfall = bonusobj.GetComponent<FallingObject>();
         if (bonusfall != null)
         {
             bonusfall.SetStatData(ObjectStatList[0]);
 
-            bonusfall.AddGenerationMass(CurrentGenration);
-            bonusfall.onSwallowed.AddListener(RemoveSpawnedObject);
+            bonusfall.InitObject();
+            bonusfall.onSwallowed.AddListener(CallBack_RemoveSpawnedObject);
         }
 
-    }
+    }*/
 
 
     public void AllObjectStopActive(bool active)
