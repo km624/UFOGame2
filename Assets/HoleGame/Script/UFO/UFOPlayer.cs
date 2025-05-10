@@ -23,9 +23,10 @@ public class UFOPlayer : MonoBehaviour, IDetctable
     [SerializeField]
     private float MaxExpGauge = 100.0f;
 
-    float baseExpPerMass = 7.0f;
+    float baseExpPerMass = 50.0f;
 
     public event Action<float> FOnExpAdded;
+    public event Action<int/*curentLevel*/> FOnLevelUped;
 
     private float fillSpeed = 3.0f;
     private float TargetfillPercent = 0.0f;
@@ -87,11 +88,14 @@ public class UFOPlayer : MonoBehaviour, IDetctable
 
     public Vector3 WorldPosition => transform.position;
 
+    [SerializeField] private PossibleWidget possibleWidget;
+
  
     public void InitUFO(float gametime , UserUFOData userufodata , UFOData selectUFOdata , bool bisdirect)
     {
         LoadPlayerStatList();
 
+       
       
         TimeGaugeBar.fillAmount = gametime / TimeMax;
         float Time2 = gametime - TimeMax;
@@ -140,7 +144,9 @@ public class UFOPlayer : MonoBehaviour, IDetctable
        
         //연출 있으면 시작
         if(bisdirect)
-         StartUFODirecting();
+            StartUFODirecting();
+        else
+            FOnLevelUped?.Invoke(CurrentLevel);
     }
 
    
@@ -173,6 +179,7 @@ public class UFOPlayer : MonoBehaviour, IDetctable
     {
         DirectionProgress(false);
         FOnDirectionEnd?.Invoke();
+        FOnLevelUped?.Invoke(CurrentLevel);
 
     }
 
@@ -190,6 +197,7 @@ public class UFOPlayer : MonoBehaviour, IDetctable
     {
         DirectionProgress(false);
         FOnWarpDirectionEnd?.Invoke();
+        FOnLevelUped?.Invoke(CurrentLevel);
     }
 
     private void DirectionProgress(bool bprogress)
@@ -480,18 +488,16 @@ public class UFOPlayer : MonoBehaviour, IDetctable
 
     public void AddEXPGauge(float gauge , float mass)
     {
-        //Debug.Log("Taime : " + gauge);
+       
         SpawnGagueEffect(gauge);
 
         if (CurrentLevel >= MaxLevel) return;
 
-        //CurrentExpGauge += gauge;
-        //Debug.Log(" 내 레벨 : " + CurrentLevel + " 질량 : "+ mass);
         float newGague = CalculateExpGain(CurrentLevel, mass);
 
-        //Debug.Log("겅혐치 : " + newGague);
+       
         CurrentExpGauge += newGague;
-        //Debug.Log("UFOPLAYEr : " + newGague);
+       
         FOnExpAdded?.Invoke(newGague);
 
         if (CurrentExpGauge >= MaxExpGauge)
@@ -514,7 +520,6 @@ public class UFOPlayer : MonoBehaviour, IDetctable
         }
         TargetfillPercent = Mathf.Clamp01(CurrentExpGauge / MaxExpGauge);
 
-        //SpawnGagueEffect(gauge);
     }
     public float CalculateExpGain(int level, float absorbedMass)
     {
@@ -537,8 +542,7 @@ public class UFOPlayer : MonoBehaviour, IDetctable
     void SpawnGagueEffect(float gauge)
     {
         GameManager.Instance.soundManager.PlaySfx(SoundEnum.Swallowed);
-        //AddGaugeSound.Play();
-        // DamageNumber damageNumber = 
+       
         string gaugestring = "+" + string.Format("{0:N1}", gauge);
         numberPrefab.Spawn(transform.position, gauge);
     }
@@ -553,7 +557,9 @@ public class UFOPlayer : MonoBehaviour, IDetctable
 
         CurrentLevel += bLevelUp ? 1 : -1;
 
-        if(MaxLevel == CurrentLevel)
+        FOnLevelUped?.Invoke(CurrentLevel);
+
+        if (MaxLevel == CurrentLevel)
             bossdetectwidget.ActiveBossDetect(true);
 
         if (GameManager.Instance != null)
@@ -580,6 +586,12 @@ public class UFOPlayer : MonoBehaviour, IDetctable
         MaxLevel  += 4;
         BeamColor.SetMaxLevel(MaxLevel);
         BeamColor.UpdateLevelSettings(CurrentLevel);
+
+        if (GameManager.Instance.userData != null)
+        {
+            if (!GameManager.Instance.userData.userSettingData.bIsDirection)
+                FOnLevelUped?.Invoke(CurrentLevel);
+        }
     }
 
     public void SetCurrentBoss(BossObject boss)
@@ -619,6 +631,11 @@ public class UFOPlayer : MonoBehaviour, IDetctable
     {
        
         CamerapositionComposer.CameraDistance = DefaultCameraDistance;
+    }
+
+    public void OnPossibeWidget(ShapeEnum shape)
+    {
+        possibleWidget.SetPossibleIcon(shape);
     }
 
 

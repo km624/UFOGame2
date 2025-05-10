@@ -1249,7 +1249,7 @@ MonoBehaviour:
   _bursts:
   - time: 0
     count: 40
-    used: 1
+    used: 0
   _particleTrailRenderer: {fileID: 8768379004490987532}
   _trailModule:
     enabled: 1
@@ -2700,7 +2700,7 @@ MonoBehaviour:
   _bursts:
   - time: 0
     count: 100
-    used: 1
+    used: 0
   _particleTrailRenderer: {fileID: 0}
   _trailModule:
     enabled: 0

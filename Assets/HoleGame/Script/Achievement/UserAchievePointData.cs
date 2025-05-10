@@ -9,7 +9,7 @@ public class UserAchievePointData
     public int Point = 0;
 
     public int Step = 0;
-    //public int Tier = -1;
+    
 
     public List<bool> TierCompleted = new List<bool>();
 

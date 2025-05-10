@@ -19,7 +19,7 @@ public class BossDetectWidget : MonoBehaviour
 
     public void SetBosstransform(Transform bosstransform)
     {
-        //Debug.Log(bosstransform);
+        Debug.Log(bosstransform.name + " 보스 위치 세팅");
         bossTransform = bosstransform;
     }
     public void ActiveBossDetect(bool actvie)
@@ -66,7 +66,7 @@ public class BossDetectWidget : MonoBehaviour
        if (!bIsBossDetected || bossTransform == null) return;
        //if ( bossTransform == null) return;
         bool isBossVisible = IsBossVisible(mainCamera, bossTransform);
-        //Debug.Log("UpdataeBoss");
+       
         arrowRect.gameObject.SetActive(!isBossVisible);
         IconRect.gameObject.SetActive(!isBossVisible);
 
@@ -93,8 +93,17 @@ public class BossDetectWidget : MonoBehaviour
     private Vector3 GetScreenPositionOnRoundedRect(RectTransform rectTransform, Transform bossTransform, Camera cam, float cornerRadius, float insideOffset)
     {
         Vector2 center = rectTransform.position;
-        Vector2 bossScreenPos = cam.WorldToScreenPoint(bossTransform.position);
+       
+        //Vector2 bossScreenPos = cam.WorldToScreenPoint(bossTransform.position);
+        //Vector2 center = RectTransformUtility.WorldToScreenPoint(cam, rectTransform.position);
+        Vector3 bossScreen3D = cam.WorldToScreenPoint(bossTransform.position);
+        if (bossScreen3D.z < 0f)
+        {
+            bossScreen3D.x = -bossScreen3D.x;
+            bossScreen3D.y = -bossScreen3D.y;
+        }
 
+        Vector2 bossScreenPos = new Vector2(bossScreen3D.x, bossScreen3D.y);
         Vector2 direction = bossScreenPos - center;
 
         Vector2 rectSize = new Vector2(
@@ -141,15 +150,6 @@ public class BossDetectWidget : MonoBehaviour
                viewportPos.y > 0 && viewportPos.y < 1;
     }
 
-  /*  private Vector3 GetWorldPositionOnCircle(RectTransform circleRect, Vector3 bossWorldPos)
-    {
-        Vector3 center = circleRect.position;
-        Vector3 flatBoss = new Vector3(bossWorldPos.x, center.y, bossWorldPos.z); // 높이 무시
-
-        Vector3 direction = (flatBoss - center).normalized;
-        float radius = (circleRect.rect.width * 0.5f) * circleRect.lossyScale.x + arrowOffset;
-
-        return center + direction * radius;
-    }*/
+  
 }
 

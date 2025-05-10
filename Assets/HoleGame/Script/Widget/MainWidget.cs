@@ -1,14 +1,11 @@
 
 using EasyTransition;
-using Lean.Gui;
-
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using DG.Tweening;
 using UnityEngine.Splines;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using AssetKits.ParticleImage;
 using System.Collections;
 
@@ -149,7 +146,7 @@ public class MainWidget : MonoBehaviour
         else
             rect.position = startTransform.position;
 
-      
+        particle.attractorTarget = MoneyTransform;
 
         particle.gameObject.SetActive(true);
 

@@ -108,6 +108,9 @@ public class GameState : MonoBehaviour
         //워프 연출 바인딩
         ufoplayer.FOnWarpDirectionEnd += WarpDirectionEnd;
         ufoplayer.FonGenerationMoved += objectManager.ChangeGeneration;
+
+        //UFO레벨업 바인딩
+        ufoplayer.FOnLevelUped += CallBack_GetLevelObjectShape;
         
         //데이터 불러와서 세팅
         UserUFOData userufodata = null;
@@ -117,7 +120,6 @@ public class GameState : MonoBehaviour
             if (GameManager.Instance.userData != null)
             {
  
-              
                 string selectUFOname = GameManager.Instance.userData.SelectUFOName;
                 selectUFOdata = UFOLoadManager.Instance.ReadLoadedUFODataDic[selectUFOname];
                 if (selectUFOdata != null)
@@ -168,6 +170,8 @@ public class GameState : MonoBehaviour
         {
             StartPlayTimer();
             StartGameTimer();
+            //UFO 흡수 가능 표시
+            
         }
 
         if(bdirecting)
@@ -203,6 +207,8 @@ public class GameState : MonoBehaviour
         ufoplayer.FOnWarpDirectionEnd -= WarpDirectionEnd;
         ufoplayer.FonGenerationMoved -= objectManager.ChangeGeneration;
 
+        ufoplayer.FOnLevelUped -= CallBack_GetLevelObjectShape;
+
 
     }
 
@@ -230,9 +236,23 @@ public class GameState : MonoBehaviour
         PlayerHud.SetJoystick(true);
     }
 
+    private void CallBack_GetLevelObjectShape(int level)
+    {
+        ShapeEnum shapetype =  objectManager.GetObjectShape(level);
+        if(shapetype == ShapeEnum.boomb)
+        {
+            Debug.Log("타입 가져오기 실패");
+            return;
+
+        }
+
+        ufoplayer.OnPossibeWidget(shapetype);
+        
+    }
+
     private void CallBack_ObjectSwallow(FallingObject fallingobject)
     {
-        Debug.Log("흡수 : "  + fallingobject.gameObject.name);
+       // Debug.Log("흡수 : "  + fallingobject.gameObject.name);
         PlayerHud.SetScoreText(TotalScore);
         
         ufoplayer.AddEXPGauge(fallingobject.Score, fallingobject.ObjectMass);
@@ -244,7 +264,7 @@ public class GameState : MonoBehaviour
         BossObject bossobject = fallingobject as BossObject;
         if (bossobject != null)
         {
-            calculatetime += 10.0f;
+            calculatetime += 15.0f;
 
             ufoplayer.ResetCameraDistance();
         }

@@ -1375,6 +1375,7 @@ MonoBehaviour:
   moduleMovementFoldout: 0
   moduleEventsFoldout: 0
   moduleAdvancedFoldout: 0
+  m_Sprite: {fileID: 0}
   m_Texture: {fileID: 0}
 --- !u!1 &4954668651810640290
 GameObject:
@@ -2751,6 +2752,7 @@ MonoBehaviour:
   moduleMovementFoldout: 0
   moduleEventsFoldout: 0
   moduleAdvancedFoldout: 0
+  m_Sprite: {fileID: 0}
   m_Texture: {fileID: 0}
 --- !u!1 &4954668651848278630
 GameObject:
@@ -4133,6 +4135,7 @@ MonoBehaviour:
   moduleMovementFoldout: 0
   moduleEventsFoldout: 0
   moduleAdvancedFoldout: 0
+  m_Sprite: {fileID: 0}
   m_Texture: {fileID: 0}
 --- !u!1 &4954668652424234635
 GameObject:
@@ -5505,8 +5508,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   moduleEmitterFoldout: 1
-  moduleParticleFoldout: 0
-  moduleMovementFoldout: 0
+  moduleParticleFoldout: 1
+  moduleMovementFoldout: 1
   moduleEventsFoldout: 0
   moduleAdvancedFoldout: 0
+  m_Sprite: {fileID: 0}
   m_Texture: {fileID: 0}

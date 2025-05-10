@@ -63,7 +63,7 @@ public class SettingWidget : MonoBehaviour
         {
             GameManager.Instance.vibrationManager.OnVibration(userSettingData.bIsVibration);
             GameManager.Instance.vibrationManager.Play(VibrationEnum.ButtonClick);
-            GameManager.Instance.soundManager.PlaySfx(SoundEnum.ButtonClick);
+            GameManager.Instance.soundManager.PlaySfx(SoundEnum.ButtonClick, 0.3f);
         }
     }
 
@@ -75,7 +75,7 @@ public class SettingWidget : MonoBehaviour
         {
             GameManager.Instance.soundManager.SetBgmMute(!userSettingData.bIsBgm);
             GameManager.Instance.vibrationManager.Play(VibrationEnum.ButtonClick);
-            GameManager.Instance.soundManager.PlaySfx(SoundEnum.ButtonClick);
+            GameManager.Instance.soundManager.PlaySfx(SoundEnum.ButtonClick, 0.3f);
         }
     }
 
@@ -85,13 +85,13 @@ public class SettingWidget : MonoBehaviour
         SetButtonColor(sfxButton, userSettingData.bIsSfx);
         GameManager.Instance.soundManager.SetSfxMute(!userSettingData.bIsSfx);
         GameManager.Instance.vibrationManager.Play(VibrationEnum.ButtonClick);
-        GameManager.Instance.soundManager.PlaySfx(SoundEnum.ButtonClick);
+        GameManager.Instance.soundManager.PlaySfx(SoundEnum.ButtonClick, 0.3f);
     }
 
     public void ToogleDirection()
     {
         userSettingData.bIsDirection = !userSettingData.bIsDirection;
-        GameManager.Instance.soundManager.PlaySfx(SoundEnum.ButtonClick);
+        GameManager.Instance.soundManager.PlaySfx(SoundEnum.ButtonClick,0.3f);
         GameManager.Instance.vibrationManager.Play(VibrationEnum.ButtonClick);
     }
 

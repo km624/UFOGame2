@@ -34,7 +34,11 @@ public class AchievePointWidget : MonoBehaviour
 
     [SerializeField] private LastRewardWidget lastRewardWidget;
 
-   
+    [SerializeField] private NextRewardWidget nextRewardWidget;
+
+    [SerializeField] private GameObject WorkInProgressPanel;
+
+
     public void InitPointWidget()
     {
         if (GameManager.Instance.userData == null) return;
@@ -42,33 +46,50 @@ public class AchievePointWidget : MonoBehaviour
 
         AchievementManager.Instance.FOnPointChanged -= CallBack_UpdatePoint;
         AchievementManager.Instance.FOnPointChanged += CallBack_UpdatePoint;
-        
+        WorkInProgressPanel.SetActive(false);
         CreatePointWidget();
     }
 
     private void CreatePointWidget()
     {
         currentStep = userpointData.Step;
+        NormalPointgauge = 0;
+        //누적 포인트 계산
+        int enabletier = currentStep;
+        Debug.Log(currentStep + " 현재 스텝 세팅");
+      
+         for (int i = 0; i < enabletier; i++)
+         {
+             Debug.Log(i + "번째");
+             int stepmaxtpoint = AchievementManager.Instance.ReadPointRewardDataList[i].MaxPoint;
+             Debug.Log("stepmaxtpoint  " + stepmaxtpoint);
+             NormalPointgauge += stepmaxtpoint;
+         }
+        Debug.Log(NormalPointgauge);
+        CurrentPointGauge = userpointData.Point - NormalPointgauge;
 
-       
+        currentPointText.text = CurrentPointGauge.ToString();
+
+        if (!AchievementManager.Instance.CheckPossibleNextStep(currentStep))
+        {
+            WorkInProgressPanel.SetActive(true);
+            return;
+        }
+
         var pointDataList = AchievementManager.Instance.ReadPointRewardDataList[currentStep];
-    
+
+        //이부분 (위험 ) Danger
+        if(userpointData.TierCompleted.Count==0 || userpointData.TierCompleted == null)
+        {
+
+            userpointData.InitTierList(pointDataList.PointRewardDatas.Count);
+            Debug.Log("포인트 현재 상황 데이터 없어서 세팅");
+        }
+
         MaxPointGauge = pointDataList.MaxPoint;
 
         EachMaxGaguge = MaxPointGauge / (pointDataList.PointRewardDatas.Count);
 
-       
-        //누적 포인트 계산
-        for (int i = 0; i < userpointData.Step; i++)
-        {
-            int stepmaxtpoint = AchievementManager.Instance.ReadPointRewardDataList[i].MaxPoint;
-
-            NormalPointgauge += stepmaxtpoint;
-        }
-        //Debug.Log("currentgague 오차 " + NormalPointgauge);
-        CurrentPointGauge = userpointData.Point- NormalPointgauge;
-
-        currentPointText.text = CurrentPointGauge.ToString();
 
         int tier = 0;
         foreach (var achievetier in pointDataList.PointRewardDatas)
@@ -91,6 +112,8 @@ public class AchievePointWidget : MonoBehaviour
 
         }
     }
+
+   
 
     public bool CheckrewardMark()
     {
@@ -130,25 +153,35 @@ public class AchievePointWidget : MonoBehaviour
 
         if (userpointData.CheckAllTierCompleted())
         {
-           if(AchievementManager.Instance.CheckPossibleNextStep(currentStep + 1))
+            if (AchievementManager.Instance.CheckPossibleNextStep(currentStep + 1))
             {
                 var nextpointDataList = AchievementManager.Instance.ReadPointRewardDataList[currentStep + 1];
-
                 userpointData.ChangeRewradPointStep(currentStep + 1, nextpointDataList.PointRewardDatas.Count);
-                Debug.Log("새로운 포인트 리워드 세팅");
-
-                foreach(var rewardwidget in RewardWidgets)
-                {
-                    Destroy(rewardwidget.gameObject);
-                }
-                RewardWidgets.Clear();
-                CreatePointWidget();
-                
+                Debug.Log((currentStep+1) +  "새로운 포인트 리워드 세팅");
             }
             else
             {
-                Debug.Log("다음 포인트 리워드 세팅 없음");
+                userpointData.ChangeRewradPointStep(currentStep + 1, 0);
+                Debug.Log((currentStep + 1) + "세팅없엉 세팅");
             }
+
+ 
+            foreach (var rewardwidget in RewardWidgets)
+            {
+                Destroy(rewardwidget.gameObject);
+            }
+            RewardWidgets.Clear();
+            CreatePointWidget();
+            nextRewardWidget.SetNextRewardWidget(currentStep);
+
+            //}
+            /* else
+             {
+                 WorkInProgressPanel.SetActive(true);
+                // Debug.Log("다음 포인트 리워드 세팅 없음");
+             }*/
+
+
         }
 
         if(!CheckrewardMark())
@@ -198,6 +231,7 @@ public class AchievePointWidget : MonoBehaviour
                             if (userufodata != null)
                             {
                                 userufodata.AddColor(colorIndex);
+                                GameManager.Instance.soundManager.PlaySfx(SoundEnum.GetReward, 1.0f);
                                 lastRewardWidget.SetLastRewardWidget(rewardtype, ufoname, colorIndex);
                             }
                             else
@@ -227,6 +261,7 @@ public class AchievePointWidget : MonoBehaviour
                     UFOData rewardUFOData = UFOLoadManager.Instance.ReadLoadedUFODataDic[reward];
                     UserUFOData newuserUFOData = new UserUFOData(rewardUFOData);
                     GameManager.Instance.userData.serialUFOList.AddUFO(newuserUFOData);
+                    GameManager.Instance.soundManager.PlaySfx(SoundEnum.GetReward, 1.0f);
                     lastRewardWidget.SetLastRewardWidget(rewardtype, reward,0);
                     break;
                 }

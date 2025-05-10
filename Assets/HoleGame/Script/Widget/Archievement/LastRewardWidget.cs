@@ -1,9 +1,9 @@
 using Lean.Gui;
-using NUnit.Framework;
+
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using AssetKits.ParticleImage;
 public class LastRewardWidget : MonoBehaviour
 {
 
@@ -20,6 +20,12 @@ public class LastRewardWidget : MonoBehaviour
     [SerializeField] private MeshRenderer UFOrenderer;
 
     [SerializeField] private Image SkillImage;
+
+    [SerializeField] private ParticleImage UFOParticleEffect;
+    [SerializeField] private ParticleImage SkinParticleEffect;
+
+    [SerializeField] private GameObject DescPanel;
+
 
     private List<GameObject> AddObjectInstanceList = new List<GameObject>();
 
@@ -85,9 +91,12 @@ public class LastRewardWidget : MonoBehaviour
 
         RenderCamera.SetActive(true);
 
+        bool rewardufo = rewardtype == PointRewardEnum.UFO;
+        DescPanel.SetActive(rewardufo);
+        UFOParticleEffect.gameObject.SetActive(rewardufo);
+        SkinParticleEffect.gameObject.SetActive(!rewardufo);
+       
 
-        //myrecttransform.localScale = new Vector3(0,0,1);
-        transform.localScale = new Vector3(0.1f, 0.1f, 1);
         Rewardleanwindow.TurnOn();
 
     }

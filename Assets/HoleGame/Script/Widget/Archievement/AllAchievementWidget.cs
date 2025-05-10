@@ -81,7 +81,9 @@ public class AllAchievementWidget : MonoBehaviour
         Dictionary<string, AchievementWidget> tiercompleteachievement = new Dictionary<string, AchievementWidget>();
 
         int index = 0;
-        AchieveMarkActive=false;
+
+        AchieveMarkActive = false;
+
         Debug.Log("Àç¹è¿­");
         foreach (var achieve in AchievementManager.Instance.ReadAchiveDict)
         {
@@ -123,6 +125,10 @@ public class AllAchievementWidget : MonoBehaviour
                 index++;
             }
         }
+
+        if (!AchieveMarkActive)
+            AchieveMark.SetActive(false);
+
         foreach (var achievement in tiercompleteachievement)
         {
             achievement.Value.transform.SetParent(AchieveContent.transform, false);

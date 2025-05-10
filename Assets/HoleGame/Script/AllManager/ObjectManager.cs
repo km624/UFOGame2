@@ -28,7 +28,6 @@ public class ObjectManager : MonoBehaviour
 
     public ExelEarthObjectData ObjecstStatTime { get; private set; } = null;
 
-  
 
     private ExelBombStatData ExelBombstat = null;
    
@@ -95,8 +94,6 @@ public class ObjectManager : MonoBehaviour
     [SerializeField] RandomSpawner bossSpawner;
     [SerializeField] RandomSpawner moneySpawner;
     [SerializeField] RandomSpawner bonusSpawner;
-
-
 
 
     [Header("맵")]
@@ -784,5 +781,17 @@ public class ObjectManager : MonoBehaviour
     }
 
 
+    public ShapeEnum GetObjectShape(int mass)
+    {
+        ShapeEnum shapetype = ShapeEnum.boomb;
+        int calculmass = mass - CurrentGenration*5+ CurrentGenration;
+        if(CurrentGenerationData.objects.Count> calculmass)
+        {
+            shapetype = CurrentGenerationData.objects[calculmass].GetShapeEnum();
+        }
+        if (calculmass == 5)
+            shapetype = ShapeEnum.boss;
+        return shapetype;
+    }
 }
 

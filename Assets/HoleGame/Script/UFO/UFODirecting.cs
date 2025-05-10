@@ -130,7 +130,7 @@ public class UFODirecting : MonoBehaviour
 
     public void WarpEffectEnd()
     {
-        Debug.Log("WarpEnd");
+        //Debug.Log("WarpEnd");
         owner.EndWarpDirecting();
         UFOAnimator.enabled = false;
     }

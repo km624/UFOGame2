@@ -137,7 +137,7 @@ public class AchievementManager : MonoBehaviour
        
         int target = data.TiersList[tierIndex].TargetValue;
 
-        Debug.Log($"[Achievement] '{id}' 진행도 갱신: {prog.CurrentValue}/{target}");
+       // Debug.Log($"[Achievement] '{id}' 진행도 갱신: {prog.CurrentValue}/{target}");
         
         //메인화면에서만 작동
         FOnProgressChanged?.Invoke(type, data.Id, prog.CurrentValue);

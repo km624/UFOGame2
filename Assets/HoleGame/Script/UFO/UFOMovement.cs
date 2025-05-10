@@ -14,16 +14,23 @@ public class UFOMovement : MonoBehaviour
     public Joystick joystick;
 
     public UFOMotion motion;
+    [SerializeField]private UFOMotion2 motion2;
     
 
     private bool MoveActive = true;
     private Rigidbody rb;
 
+
+    [SerializeField] private bool TurningMotion = false;
   
+    public void SetMoveType(bool turningMotion)
+    {
+        TurningMotion = turningMotion;
+    }
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-       
     }
 
 
@@ -48,7 +55,7 @@ public class UFOMovement : MonoBehaviour
         }
 
     
-        if (motion != null)
+       if (!TurningMotion)
       {
             Vector3 movementDirection = new Vector3(moveX, 0, moveZ);
 
@@ -63,8 +70,17 @@ public class UFOMovement : MonoBehaviour
               
             }
       }
-       
-       
+      else
+        {
+            Vector3 dir = new Vector3(joystick.Horizontal, 0, joystick.Vertical);
+          
+            motion2.UpdateMotion(dir);
+          
+
+        }
+
+
+
     }
 
     public void SetMoveActive(bool active)
