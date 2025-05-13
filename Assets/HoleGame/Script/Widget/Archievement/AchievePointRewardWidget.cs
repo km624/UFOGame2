@@ -14,9 +14,14 @@ public class AchievePointRewardWidget : MonoBehaviour
     public bool bisCompleted { get; private set; }
     public bool bCanOpen { get; private set; }
 
+    public bool LastTier { get; private set; }
+
     [SerializeField] private Image IconImage;
     [SerializeField] private Sprite OpenIcon;
     [SerializeField] private Sprite CloseIcon;
+    [SerializeField] private Sprite LastOpenIcon;
+    [SerializeField] private Sprite LastCloseIcon;
+
     [SerializeField] private TMP_Text PointText;
 
     [SerializeField] private Image ProgressBar;
@@ -26,16 +31,20 @@ public class AchievePointRewardWidget : MonoBehaviour
     public float currentgaugebar { get; private set; } = 0;
 
 
-    public void InitRewardWidget(AchievePointWidget pointwidget,int tier, bool bcomplete , float maxgague ,float realcurrentgaguge, float point)
+    public void InitRewardWidget(AchievePointWidget pointwidget,int tier, bool bcomplete , float maxgague ,float realcurrentgaguge, float point ,
+        bool lastier)
     {
         achievePointwidget = pointwidget;
 
         RewardTier = tier;
         bisCompleted = bcomplete;
-
+        LastTier =  lastier;
         RewardButton.interactable = !bisCompleted;
 
-        IconImage.sprite = bisCompleted ? OpenIcon : CloseIcon;
+        if(!LastTier) 
+            IconImage.sprite = bisCompleted ? OpenIcon : CloseIcon;
+        else
+            IconImage.sprite = bisCompleted ? LastOpenIcon : LastCloseIcon;
 
         maxgaugebar = maxgague;
         currentgaugebar = CacluateCurrentGauge(realcurrentgaguge);

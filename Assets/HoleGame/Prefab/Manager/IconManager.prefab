@@ -70,7 +70,7 @@ MonoBehaviour:
   - shape: 10
     icon: {fileID: 21300000, guid: 8df5b967e58ddf342aeaefe55023d04d, type: 3}
   - shape: 11
-    icon: {fileID: 21300000, guid: 8df5b967e58ddf342aeaefe55023d04d, type: 3}
+    icon: {fileID: 21300000, guid: 342369d3e5b5b464e837e7165f012eee, type: 3}
   - shape: 12
     icon: {fileID: 21300000, guid: 7db743b93dade514db095dcd5df69149, type: 3}
   - shape: 13
@@ -90,13 +90,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SkillImageList:
   - Skilltype: 0
-    Skillicon: {fileID: 21300000, guid: 3937f83f78094e440a91ea7df9c4e496, type: 3}
+    Skillicon: {fileID: 21300000, guid: bcf919db24ce27e45a7c4a73e6510606, type: 3}
   - Skilltype: 1
-    Skillicon: {fileID: 21300000, guid: fa78bcd8e9cbead41a4b5c6e0bd93ad7, type: 3}
+    Skillicon: {fileID: 21300000, guid: 82932ad917b356f439b3a4c94e4c6da5, type: 3}
   - Skilltype: 2
-    Skillicon: {fileID: 21300000, guid: 1b8dccfb3180beb409ca352b96dce39e, type: 3}
+    Skillicon: {fileID: 21300000, guid: 1ea153d0403115b48bfe00d454e4bb87, type: 3}
   - Skilltype: 3
-    Skillicon: {fileID: 21300000, guid: 51937e99c2482af46b40952992a3c9db, type: 3}
+    Skillicon: {fileID: 21300000, guid: ac53036e47c30844290ea90d5a90d61f, type: 3}
   DefaultIcon: {fileID: 21300000, guid: 7db743b93dade514db095dcd5df69149, type: 3}
 --- !u!114 &8416557701435221333
 MonoBehaviour:

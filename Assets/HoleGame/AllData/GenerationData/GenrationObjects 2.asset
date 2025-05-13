@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c44526a62a104af4d99953cb9ff18b2e, type: 3}
+  m_Name: GenrationObjects 2
+  m_EditorClassIdentifier: 
+  objects:
+  - {fileID: 248943852809235314, guid: 2bca71e339ed97f459eb793803f3cc30, type: 3}
+  - {fileID: 8967097520502933217, guid: 08a500164fc5df549b0d49e486d54994, type: 3}
+  - {fileID: 2283098316190276558, guid: 929d7a4e939a4a7468d751a67ebb0926, type: 3}
+  - {fileID: 5588394161260100292, guid: 68b9a8ea516aa13479932c1cdb539d81, type: 3}
+  - {fileID: 8416549946198533537, guid: 426fde45ed7bebe428a72de1f8d16d94, type: 3}
+  bomb: {fileID: 2231101162902535765, guid: 7644a52461afc1c4fa7f9afa5bd1567f, type: 3}
+  Boss: {fileID: 6395020949981121326, guid: aff061fbc614e6e4f85a1c2ebe99d070, type: 3}
+  GenerationName: "\uC911\uC138 \uC2DC\uB300"
+  MapMaterial: {fileID: 2100000, guid: 94b67c99565f776499ca8843d096d632, type: 2}
+  MapObjects: []
+  GenerationBGM: {fileID: 8300000, guid: e1b01cb9dd62c4f4e87757a5e0c46b1e, type: 3}

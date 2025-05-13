@@ -34,7 +34,7 @@ public class SkillWidget : MonoBehaviour
         SkillCountText.text = skillcount.ToString();
         SkillCoolTime = cooltime;
         SkillNum = skillnum;
-        
+        SkillCoolTimeImage.gameObject.SetActive(false);
         DefaultPostionY = ButtonObject.transform.localPosition.y;
     }
    
@@ -53,11 +53,13 @@ public class SkillWidget : MonoBehaviour
         remainingCoolTime = SkillCoolTime;
 
         // 버튼 아래로 이동 (y -20), 0.5초
-        ButtonObject.transform.DOLocalMoveY(-5.0f, animationTime).SetEase(Ease.InBack);
+        ButtonObject.transform.DOLocalMoveY(-14f, animationTime).SetEase(Ease.InBack);
 
         SkillCoolTimeAnimation.SetAnimationDuration(SkillCoolTime);
         SkillCoolTimeAnimation.StartAnimation();
         SkillCoolTimeAnimation.SetAnimationStopState(true);
+
+        SkillCoolTimeImage.gameObject.SetActive(true);
 
         if (skillcooltime != null)
             StopCoroutine(skillcooltime);
@@ -105,6 +107,7 @@ public class SkillWidget : MonoBehaviour
 
         // 버튼 원위치 (y +20), 0.5초
         ButtonObject.transform.DOLocalMoveY(DefaultPostionY, animationTime).SetEase(Ease.InBack);
+        SkillCoolTimeImage.gameObject.SetActive(false);
     }
 
 }

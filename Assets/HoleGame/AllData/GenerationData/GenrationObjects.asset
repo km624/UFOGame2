@@ -22,6 +22,5 @@ MonoBehaviour:
   Boss: {fileID: 354041552339809526, guid: 8040702dd5c003a4eb83bd4a0b322560, type: 3}
   GenerationName: "\uBC31\uC545\uAE30 \uC2DC\uB300"
   MapMaterial: {fileID: 2100000, guid: 22ffb96697013764e827515311c4d2cc, type: 2}
-  MapObjects:
-  - {fileID: 9020408119336090451, guid: f7fab55da14193f4eb6fa8b490e04b3d, type: 3}
+  MapObjects: []
   GenerationBGM: {fileID: 8300000, guid: a62308a7fc965f24dab6d8cbfaf9bde9, type: 3}

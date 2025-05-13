@@ -242,8 +242,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RewardButton: {fileID: 1318180348104037687}
   IconImage: {fileID: 4675589947608761665}
-  OpenIcon: {fileID: 21300000, guid: 86b0324302caa3c4ca5dfefa52b5ee60, type: 3}
-  CloseIcon: {fileID: 21300000, guid: 3eb8aa29227a68a41994f27f151d73ec, type: 3}
+  OpenIcon: {fileID: 21300000, guid: f5e7f8ace95fe1f4b97ba8d519f8b314, type: 3}
+  CloseIcon: {fileID: 21300000, guid: f377d8dc6f33ef54e94f2b35c1783077, type: 3}
+  LastOpenIcon: {fileID: 21300000, guid: ad1c4f41fe04a344e8ee973cd2f68ccf, type: 3}
+  LastCloseIcon: {fileID: 21300000, guid: 6239d1b3b10577c45a21f8a6ab8346c6, type: 3}
   PointText: {fileID: 935950944713333728}
   ProgressBar: {fileID: 8625795244818051987}
   CanOpen: {fileID: 1505459481455034468}
@@ -528,7 +530,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 3eb8aa29227a68a41994f27f151d73ec, type: 3}
+  m_Sprite: {fileID: 21300000, guid: f377d8dc6f33ef54e94f2b35c1783077, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

@@ -82,7 +82,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &200084297033684756
 RectTransform:
   m_ObjectHideFlags: 0
@@ -125,7 +125,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -305,7 +305,7 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
     m_ConstantMin: 1
-    m_ConstantMax: 1.5
+    m_ConstantMax: 2
   _startSpeed:
     m_Mode: 3
     m_CurveMultiplier: 0
@@ -321,8 +321,8 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    m_ConstantMin: 3
-    m_ConstantMax: 5
+    m_ConstantMin: 2
+    m_ConstantMax: 4
   _colorOverLifetime:
     m_Mode: 1
     m_GradientMin:
@@ -1119,7 +1119,7 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
     m_ConstantMin: 0
-    m_ConstantMax: -9.81
+    m_ConstantMax: -2
   _targetModule:
     enabled: 1
   _attractorTarget: {fileID: 0}
@@ -1130,8 +1130,8 @@ MonoBehaviour:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
-        time: 0.6946691
-        value: -0.0020119883
+        time: 0.6001257
+        value: 0.018495824
         inSlope: 0.000033206496
         outSlope: 0.000033206496
         tangentMode: 0
@@ -1139,8 +1139,8 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0.8866889
       - serializedVersion: 3
-        time: 1
-        value: 1
+        time: 1.0005525
+        value: 0.9988367
         inSlope: 7.236108
         outSlope: 7.236108
         tangentMode: 0
@@ -1154,28 +1154,28 @@ MonoBehaviour:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
-        time: 0.54769444
-        value: 0.0012264065
-        inSlope: 0
-        outSlope: 0
+        time: 0.39996698
+        value: 0.023851776
+        inSlope: 0.5300021
+        outSlope: 0.5300021
         tangentMode: 0
         weightedMode: 0
         inWeight: 0
-        outWeight: 0
+        outWeight: 0.055635296
       - serializedVersion: 3
-        time: 0.8015907
-        value: 1.0024865
-        inSlope: 10.884087
-        outSlope: 10.884087
+        time: 0.99995494
+        value: 0.98722374
+        inSlope: 6.445343
+        outSlope: 6.445343
         tangentMode: 0
         weightedMode: 0
-        inWeight: 0.030705651
+        inWeight: 0.06079628
         outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    m_ConstantMin: 0
-    m_ConstantMax: 0
+    m_ConstantMin: 0.5
+    m_ConstantMax: 1
   _targetMode: 0
   _noiseModule:
     enabled: 0
@@ -1245,8 +1245,8 @@ MonoBehaviour:
           inWeight: 0
           outWeight: 0
         - serializedVersion: 3
-          time: 0.20901546
-          value: 0.43747032
+          time: 0.23132381
+          value: -0.32678902
           inSlope: 0
           outSlope: 0
           tangentMode: 0
@@ -1413,8 +1413,8 @@ MonoBehaviour:
       m_RotationOrder: 4
     m_ConstantMin: 0
     m_ConstantMax: 1
-  _trailLifetime: 0.3
-  _minimumVertexDistance: 10
+  _trailLifetime: 0.1
+  _minimumVertexDistance: 5
   _trailColorOverLifetime:
     m_Mode: 0
     m_GradientMin:
@@ -1561,7 +1561,19 @@ MonoBehaviour:
       m_Calls: []
   _onParticleFinish:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: MainWidget, Assembly-CSharp
+        m_MethodName: CallBack_CoinArrive
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   _onLastParticleFinish:
     m_PersistentCalls:
       m_Calls: []

@@ -20,6 +20,16 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2b7de50325334484e813803ef38a98da
+    m_Address: Assets/HoleGame/AllData/UFOData/UFOCtrlS.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 53bd7e95966c45a4996a6060b907c202
+    m_Address: Assets/HoleGame/AllData/UFOData/UFOBubble.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: a94cea26ddb9d584fb59937b6cfd0ebd
     m_Address: Assets/HoleGame/AllData/UFOData/UFOSpeed.asset
     m_ReadOnly: 0
@@ -27,6 +37,11 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: bb5da4c585c54e647ad864fc75ad6983
     m_Address: Assets/HoleGame/UFOData/UFO.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d07149e9cd4828f458851344c59922f5
+    m_Address: Assets/HoleGame/AllData/UFOData/UFOFruit.asset
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

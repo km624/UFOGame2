@@ -84,6 +84,11 @@ public class VibrationManager : MonoBehaviour
                 Vibration.CreateOneShot(150, 150);
                 break;
 
+            case VibrationEnum.CoinArrive:
+                if (bPauseVibrated) return;
+                Vibration.CreateOneShot(5, 100);
+                break;
+
             case VibrationEnum.None:
                 break;
         }

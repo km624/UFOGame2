@@ -480,14 +480,14 @@ public class UFOAllWidget : MonoBehaviour
     public void OnEnableColorReinForceWidget()
     {
 
-        //selectUFOWidget.gameObject.SetActive(false);
+        selectUFOWidget.EnablePanel(false);
         ColorReinforcePanel.gameObject.SetActive(true);
        
     }
 
     public void OnEnableUFOSelectWdiget()
     {
-        //selectUFOWidget.gameObject.SetActive(true);
+        selectUFOWidget.EnablePanel(true);
         ColorReinforcePanel.gameObject.SetActive(false);
        
     }

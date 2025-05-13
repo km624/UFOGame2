@@ -7,5 +7,6 @@ public enum VibrationEnum
     LiftLoop,    
     UFOHit,
     LevelUp,
+    CoinArrive,
     None
 }

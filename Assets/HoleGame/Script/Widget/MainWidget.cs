@@ -162,6 +162,12 @@ public class MainWidget : MonoBehaviour
         particleQueue.Enqueue(particle);
     }
 
+    public void CallBack_CoinArrive()
+    {
+        GameManager.Instance.vibrationManager.Play(VibrationEnum.CoinArrive);
+        Debug.Log(Time.time + " : arrive");
+    }
+
 
     public void StartUFOPathMove()
     {

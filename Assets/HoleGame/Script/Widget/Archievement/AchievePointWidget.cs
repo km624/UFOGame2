@@ -103,8 +103,11 @@ public class AchievePointWidget : MonoBehaviour
            
            
             bool rewardComplete = userpointData.TierCompleted[tier];
-          
-            rewardWidget.InitRewardWidget(this, tier, rewardComplete, EachMaxGaguge, CurrentPointGauge, eachpoint);
+
+            bool lastier = (tier == pointDataList.PointRewardDatas.Count - 1);
+
+
+            rewardWidget.InitRewardWidget(this, tier, rewardComplete, EachMaxGaguge, CurrentPointGauge, eachpoint, lastier);
            
             
             RewardWidgets.Add(rewardWidget);

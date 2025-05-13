@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a08779f880e7cf943ab05e046a2d8b03, type: 3}
+  m_Name: UFOCtrlS
+  m_EditorClassIdentifier: 
+  UFOName: UFOCtrlS
+  UFOMesh: {fileID: -2128599272216676504, guid: 8aef242e8662d1c4bbccdf07e069a3ba, type: 3}
+  UFOColorDataList:
+  - IConColor:
+      serializedVersion: 2
+      rgba: 4282851366
+    Materials:
+    - {fileID: 2100000, guid: 807868f598c334a488cbabb9ca2aa634, type: 2}
+    ColorPrice: 0
+    bIsreward: 0
+  - IConColor:
+      serializedVersion: 2
+      rgba: 4293971583
+    Materials:
+    - {fileID: 2100000, guid: 4ad81ff69ba8b514faf109ab7f40a015, type: 2}
+    ColorPrice: 20
+    bIsreward: 0
+  AddUFObject: []
+  AddFullStatObject:
+  - {fileID: 2474884020779558425, guid: 51593392ef7d444448d988787eb4d3d2, type: 3}
+  UFOPrice: 25
+  UFOIcon: {fileID: 21300000, guid: edc13fd501b22524b818f6bac0bc172f, type: 3}
+  Skilltype: 3
+  StatList:
+  - StatType: 0
+    BaseValue: 4
+    MaxValue: 5
+  - StatType: 1
+    BaseValue: 3
+    MaxValue: 5
+  - StatType: 2
+    BaseValue: 3
+    MaxValue: 5
+  - StatType: 3
+    BaseValue: 1
+    MaxValue: 2
+  bIsReward: 0

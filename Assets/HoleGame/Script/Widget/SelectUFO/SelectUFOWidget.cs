@@ -34,6 +34,10 @@ public class SelectUFOWidget : MonoBehaviour
     [SerializeField] private Button PurchaseButton;
     [SerializeField] private TMP_Text PriceText;
 
+    [SerializeField] private Image PanelIamge;
+    [SerializeField] private Color disableColor;
+    [SerializeField] private Color enableColor;
+
     public void InitializeSelectWidget(UFOAllWidget ufowidget, IReadOnlyDictionary<string, UFOData> ufoList, 
         IReadOnlyDictionary<string, UserUFOData> userufo, string selectUFOname)
     {
@@ -195,6 +199,11 @@ public class SelectUFOWidget : MonoBehaviour
         }
         else
             Debug.Log("UFO ¾øÀ½");
+    }
+
+    public void EnablePanel(bool benable)
+    {
+        PanelIamge.color = benable ? enableColor :disableColor;
     }
 
 }

@@ -28,7 +28,7 @@ public class UFOPlayer : MonoBehaviour, IDetctable
     public event Action<float> FOnExpAdded;
     public event Action<int/*curentLevel*/> FOnLevelUped;
 
-    private float fillSpeed = 3.0f;
+    //private float fillSpeed = 3.0f;
     private float TargetfillPercent = 0.0f;
 
     private ExelUFOStatData UFOBaseStatList;
@@ -36,8 +36,8 @@ public class UFOPlayer : MonoBehaviour, IDetctable
 
 
     [Header("UFO UI")]
-    [SerializeField]
-    private Image EXPGaugeBar;
+    //[SerializeField]
+    //private Image EXPGaugeBar;
     [SerializeField]
     private Image TimeGaugeBar; 
     [SerializeField]
@@ -137,7 +137,7 @@ public class UFOPlayer : MonoBehaviour, IDetctable
            
         }
 
-        EXPGaugeBar.fillAmount = 0.0f;
+       // EXPGaugeBar.fillAmount = 0.0f;
 
         //레벨 표시
         UpdateSizeText(CurrentLevel);
@@ -222,7 +222,7 @@ public class UFOPlayer : MonoBehaviour, IDetctable
     void Update()
     {
 
-        UpdateSizeGaugeBar();
+        //UpdateSizeGaugeBar();
       
     }
    
@@ -479,12 +479,12 @@ public class UFOPlayer : MonoBehaviour, IDetctable
         UFORenderer.material = newmaterial;
     }
 
-    private void UpdateSizeGaugeBar()
+   /* private void UpdateSizeGaugeBar()
     {
 
         EXPGaugeBar.fillAmount = Mathf.Lerp(EXPGaugeBar.fillAmount, TargetfillPercent, Time.deltaTime * fillSpeed);
       
-    }
+    }*/
 
     public void AddEXPGauge(float gauge , float mass)
     {
@@ -512,7 +512,7 @@ public class UFOPlayer : MonoBehaviour, IDetctable
             }
             
 
-            EXPGaugeBar.fillAmount = 0.0f;
+           // EXPGaugeBar.fillAmount = 0.0f;
 
             ChangeLevel(true);
 
