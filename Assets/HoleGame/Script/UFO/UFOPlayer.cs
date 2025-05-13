@@ -23,7 +23,7 @@ public class UFOPlayer : MonoBehaviour, IDetctable
     [SerializeField]
     private float MaxExpGauge = 100.0f;
 
-    float baseExpPerMass = 50.0f;
+    float baseExpPerMass = 7.0f;
 
     public event Action<float> FOnExpAdded;
     public event Action<int/*curentLevel*/> FOnLevelUped;

@@ -65,9 +65,9 @@ public class ObjectManager : MonoBehaviour
     public event Action<Dictionary<float,int>/*BonusObjectsOrgin*/> FOnBounusCompleted;
 
 
-    [SerializeField] private LayerMask groundMask;
+    /*[SerializeField] private LayerMask groundMask;
     [SerializeField] private LayerMask wallMask;
-    [SerializeField] private LayerMask IgnoreMask;
+    [SerializeField] private LayerMask IgnoreMask;*/
 
     public int GetMaxObjectCnt() { return MaxObjectCnt; }
 
@@ -429,7 +429,7 @@ public class ObjectManager : MonoBehaviour
         }
         Dictionary<ShapeEnum, float> shapeToActualMass = new();
 
-        for (int i = 0; i < currentGen.objects.Count-1; i++)
+        for (int i = 0; i < currentGen.objects.Count; i++)
         {
             ShapeEnum shape = currentGen.objects[i].GetShapeEnum();
             //Debug.Log( shape.ToString() + " mass세팅");
@@ -469,7 +469,7 @@ public class ObjectManager : MonoBehaviour
             int randomCount = UnityEngine.Random.Range(bonusMinCount, bonusMaxCount + 1);
             
   
-            //Debug.Log($"[{i}] ObjectMass: {shapeToActualMass[limitedList[i].GetShapeEnum()]}, Shape: {limitedList[i].GetShapeEnum()}");
+            Debug.Log($"[{i}] ObjectMass: {shapeToActualMass[limitedList[i].GetShapeEnum()]}, Shape: {limitedList[i].GetShapeEnum()}");
            
 
             BonusObjectsOrgin.Add(shapeToActualMass[limitedList[i].GetShapeEnum()], randomCount);

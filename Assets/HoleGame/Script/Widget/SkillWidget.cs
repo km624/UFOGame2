@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
+using DG.Tweening;
 
 
 public class SkillWidget : MonoBehaviour
@@ -12,6 +13,7 @@ public class SkillWidget : MonoBehaviour
     public TMP_Text SkillCountText;
     public Image SkillCoolTimeImage;
     public UIButtomAnimation SkillCoolTimeAnimation;
+    [SerializeField] private GameObject ButtonObject;
     
     protected int SkillNum;
 
@@ -21,6 +23,10 @@ public class SkillWidget : MonoBehaviour
 
     Coroutine skillcooltime;
     private float remainingCoolTime;
+
+    private float DefaultPostionY = 0.0f; 
+    [SerializeField] private float animationTime = 0.5f;
+
     public void SetSkillWidget(SkillManager manager,  Sprite skillIcon, int skillcount, float cooltime,int skillnum)
     {
         skillmanager = manager;
@@ -28,6 +34,8 @@ public class SkillWidget : MonoBehaviour
         SkillCountText.text = skillcount.ToString();
         SkillCoolTime = cooltime;
         SkillNum = skillnum;
+        
+        DefaultPostionY = ButtonObject.transform.localPosition.y;
     }
    
 
@@ -43,6 +51,9 @@ public class SkillWidget : MonoBehaviour
         //audiosource.Play();
         SkillCountText.text = skillcount.ToString();
         remainingCoolTime = SkillCoolTime;
+
+        // 버튼 아래로 이동 (y -20), 0.5초
+        ButtonObject.transform.DOLocalMoveY(-5.0f, animationTime).SetEase(Ease.InBack);
 
         SkillCoolTimeAnimation.SetAnimationDuration(SkillCoolTime);
         SkillCoolTimeAnimation.StartAnimation();
@@ -91,6 +102,9 @@ public class SkillWidget : MonoBehaviour
         //audiosource.Stop();
         SkillCoolTimeImage.fillAmount = 0f;
         SkillCoolTimeAnimation.SetAnimationStopState(false);
+
+        // 버튼 원위치 (y +20), 0.5초
+        ButtonObject.transform.DOLocalMoveY(DefaultPostionY, animationTime).SetEase(Ease.InBack);
     }
 
 }

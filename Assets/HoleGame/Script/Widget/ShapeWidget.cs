@@ -1,4 +1,5 @@
 
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,6 +12,7 @@ public class ShapeWidget : MonoBehaviour
     public Image ShapeImage;
     private int Shapecount = 0;
     private PlayerHudWidget playerhud;
+    [SerializeField] private float Duration = 0.5f;
 
    
 
@@ -22,6 +24,14 @@ public class ShapeWidget : MonoBehaviour
             ShapeImage.sprite = shpaeImage;
 
         playerhud = hud;
+
+        // 초기 스케일 설정 (X=0에서 시작)
+        transform.localScale = new Vector3(0f, 1f, 1f);
+        transform.DOScaleX(1.2f, Duration*0.7f).SetEase(Ease.OutBack).onComplete = () =>
+        {
+            transform.DOScaleX(1f, Duration * 0.3f).SetEase(Ease.OutSine);
+        };
+       
     }
 
     public void UpdateShapeCount(int count)
@@ -36,7 +46,7 @@ public class ShapeWidget : MonoBehaviour
         CountText.text = Shapecount.ToString();
         if (Shapecount == 0)
         {
-            DisableShapeWidget();
+            OnShpaeWidgetAnimation();
 
         } 
 
@@ -45,19 +55,33 @@ public class ShapeWidget : MonoBehaviour
 
     public bool CheckDisable() { return Shapecount <= 0; }
 
+   
+    public void OnShpaeWidgetAnimation()
+    {
+
+        transform.DOScaleX(1.2f, Duration * 0.3f).SetEase(Ease.OutBack).onComplete = () =>
+        {
+            transform.DOScaleX(0f, Duration * 0.7f)
+                     .SetEase(Ease.InCubic)
+                     .OnComplete(() =>
+                     {
+                         DisableShapeWidget();
+                     });
+        };
+
+
+
+    }
+
     private void DisableShapeWidget()
     {
 
-        //애니메이션 추가 가능
+
         CountText.enabled = false;
         ShapeImage.enabled = false;
         DoubleText.enabled = false;
 
-        OnShpaeWidgetAnimation();
-    }
-
-    public void OnShpaeWidgetAnimation()
-    {
         playerhud.CallBack_WidgetAnimationEnd();
     }
+
 }

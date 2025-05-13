@@ -19,6 +19,8 @@ public class GenerationObjects : ScriptableObject
 
     public Material MapMaterial;
 
+    public List<GameObject> MapObjects = new List<GameObject>();
+
     public AudioClip GenerationBGM;
 }
 

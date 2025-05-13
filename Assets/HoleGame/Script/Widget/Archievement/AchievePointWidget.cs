@@ -56,16 +56,16 @@ public class AchievePointWidget : MonoBehaviour
         NormalPointgauge = 0;
         //누적 포인트 계산
         int enabletier = currentStep;
-        Debug.Log(currentStep + " 현재 스텝 세팅");
+        //Debug.Log(currentStep + " 현재 스텝 세팅");
       
          for (int i = 0; i < enabletier; i++)
          {
-             Debug.Log(i + "번째");
+             //Debug.Log(i + "번째");
              int stepmaxtpoint = AchievementManager.Instance.ReadPointRewardDataList[i].MaxPoint;
-             Debug.Log("stepmaxtpoint  " + stepmaxtpoint);
+             //Debug.Log("stepmaxtpoint  " + stepmaxtpoint);
              NormalPointgauge += stepmaxtpoint;
          }
-        Debug.Log(NormalPointgauge);
+       // Debug.Log(NormalPointgauge);
         CurrentPointGauge = userpointData.Point - NormalPointgauge;
 
         currentPointText.text = CurrentPointGauge.ToString();

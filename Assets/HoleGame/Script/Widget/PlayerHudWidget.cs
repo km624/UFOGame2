@@ -177,7 +177,8 @@ public class PlayerHudWidget : MonoBehaviour
         spawnedImage.rectTransform.localScale = Vector3.one * 4.0f;
         
       
-        RectTransform targetUIAnchor = AllBonusWidget[shape].gameObject.GetComponent<RectTransform>();
+        //RectTransform targetUIAnchor = AllBonusWidget[shape].gameObject.GetComponent<RectTransform>();
+        RectTransform targetUIAnchor = AllBonusWidget[shape].ShapeImage.GetComponent<RectTransform>();
         Vector3 endPos = targetUIAnchor.position;
 
         Sequence seq = DOTween.Sequence()
@@ -189,7 +190,7 @@ public class PlayerHudWidget : MonoBehaviour
 
     public void OnIconArrived(Image icon, ShapeEnum shapetype)
     {
-        Destroy(icon);
+        Destroy(icon.gameObject);
         SwalloweShapeCount(shapetype);
     }
 

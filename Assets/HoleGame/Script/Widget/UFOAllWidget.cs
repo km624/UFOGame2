@@ -1,7 +1,7 @@
 
 using DG.Tweening;
 using System.Collections.Generic;
-
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,7 +9,11 @@ using UnityEngine.UI;
 public class UFOAllWidget : MonoBehaviour
 {
     [SerializeField]private MainWidget mainWidget;
+
+    [SerializeField] private Image UFOButtonImage;
+    [SerializeField] private Image SlideDownImage;
    
+
 
     [SerializeField] private RectTransform UFOAllWidgetTransform;
     [SerializeField] private Button UFOSelectButton;
@@ -30,7 +34,9 @@ public class UFOAllWidget : MonoBehaviour
 
     [SerializeField] private SelectUFOWidget selectUFOWidget;
 
+    //[SerializeField] private Canvas SelectUFOPanel;
     [SerializeField] private GameObject ColorReinforcePanel;
+    
 
     [SerializeField] private SelectPaletteWidget selectPaletteWidget;
     [SerializeField] private ReinForceWidget reinForceWidget;
@@ -41,7 +47,11 @@ public class UFOAllWidget : MonoBehaviour
 
     void Start()
     {
-        ColorReinforcePanel.SetActive(false);
+        UFOButtonImage.gameObject.SetActive(true);
+        SlideDownImage.gameObject.SetActive(false);
+        ColorReinforcePanel.gameObject.SetActive(false);
+      
+       // Debug.Log("강제 닫기");
     }
 
     public void TogglePanel()
@@ -55,7 +65,8 @@ public class UFOAllWidget : MonoBehaviour
     private void ShowPanel()
     {
         isVisible = true;
-        
+        UFOButtonImage.gameObject.SetActive(false);
+        SlideDownImage.gameObject.SetActive(true);
         Vector2 shownPos = new Vector2(0, 0f);
 
         UFOSelectButton.gameObject.SetActive(true);
@@ -74,7 +85,8 @@ public class UFOAllWidget : MonoBehaviour
     {
 
         isVisible = false;
-
+        UFOButtonImage.gameObject.SetActive(true);
+        SlideDownImage.gameObject.SetActive(false);
         string currentufo = GameManager.Instance.userData.SelectUFOName;
 
         //판넬 닺힐때 강제 리셋
@@ -84,7 +96,7 @@ public class UFOAllWidget : MonoBehaviour
         UFOSelectButton.gameObject.SetActive(false);
         UFOReinforceButton.gameObject.SetActive(false);
 
-        Vector2 hiddenPos = new Vector2(0.0f, -1100.0f);
+        Vector2 hiddenPos = new Vector2(0.0f, -1250.0f);
         UFOAllWidgetTransform.DOAnchorPos(hiddenPos, slideDuration)
             .SetEase(Ease.InQuart)
             .OnComplete(() =>
@@ -230,8 +242,10 @@ public class UFOAllWidget : MonoBehaviour
 
             // 머터리얼 배열 통째로 적용
             renderer.materials = mats;
-            if(isVisible)
-                UFOReinforceButton.gameObject.SetActive(bunlock);
+
+            UFOReinforceButton.gameObject.SetActive(bunlock);
+                
+
 
             //추가 오브젝트 세팅
             CreateAddObject(currentUFOdata, bunlock, baseMap);
@@ -466,15 +480,16 @@ public class UFOAllWidget : MonoBehaviour
     public void OnEnableColorReinForceWidget()
     {
 
-        ColorReinforcePanel.SetActive(true);
-        selectUFOWidget.gameObject.SetActive(false);
+        //selectUFOWidget.gameObject.SetActive(false);
+        ColorReinforcePanel.gameObject.SetActive(true);
+       
     }
 
     public void OnEnableUFOSelectWdiget()
     {
-        selectUFOWidget.gameObject.SetActive(true);
-        ColorReinforcePanel.SetActive(false);
-
+        //selectUFOWidget.gameObject.SetActive(true);
+        ColorReinforcePanel.gameObject.SetActive(false);
+       
     }
 
     public void CallBack_UFORewardCompleted(string ufoname)
