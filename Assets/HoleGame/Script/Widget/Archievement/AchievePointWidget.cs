@@ -228,7 +228,7 @@ public class AchievePointWidget : MonoBehaviour
                         if (int.TryParse(split[1], out int colorIndex))
                         {
                             ColorIndex = colorIndex;
-                            allAchievementWidget.OnEvenetRewardComplete(rewardtype, ufoname, ColorIndex);
+                           
                             UFOData currentUFOData = UFOLoadManager.Instance.ReadLoadedUFODataDic[ufoname];
                             UserUFOData userufodata = GameManager.Instance.userData.serialUFOList.Get(currentUFOData.UFOName);
                             if (userufodata != null)
@@ -236,6 +236,8 @@ public class AchievePointWidget : MonoBehaviour
                                 userufodata.AddColor(colorIndex);
                                 GameManager.Instance.soundManager.PlaySfx(SoundEnum.GetReward, 1.0f);
                                 lastRewardWidget.SetLastRewardWidget(rewardtype, ufoname, colorIndex);
+
+                                allAchievementWidget.OnEvenetRewardComplete(rewardtype, ufoname, ColorIndex);
                             }
                             else
                             {
@@ -259,13 +261,14 @@ public class AchievePointWidget : MonoBehaviour
             case PointRewardEnum.UFO:
                 {
                     Debug.Log($"UFO ÇØ±Ý: {reward}");
-                    allAchievementWidget.OnEvenetRewardComplete(rewardtype, reward, 0);
                     
                     UFOData rewardUFOData = UFOLoadManager.Instance.ReadLoadedUFODataDic[reward];
                     UserUFOData newuserUFOData = new UserUFOData(rewardUFOData);
                     GameManager.Instance.userData.serialUFOList.AddUFO(newuserUFOData);
                     GameManager.Instance.soundManager.PlaySfx(SoundEnum.GetReward, 1.0f);
                     lastRewardWidget.SetLastRewardWidget(rewardtype, reward,0);
+
+                    allAchievementWidget.OnEvenetRewardComplete(rewardtype, reward, 0);
                     break;
                 }
 

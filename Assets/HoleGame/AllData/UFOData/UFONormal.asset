@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: UFONormal
   m_EditorClassIdentifier: 
   UFOName: UFONormal
-  UFOMesh: {fileID: 7810371007003685382, guid: 62a6e662bfc13654684970b9dc0dba67, type: 3}
+  UFOMesh: {fileID: 7810371007003685382, guid: 01b08d697be3afd4a95df9109652fae7, type: 3}
   UFOColorDataList:
   - IConColor:
       serializedVersion: 2

@@ -69,8 +69,8 @@ public class UFOAllWidget : MonoBehaviour
         SlideDownImage.gameObject.SetActive(true);
         Vector2 shownPos = new Vector2(0, 0f);
 
-        UFOSelectButton.gameObject.SetActive(true);
-        UFOReinforceButton.gameObject.SetActive(true);
+      /*  UFOSelectButton.gameObject.SetActive(true);
+        UFOReinforceButton.gameObject.SetActive(true);*/
        
 
         UFOAllWidgetTransform.DOAnchorPos(shownPos, slideDuration)
@@ -93,8 +93,8 @@ public class UFOAllWidget : MonoBehaviour
         selectUFOWidget.SelectUFOType(currentufo, true, 0,false);
 
 
-        UFOSelectButton.gameObject.SetActive(false);
-        UFOReinforceButton.gameObject.SetActive(false);
+       /* UFOSelectButton.gameObject.SetActive(false);
+        UFOReinforceButton.gameObject.SetActive(false);*/
 
         Vector2 hiddenPos = new Vector2(0.0f, -1250.0f);
         UFOAllWidgetTransform.DOAnchorPos(hiddenPos, slideDuration)
@@ -147,6 +147,7 @@ public class UFOAllWidget : MonoBehaviour
 
 
         CallBAck_ChangePreviewUFOType(currentUFOname, true);
+        //selectUFOWidget.SelectUFOType()
 
     }
 

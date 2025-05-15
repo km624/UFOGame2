@@ -476,6 +476,9 @@ public class ObjectManager : MonoBehaviour
             BonusObjectsCnt.Add(limitedList[i].GetShapeEnum(), randomCount);
             FOnBounsWidgetCreated?.Invoke(limitedList[i].GetShapeEnum(), randomCount);
         }
+
+       
+
     }
 
     private void CheckBonusCleared(ShapeEnum shape)

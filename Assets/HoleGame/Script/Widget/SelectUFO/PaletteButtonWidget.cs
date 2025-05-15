@@ -30,13 +30,13 @@ public class PaletteButtonWidget : MonoBehaviour
 
         ColorIcon.color = iconcolor;
 
-
+        
         ColorPrice = price;
-
-        PriceText.text = ColorPrice.ToString();
 
         bIsUnlocked = bIsUnlock;
         bIsReward = bisreward;
+
+        PriceText.text = bIsReward ? string.Empty : ColorPrice.ToString();
 
         if (bIsReward)
             LockImage.sprite = RewardIcon;
@@ -61,7 +61,7 @@ public class PaletteButtonWidget : MonoBehaviour
 
         if (!bIsUnlocked)
         {
-            if(!bIsReward)
+            //if(!bIsReward)
                 ColorPurchasebutton.gameObject.SetActive(!bIsUnlocked);
            
         }
@@ -80,7 +80,8 @@ public class PaletteButtonWidget : MonoBehaviour
 
     public void OnClickPurchaseBtn()
     {
-        selectpaletteWidget.PurchaseColor(colorindex, ColorPrice);
+        if(!bIsReward)
+            selectpaletteWidget.PurchaseColor(colorindex, ColorPrice);
     }
 
     public void UnlockPalette()

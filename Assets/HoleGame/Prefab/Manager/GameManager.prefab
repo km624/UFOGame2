@@ -85,7 +85,7 @@ MonoBehaviour:
   - type: 9
     clip: {fileID: 8300000, guid: 9d04abd5567e1984b97a2fc847d30ff4, type: 3}
   - type: 10
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: d53833ac350513645a1905d4b55cdcd1, type: 3}
   - type: 11
     clip: {fileID: 8300000, guid: 416700da05e0b4a438445ed94804f977, type: 3}
   - type: 12
@@ -102,6 +102,12 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 694b0da129d4128449de2e5b1a05b667, type: 3}
   - type: 18
     clip: {fileID: 8300000, guid: 668620113e9d6dc4483ba3d8dbae9fcf, type: 3}
+  - type: 19
+    clip: {fileID: 8300000, guid: e47be7bc1503796419dc6a7a0494ec35, type: 3}
+  - type: 20
+    clip: {fileID: 8300000, guid: 0245af241c17e564b8a2b73c7d41a939, type: 3}
+  - type: 21
+    clip: {fileID: 8300000, guid: d904f9a920593a44c8a614f47c8986d4, type: 3}
 --- !u!82 &1344838015426181253
 AudioSource:
   m_ObjectHideFlags: 0

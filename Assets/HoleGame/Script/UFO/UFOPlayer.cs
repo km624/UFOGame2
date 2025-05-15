@@ -23,7 +23,8 @@ public class UFOPlayer : MonoBehaviour, IDetctable
     [SerializeField]
     private float MaxExpGauge = 100.0f;
 
-    float baseExpPerMass = 7.0f;
+    //float baseExpPerMass = 8.0f;
+    float baseExpPerMass = 10.0f;
 
     public event Action<float> FOnExpAdded;
     public event Action<int/*curentLevel*/> FOnLevelUped;
@@ -89,6 +90,8 @@ public class UFOPlayer : MonoBehaviour, IDetctable
     public Vector3 WorldPosition => transform.position;
 
     [SerializeField] private PossibleWidget possibleWidget;
+
+    [SerializeField] private GameObject UFOWidget;
 
  
     public void InitUFO(float gametime , UserUFOData userufodata , UFOData selectUFOdata , bool bisdirect)
@@ -212,8 +215,9 @@ public class UFOPlayer : MonoBehaviour, IDetctable
             ResetCameraDistance();
         }
         UFOBeam.SetSwallow(!bprogress);
-        TimeGaugeBar.gameObject.SetActive(!bprogress);
-        TimeGaugeBar2.gameObject.SetActive(!bprogress);
+        /*  TimeGaugeBar.gameObject.SetActive(!bprogress);
+          TimeGaugeBar2.gameObject.SetActive(!bprogress);*/
+        UFOWidget.gameObject.SetActive(!bprogress);
         LevelText.gameObject.SetActive(!bprogress);
 
     }

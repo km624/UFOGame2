@@ -17,9 +17,8 @@ MonoBehaviour:
   AchieveType: 2
   TiersList:
   - TargetValue: 1
-    Rewardcnt: 30
+    Rewardcnt: 5
   - TargetValue: 2
-    Rewardcnt: 50
+    Rewardcnt: 7
   - TargetValue: 3
-    Rewardcnt: 100
-  AchieveIcon: {fileID: 21300000, guid: 7db743b93dade514db095dcd5df69149, type: 3}
+    Rewardcnt: 10

@@ -209,10 +209,14 @@ public class PlayerHudWidget : MonoBehaviour
             AllBonusWidget.Clear();
             EndBounsWidgetCnt = 0;
 
-
+            GameManager.Instance.soundManager.PlaySfx(SoundEnum.BonusClear, 0.6f);
             //Debug.Log("보너스 위젯 초기화");
             FOnAllBounusAnimEnded?.Invoke(bIsFroceRenewal);
             bIsFroceRenewal = false;
+        }
+        else
+        {
+            GameManager.Instance.soundManager.PlaySfx(SoundEnum.BonusDisappear, 0.6f);
         }
 
     }

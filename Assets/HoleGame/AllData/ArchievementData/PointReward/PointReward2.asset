@@ -18,5 +18,5 @@ MonoBehaviour:
   - type: 0
     Reward: 20
   - type: 2
-    Reward: UFOAchieve_1
-  MaxPoint: 150
+    Reward: UFOBee_1
+  MaxPoint: 60

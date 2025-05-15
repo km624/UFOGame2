@@ -37,7 +37,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 1.567}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &722377363329326170
@@ -409,7 +409,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed1300cb3473b334d89587458664b1ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Shape: 10
+  Shape: 15
   bMovement: 0
   ForceStatData: {fileID: 0}
   CanvasGameObject: {fileID: 12875912026779631}

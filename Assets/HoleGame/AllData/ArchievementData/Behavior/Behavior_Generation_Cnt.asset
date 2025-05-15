@@ -16,9 +16,9 @@ MonoBehaviour:
   Title: "\uC2DC\uB300 \uC774\uB3D9"
   AchieveType: 1
   TiersList:
-  - TargetValue: 2
-    Rewardcnt: 100
-  - TargetValue: 4
-    Rewardcnt: 150
-  - TargetValue: 6
-    Rewardcnt: 200
+  - TargetValue: 5
+    Rewardcnt: 5
+  - TargetValue: 10
+    Rewardcnt: 10
+  - TargetValue: 15
+    Rewardcnt: 15

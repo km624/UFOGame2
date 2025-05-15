@@ -17,4 +17,4 @@ MonoBehaviour:
   AchieveType: 2
   TiersList:
   - TargetValue: 1
-    Rewardcnt: 50
+    Rewardcnt: 10

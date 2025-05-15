@@ -20,7 +20,10 @@ public enum SoundEnum
     SFX_Smoke,
     SFX_GroundHit,
     SFX_Appeared,
-    GetReward
-    
+    GetReward,
+    StatButtonClick,
+    BonusDisappear,
+    GamePlay
+  
 
 }

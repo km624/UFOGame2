@@ -15,6 +15,8 @@ public class DetectWidget : MonoBehaviour
     private RectTransform radarUI; // 원형 UI 영역
     [SerializeField]
     private GameObject radarDotPrefab;
+
+    [SerializeField] private float raderoffset;
    /* [SerializeField]
     private Sprite RadorIcon;*/
 
@@ -90,7 +92,7 @@ public class DetectWidget : MonoBehaviour
             // 방향 계산 (normalized)
             Vector2 direction = flatOffset.normalized;
 
-            float radarRadius = radarUI.rect.width / 2f;
+            float radarRadius = radarUI.rect.width / 2f - raderoffset;
             float scale = Mathf.Min(distance / radarRange, 1f); // 1보다 크면 클램핑
 
             // 클램핑 시 원 가장자리에 위치하게

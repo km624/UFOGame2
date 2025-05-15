@@ -12,6 +12,7 @@ public class UFOButtonWidget : MonoBehaviour
     [SerializeField] private Image LockImage;
     [SerializeField] private Image SelectFrame;
     [SerializeField] private Sprite RewardIcon;
+    [SerializeField] private Sprite LockIcon;
 
     private int ufoPrice;
 
@@ -43,6 +44,10 @@ public class UFOButtonWidget : MonoBehaviour
 
         if (bIsReward)
             LockImage.sprite = RewardIcon;
+        else
+        {
+            LockImage.sprite = LockIcon;
+        }
 
         UfoSelectbutton.interactable = !bselect;
 

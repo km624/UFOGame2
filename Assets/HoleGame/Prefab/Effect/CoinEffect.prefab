@@ -82,7 +82,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &200084297033684756
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1585,5 +1585,5 @@ MonoBehaviour:
   moduleMovementFoldout: 1
   moduleEventsFoldout: 1
   moduleAdvancedFoldout: 1
-  m_Sprite: {fileID: 21300000, guid: 62caf8fa8077346f98e18477f3872a95, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 8780d930211fd174f9af22a8b2e52582, type: 3}
   m_Texture: {fileID: 0}

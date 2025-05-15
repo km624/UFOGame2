@@ -1,3 +1,4 @@
+using Mono.Cecil;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -20,6 +21,8 @@ public class SoundManager : MonoBehaviour
     private bool isSoundPuased = false;
 
     private AudioClip CurrentBGM;
+
+    private float StartVolume;
    
 
 #if UNITY_EDITOR
@@ -55,6 +58,7 @@ public class SoundManager : MonoBehaviour
     {
 
         InitSoundManager();
+        StartVolume = bgmSource.volume;
     }
 
     private void InitSoundManager()
@@ -107,7 +111,7 @@ public class SoundManager : MonoBehaviour
         if (isBgmMuted) return;
         if (isSoundPuased) return;
 
-        if(CurrentBGM!=null)
+        if(CurrentBGM != null)
             StartCoroutine(FadeBgmCoroutine(CurrentBGM, fadeTime, loop));
     }
 
@@ -141,12 +145,12 @@ public class SoundManager : MonoBehaviour
         // 페이드인
         for (float t = 0; t < time; t += Time.unscaledDeltaTime)
         {
-            float volume = Mathf.Lerp(0f, startVol, t / time);
+            float volume = Mathf.Lerp(0f, StartVolume, t / time);
             SetBgmVolume(volume);
             yield return null;
         }
 
-        SetBgmVolume(startVol); // 정확히 원래 볼륨으로 복구
+        SetBgmVolume(StartVolume); // 정확히 원래 볼륨으로 복구
     }
     private IEnumerator FadeOutBgmCoroutine(float time)
     {

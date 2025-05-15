@@ -519,7 +519,7 @@ public class GameState : MonoBehaviour
        
     }
 
-    public void OnSoundPause(bool active)
+   /* public void OnSoundPause(bool active)
     {
         if (GameManager.Instance != null)
         {
@@ -528,7 +528,7 @@ public class GameState : MonoBehaviour
 
 
     }
-    
+    */
     
 
     public void GameEnd()

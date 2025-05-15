@@ -16,10 +16,9 @@ MonoBehaviour:
   Title: "\uB204\uC801 \uC624\uBE0C\uC81D\uD2B8 \uD760\uC218"
   AchieveType: 0
   TiersList:
-  - TargetValue: 10
-    Rewardcnt: 50
-  - TargetValue: 15
+  - TargetValue: 50
+    Rewardcnt: 5
+  - TargetValue: 100
+    Rewardcnt: 10
+  - TargetValue: 150
     Rewardcnt: 15
-  - TargetValue: 20
-    Rewardcnt: 20
-  AchieveIcon: {fileID: 21300000, guid: 7db743b93dade514db095dcd5df69149, type: 3}
