@@ -26,28 +26,37 @@ public class UFOMotion : MonoBehaviour
     private Tween rotationTween;
     private Tween spinTween;
 
-    private bool bIsMotion = true;
-    private bool bIsMove = false;
    
+    private bool bIsMove = false;
+    private bool bIsMotion = true;
+
+   
+
     void Start()
     {
-        baseY = transform.localPosition.y;
-        //StartSpin();
+        baseY = transform.localPosition.y; // 초기 진동 중심
+      
     }
 
-   
-
-    void Update()
+    public void Update()
     {
         if (!bIsMotion) return;
         float newY = baseY + verticalLength * Mathf.Sin(Time.time * verticalSpeed * 2 * Mathf.PI);
         transform.localPosition = new Vector3(transform.localPosition.x, newY, transform.localPosition.x);
+    }
+   
+
+    public void ChangeBaseY(float newy)
+    {
+       
+        baseY = newy;
 
     }
 
+
     public void SetMotionStart(bool motion)
     {
-        bIsMotion = motion;
+       bIsMotion = motion;
     }
 
  

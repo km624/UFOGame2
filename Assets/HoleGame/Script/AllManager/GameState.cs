@@ -43,7 +43,7 @@ public class GameState : MonoBehaviour
     private bool bIgnoredbomb = false;
     //private bool bIceActive = false;
     
-    private bool bIsGameEnd = false; 
+    public bool bIsGameEnd { get; private set; } = false; 
 
 
     public Vector3 GetPlayerPostion() { return ufoplayer.transform.position; }
@@ -252,7 +252,10 @@ public class GameState : MonoBehaviour
 
     private void CallBack_ObjectSwallow(FallingObject fallingobject)
     {
-       // Debug.Log("Èí¼ö : "  + fallingobject.gameObject.name);
+        // Debug.Log("Èí¼ö : "  + fallingobject.gameObject.name);
+
+        if (bIsGameEnd) return;
+
         PlayerHud.SetScoreText(TotalScore);
         
         ufoplayer.AddEXPGauge(fallingobject.Score, fallingobject.ObjectMass);
@@ -343,7 +346,8 @@ public class GameState : MonoBehaviour
 
     public void CallBacK_BossSwallow(BossObject bossObject)
     {
-        CallBack_ObjectSwallow(bossObject);
+      
+        ufoplayer.ForcePopPossibleWidget();
     }
 
 
@@ -505,10 +509,10 @@ public class GameState : MonoBehaviour
 
     public void GamePause(bool active)
     {
-        //OnSoundPause(active);
+       
         ufoplayer.CallBack_StopMovement(active);
         GameManager.Instance.vibrationManager.OnStopVibration();
-        //GameManager.Instance.vibrationManager.OnPauseVibration(active);
+       
         AllSkillManager.PauseSkillActive(active);
         objectManager.PauseSpawnObjects(active);
         AllObjectStopActive(active);
@@ -519,16 +523,7 @@ public class GameState : MonoBehaviour
        
     }
 
-   /* public void OnSoundPause(bool active)
-    {
-        if (GameManager.Instance != null)
-        {
-            GameManager.Instance.soundManager.OnSoundPauseActive(active);
-        }
-
-
-    }
-    */
+  
     
 
     public void GameEnd()
@@ -538,6 +533,9 @@ public class GameState : MonoBehaviour
 
         GameManager.Instance.soundManager.PlayBgm(SoundEnum.BGM_GameEnd,0.5f);
         bIsGameEnd = true;
+
+      
+
         int converttime = Mathf.RoundToInt(TotalPlayTime);
         PlayerHud.UpdateGameState(converttime, TotalScore, StarCnt);
 

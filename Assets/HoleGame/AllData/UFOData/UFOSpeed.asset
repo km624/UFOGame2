@@ -21,18 +21,20 @@ MonoBehaviour:
     Materials:
     - {fileID: 2100000, guid: 85cf6d81d24148146be3b16f7fb66b86, type: 2}
     ColorPrice: 0
+    bIsreward: 0
   - IConColor:
       serializedVersion: 2
       rgba: 4281555907
     Materials:
     - {fileID: 2100000, guid: deaa81e0de6e54d40873e0418d966952, type: 2}
     ColorPrice: 10
+    bIsreward: 0
   AddUFObject:
   - {fileID: 2474884020779558425, guid: 2dcdb050f6f48014a8a3c2903e44488f, type: 3}
   AddFullStatObject:
   - {fileID: 4057589139852022725, guid: 17b7dec0b1bde934790f250e0a95d15b, type: 3}
   UFOPrice: 25
-  UFOIcon: {fileID: 21300000, guid: 1d70a5e8c5774f54d8337b6711b26992, type: 3}
+  UFOIcon: {fileID: 21300000, guid: caef8db81f4f2a94585c66c24152364a, type: 3}
   Skilltype: 3
   StatList:
   - StatType: 0
@@ -47,3 +49,4 @@ MonoBehaviour:
   - StatType: 3
     BaseValue: 1
     MaxValue: 3
+  bIsReward: 0

@@ -1,6 +1,7 @@
 using DG.Tweening;
 using JetBrains.Annotations;
 using NUnit.Framework;
+using System.Collections;
 using System.Collections.Generic;
 using System.Net.Http.Headers;
 using UnityEngine;
@@ -131,9 +132,21 @@ public class UFODirecting : MonoBehaviour
     public void WarpEffectEnd()
     {
         //Debug.Log("WarpEnd");
-        owner.EndWarpDirecting();
         UFOAnimator.enabled = false;
+        owner.EndWarpDirecting();
+        
+       // StartCoroutine(DisableAnimatorAfterDelay(1f));
     }
+
+   
+
+   /* IEnumerator DisableAnimatorAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        UFOAnimator.enabled = false;
+
+       
+    }*/
 }
 
 

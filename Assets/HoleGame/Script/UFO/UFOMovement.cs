@@ -14,7 +14,7 @@ public class UFOMovement : MonoBehaviour
     public Joystick joystick;
 
     public UFOMotion motion;
-    [SerializeField]private UFOMotion2 motion2;
+    //[SerializeField]private UFOMotion2 motion2;
     
 
     private bool MoveActive = true;
@@ -56,7 +56,7 @@ public class UFOMovement : MonoBehaviour
 
     
        if (!TurningMotion)
-      {
+        {
             Vector3 movementDirection = new Vector3(moveX, 0, moveZ);
 
             if (movementDirection.sqrMagnitude > 0.0001f)
@@ -74,12 +74,8 @@ public class UFOMovement : MonoBehaviour
         {
             Vector3 dir = new Vector3(joystick.Horizontal, 0, joystick.Vertical);
           
-            motion2.UpdateMotion(dir);
-          
-
+         
         }
-
-
 
     }
 

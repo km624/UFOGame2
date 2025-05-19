@@ -32,6 +32,8 @@ public class HoleScript : MonoBehaviour
     private Dictionary<Collider, LiftAbsorption> absorptionCache = new();
 
     private bool bIsSwalow = true;
+
+    [SerializeField] private MeshRenderer beammesh;
     public void InitBeam(UFOPlayer layer)
     {
         ufoplayer = layer;  
@@ -40,6 +42,11 @@ public class HoleScript : MonoBehaviour
     public void SetSwallow(bool swallow)
     {
         bIsSwalow = swallow;
+    }
+
+    public void SetMeshRender(bool blook)
+    {
+        beammesh.gameObject.SetActive(blook);
     }
 
     public void SetCurrentBoss (BossObject boss)
@@ -69,7 +76,7 @@ public class HoleScript : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (!bIsSwalow) return;
+       /* if (!bIsSwalow) return;*/
 
         if (other.gameObject.layer == LiftUpLayer && other.attachedRigidbody != null)
         {

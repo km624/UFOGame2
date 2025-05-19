@@ -20,6 +20,9 @@ public class UFOMotion2 : MonoBehaviour
     [Tooltip("위아래 반복 속도"), Range(0.5f, 2)]
     public float verticalSpeed = 1f;
     private float baseY;
+    private bool bIsMotion = true;
+
+    private float timeOffset; // 개별 위상 차이 유지용
 
     private void Start()
     {
@@ -28,9 +31,21 @@ public class UFOMotion2 : MonoBehaviour
 
     private void Update()
     {
+        if (!bIsMotion) return;
         float newY = baseY + verticalLength * Mathf.Sin(Time.time * verticalSpeed * 2 * Mathf.PI);
         transform.localPosition = new Vector3(transform.localPosition.x, newY, transform.localPosition.x);
     }
+
+    public void ChangeBaseY(float addy)
+    {
+        baseY += addy;
+    }
+
+    public void SetMotionStart(bool motion)
+    {
+        bIsMotion = motion;
+    }
+
     public void UpdateMotion(Vector3 inputDir)
     {
         // 1) 회전: Yaw만 회전하도록 y=0으로 고정

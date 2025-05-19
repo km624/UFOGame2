@@ -58,14 +58,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.9019608}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.9019608}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 77c805381fbf6754b81a683c4b143554, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 2f451cf8454d8b242ab951e3386eee12, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -227,7 +227,7 @@ MonoBehaviour:
   LockImage: {fileID: 3153396015338967772}
   ColorPurchasebutton: {fileID: 1931790044704475115}
   PriceText: {fileID: 1647668405915192452}
-  RewardIcon: {fileID: 21300000, guid: 2ff197eb21096cc46ad8c4b6adde45fd, type: 3}
+  RewardIcon: {fileID: 21300000, guid: 05645eab09ba212439ba90e5d19f1f09, type: 3}
 --- !u!1 &7982444086668689302
 GameObject:
   m_ObjectHideFlags: 0

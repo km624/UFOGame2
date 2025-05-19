@@ -10,14 +10,15 @@ public class MapChange : MonoBehaviour
     [SerializeField]
     private GameObject Map;
    
-    private List<GameObject> SpawnMapObject =new List<GameObject>();
+    private List<MapObject> SpawnMapObject =new List<MapObject>();
     
     public void ChangeMap(GenerationObjects currentgenerationdata)
     {
         foreach(var spawnobj in SpawnMapObject)
         {
-            Destroy(spawnobj);  
+            spawnobj.DestroyMapObject();
         }
+        SpawnMapObject.Clear();
 
         foreach (var renderer in mRenderers)
         {
@@ -26,7 +27,9 @@ public class MapChange : MonoBehaviour
 
         foreach (var mapobject in currentgenerationdata.MapObjects)
         {
-            GameObject mapobj = Instantiate(mapobject, Map.transform);
+            MapObject mapobj = Instantiate(mapobject, Map.transform);
+            mapobj.MapObjectSpawn();
+            SpawnMapObject.Add(mapobj);
         }
     }
 

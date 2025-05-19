@@ -21,16 +21,24 @@ public class FirstLoadingWidget : MonoBehaviour
     async void Start()
     {
 
-        // 통통 튀는 스케일
-       scaleTween = Logo.transform.DOScale(new Vector3(1.1f, 0.9f, 1f), 0.7f)
-                 .SetEase(Ease.InOutSine)
-                 .SetLoops(-1, LoopType.Yoyo);
+        /*    // 통통 튀는 스케일
+           scaleTween = Logo.transform.DOScale(new Vector3(1.1f, 0.9f, 1f), 0.7f)
+                     .SetEase(Ease.InOutSine)
+                     .SetLoops(-1, LoopType.Yoyo);
 
-        // 위아래 둥실
-        MoveTween = Logo.transform.DOLocalMoveY(Logo.transform.localPosition.y +50f, 0.7f)
-                 .SetEase(Ease.InOutSine)
-                 .SetLoops(-1, LoopType.Yoyo);
+            // 위아래 둥실
+            MoveTween = Logo.transform.DOLocalMoveY(Logo.transform.localPosition.y +25f, 0.7f)
+                     .SetEase(Ease.InOutSine)
+                     .SetLoops(-1, LoopType.Yoyo);*/
 
+        Logo.transform.localScale = Vector3.zero;
+        Sequence seq = DOTween.Sequence();
+        
+        seq.AppendInterval(0.25f)
+            .Append(Logo.transform.DOScale(Vector3.one, 1.5f)
+            .SetEase(Ease.OutElastic));
+          
+      
         if (GameManager.Instance)
         {
             data = GameManager.Instance.InitData2();

@@ -23,4 +23,4 @@ MonoBehaviour:
   GenerationName: "\uBC31\uC545\uAE30 \uC2DC\uB300"
   MapMaterial: {fileID: 2100000, guid: 22ffb96697013764e827515311c4d2cc, type: 2}
   MapObjects: []
-  GenerationBGM: {fileID: 8300000, guid: a62308a7fc965f24dab6d8cbfaf9bde9, type: 3}
+  GenerationBGM: {fileID: 8300000, guid: 10ea0c6ecdfbe594d85161c221bce875, type: 3}

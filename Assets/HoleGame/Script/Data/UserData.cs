@@ -26,7 +26,7 @@ public class UserData
         SelectUFOName = "UFONormal";
 
         BestScore = 0;
-        StarCnt = 100;
+        StarCnt = 50;
         userSettingData = new UserSettingData();
         userAchievePointData = new UserAchievePointData();
 
@@ -37,7 +37,7 @@ public class UserData
         SelectUFOName = "UFONormal";
 
         BestScore = 0;
-        StarCnt = 100;
+        StarCnt = 50;
         userSettingData = new UserSettingData();
         userAchievePointData = new UserAchievePointData();
     }

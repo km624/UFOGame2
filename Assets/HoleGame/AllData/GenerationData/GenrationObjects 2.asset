@@ -21,6 +21,9 @@ MonoBehaviour:
   bomb: {fileID: 2231101162902535765, guid: 7644a52461afc1c4fa7f9afa5bd1567f, type: 3}
   Boss: {fileID: 6395020949981121326, guid: aff061fbc614e6e4f85a1c2ebe99d070, type: 3}
   GenerationName: "\uC911\uC138 \uC2DC\uB300"
-  MapMaterial: {fileID: 2100000, guid: 94b67c99565f776499ca8843d096d632, type: 2}
-  MapObjects: []
-  GenerationBGM: {fileID: 8300000, guid: 48685df7171a28143ab6d7822fb8f9be, type: 3}
+  MapMaterial: {fileID: 2100000, guid: 458e3bb122516054587b9c9f5707aa96, type: 2}
+  MapObjects:
+  - {fileID: 7278146050696279032, guid: ee80f30ce9e255a40bc9933416557001, type: 3}
+  - {fileID: -1647671605241801913, guid: 3f9210472ed42494fabc1e83ab98c168, type: 3}
+  - {fileID: 3648504532597529271, guid: 898f6d3c745d492469e9f4778c6241e6, type: 3}
+  GenerationBGM: {fileID: 8300000, guid: 5b1ed8fbe89154eaf96723b6e5f0aad3, type: 3}

@@ -36,7 +36,7 @@ public class AchievePointWidget : MonoBehaviour
 
     [SerializeField] private NextRewardWidget nextRewardWidget;
 
-    [SerializeField] private GameObject WorkInProgressPanel;
+    //SerializeField] private GameObject WorkInProgressPanel;
 
 
     public void InitPointWidget()
@@ -46,13 +46,35 @@ public class AchievePointWidget : MonoBehaviour
 
         AchievementManager.Instance.FOnPointChanged -= CallBack_UpdatePoint;
         AchievementManager.Instance.FOnPointChanged += CallBack_UpdatePoint;
-        WorkInProgressPanel.SetActive(false);
+       // WorkInProgressPanel.SetActive(false);
+
+
+
         CreatePointWidget();
     }
+    private void InitUserTierAllCompleted()
+    {
+        currentStep = userpointData.Step;
+        if(userpointData.CheckAllTierCompleted())
+        {
+            if (!AchievementManager.Instance.CheckPossibleNextStep(currentStep + 1))
+            {
+               
+                var nextpointDataList = AchievementManager.Instance.ReadPointRewardDataList[currentStep + 1];
+                userpointData.ChangeRewradPointStep(currentStep + 1, nextpointDataList.PointRewardDatas.Count);
+               
+            }
+        }
+      
+        
+    }
+   
 
     private void CreatePointWidget()
     {
         currentStep = userpointData.Step;
+
+       
         NormalPointgauge = 0;
         //누적 포인트 계산
         int enabletier = currentStep;
@@ -65,21 +87,21 @@ public class AchievePointWidget : MonoBehaviour
              //Debug.Log("stepmaxtpoint  " + stepmaxtpoint);
              NormalPointgauge += stepmaxtpoint;
          }
-       // Debug.Log(NormalPointgauge);
+      
         CurrentPointGauge = userpointData.Point - NormalPointgauge;
 
         currentPointText.text = CurrentPointGauge.ToString();
 
-        if (!AchievementManager.Instance.CheckPossibleNextStep(currentStep))
+       /* if (!AchievementManager.Instance.CheckPossibleNextStep(currentStep))
         {
-            WorkInProgressPanel.SetActive(true);
+           // WorkInProgressPanel.SetActive(true);
             return;
-        }
+        }*/
 
         var pointDataList = AchievementManager.Instance.ReadPointRewardDataList[currentStep];
 
         //이부분 (위험 ) Danger
-        if(userpointData.TierCompleted.Count==0 || userpointData.TierCompleted == null)
+        if(userpointData.TierCompleted.Count== 0 || userpointData.TierCompleted == null)
         {
 
             userpointData.InitTierList(pointDataList.PointRewardDatas.Count);
@@ -156,33 +178,36 @@ public class AchievePointWidget : MonoBehaviour
 
         if (userpointData.CheckAllTierCompleted())
         {
+            nextRewardWidget.SetNextRewardWidget(currentStep+1);
+
             if (AchievementManager.Instance.CheckPossibleNextStep(currentStep + 1))
             {
                 var nextpointDataList = AchievementManager.Instance.ReadPointRewardDataList[currentStep + 1];
+                
                 userpointData.ChangeRewradPointStep(currentStep + 1, nextpointDataList.PointRewardDatas.Count);
                 Debug.Log((currentStep+1) +  "새로운 포인트 리워드 세팅");
+                foreach (var rewardwidget in RewardWidgets)
+                {
+                    Destroy(rewardwidget.gameObject);
+                }
+                RewardWidgets.Clear();
+                CreatePointWidget();
             }
             else
             {
-                userpointData.ChangeRewradPointStep(currentStep + 1, 0);
+                //userpointData.ChangeRewradPointStep(currentStep + 1, 0);
                 Debug.Log((currentStep + 1) + "세팅없엉 세팅");
             }
 
  
-            foreach (var rewardwidget in RewardWidgets)
+           /* foreach (var rewardwidget in RewardWidgets)
             {
                 Destroy(rewardwidget.gameObject);
             }
             RewardWidgets.Clear();
-            CreatePointWidget();
-            nextRewardWidget.SetNextRewardWidget(currentStep);
+            CreatePointWidget();*/
 
-            //}
-            /* else
-             {
-                 WorkInProgressPanel.SetActive(true);
-                // Debug.Log("다음 포인트 리워드 세팅 없음");
-             }*/
+            
 
 
         }

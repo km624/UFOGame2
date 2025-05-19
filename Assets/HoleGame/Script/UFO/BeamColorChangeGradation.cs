@@ -5,7 +5,10 @@ public class BeamColorChangeGradation : MonoBehaviour
     [Header("Shader Material")]
     [SerializeField]
     private Material beamMaterial; // ShaderGraph 만든 머터리얼 연결
-
+    [SerializeField] private Renderer beamRenderer;
+    [SerializeField]
+    private Material hiddenmaterial; // ShaderGraph 만든 머터리얼 연결
+    private Material hiddenMaterialInstance = null;
     [Header("Color Properties")]
     [SerializeField]
     private Color[] colors = new Color[5]; // 미리 등록해둔 5개 컬러
@@ -27,8 +30,8 @@ public class BeamColorChangeGradation : MonoBehaviour
     private int maxLevel = 5;
     private int currentLevel = 1;
 
-   
 
+  
     // 컬러들을 머터리얼에 초기 셋팅
     private void InitializeColors()
     {
@@ -36,11 +39,24 @@ public class BeamColorChangeGradation : MonoBehaviour
         {
             beamMaterial.SetColor(colorPropertyNames[i], colors[i]);
         }
+       
     }
 
     public void SetMaxLevel(int max)
     {
         maxLevel = max;
+    }
+
+    public void HideMaterial(bool hide)
+    {
+        if(hide)
+        {
+ 
+            beamRenderer.material = hiddenmaterial;
+        }
+        else
+            beamRenderer.material = beamMaterial;
+        Debug.Log("Hide" + hide);
     }
 
     // 현재 레벨에 따라 구간 조정

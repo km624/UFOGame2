@@ -65,10 +65,6 @@ public class ObjectManager : MonoBehaviour
     public event Action<Dictionary<float,int>/*BonusObjectsOrgin*/> FOnBounusCompleted;
 
 
-    /*[SerializeField] private LayerMask groundMask;
-    [SerializeField] private LayerMask wallMask;
-    [SerializeField] private LayerMask IgnoreMask;*/
-
     public int GetMaxObjectCnt() { return MaxObjectCnt; }
 
     public string getCurrentGenerationName() 
@@ -234,7 +230,9 @@ public class ObjectManager : MonoBehaviour
 
     public void ChangeGeneration()
     {
-      
+
+        if (gameState.bIsGameEnd) return;
+
         CurrentGenration += 1;
         
        
@@ -650,38 +648,17 @@ public class ObjectManager : MonoBehaviour
         gameState.CallBack_BossSpawned(bossobject);
     }
 
-   /* void SpawnBossAtRandomGridPosition()
-    {
-        //BossObject bossprefab = generationList[CurrentGenration].Boss;
-        BossObject bossprefab = CurrentGenerationData.Boss;
-        if (bossprefab == null) return;
-
-       
-
-        Vector3 spawnPosition = GetValidSpawnPosition(true);
-        GameObject bossobj = Instantiate(bossprefab.gameObject, spawnPosition, Quaternion.identity);
-      
-
-        BossObject boss = bossobj.GetComponent<BossObject>();
-        if (boss != null)
-        {
-            boss.SetStatData(bossStat);
-            boss.InitObject();
-            boss.FOnBossSwallowed += CallBacK_BossSwallow;
-            currentBoss = boss;
-            gameState.CallBack_BossSpawned(boss);
-
-
-        }
-    }
-*/
+   
     public void CallBacK_BossSwallow(BossObject bossObject)
     {
         if(bossObject!=null)
         {
 
+            gameState.CallBacK_BossSwallow(bossObject);
             //보스 시간 , 점수 추가
-            FOnObjectSwallowed(bossObject);
+            FOnObjectSwallowed?.Invoke(bossObject);
+
+
             if (GameManager.Instance.userData!=null)
             {
                if(GameManager.Instance.userData.userSettingData.bIsDirection)

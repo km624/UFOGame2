@@ -16,20 +16,7 @@ public class StageWidget : MonoBehaviour
     [SerializeField]
     private TMP_Text TimeText;
 
-    //private int stageNum = 0;
-    //private int clearStar = 0;
-    
    
-    void Start()
-    {
-        
-    }
-
-   
-    void Update()
-    {
-        
-    }
 
     private void ResetShapeWidget()
     {

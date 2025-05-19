@@ -39,7 +39,11 @@ public class PaletteButtonWidget : MonoBehaviour
         PriceText.text = bIsReward ? string.Empty : ColorPrice.ToString();
 
         if (bIsReward)
+        {
             LockImage.sprite = RewardIcon;
+            LockImage.color = Color.white;
+        }
+            
 
         LockImage.gameObject.SetActive(!bIsUnlock);
 

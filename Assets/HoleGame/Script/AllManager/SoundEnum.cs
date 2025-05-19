@@ -23,7 +23,8 @@ public enum SoundEnum
     GetReward,
     StatButtonClick,
     BonusDisappear,
-    GamePlay
+    GamePlay,
+    DangerSFX
   
 
 }

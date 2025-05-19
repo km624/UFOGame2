@@ -23,8 +23,9 @@ public class UFOPlayer : MonoBehaviour, IDetctable
     [SerializeField]
     private float MaxExpGauge = 100.0f;
 
-    //float baseExpPerMass = 8.0f;
-    float baseExpPerMass = 10.0f;
+    float baseExpPerMass = 8.0f;
+    //float baseExpPerMass = 50.0f;
+   
 
     public event Action<float> FOnExpAdded;
     public event Action<int/*curentLevel*/> FOnLevelUped;
@@ -37,8 +38,7 @@ public class UFOPlayer : MonoBehaviour, IDetctable
 
 
     [Header("UFO UI")]
-    //[SerializeField]
-    //private Image EXPGaugeBar;
+    
     [SerializeField]
     private Image TimeGaugeBar; 
     [SerializeField]
@@ -55,8 +55,10 @@ public class UFOPlayer : MonoBehaviour, IDetctable
     private TMP_Text LevelText;
     [SerializeField]
     private DamageNumber numberPrefab;
+    //[SerializeField]
+    //private DamageNumber LevelUpPrefab;
     [SerializeField]
-    private DamageNumber LevelUpPrefab;
+    private LevelUpMotion levelupEffect;
 
     [Header(" 개발자 ")]
     [SerializeField]
@@ -92,6 +94,9 @@ public class UFOPlayer : MonoBehaviour, IDetctable
     [SerializeField] private PossibleWidget possibleWidget;
 
     [SerializeField] private GameObject UFOWidget;
+
+    [SerializeField] private UFOHeightController heightController;
+
 
  
     public void InitUFO(float gametime , UserUFOData userufodata , UFOData selectUFOdata , bool bisdirect)
@@ -169,7 +174,7 @@ public class UFOPlayer : MonoBehaviour, IDetctable
             ufodirection.OnStartUFODirecct();
 
         }
-
+        CameraDirection(true);
         DirectionProgress(true);
     }
 
@@ -180,6 +185,7 @@ public class UFOPlayer : MonoBehaviour, IDetctable
 
     public void EndUFODirecting()
     {
+        CameraDirection(false);
         DirectionProgress(false);
         FOnDirectionEnd?.Invoke();
         FOnLevelUped?.Invoke(CurrentLevel);
@@ -192,18 +198,29 @@ public class UFOPlayer : MonoBehaviour, IDetctable
         {
             ufodirection.OnWarpStart();
         }
-
+        CameraDirection(true);
         DirectionProgress(true);
     }
 
     public void EndWarpDirecting()
     {
+        CameraDirection(false);
         DirectionProgress(false);
         FOnWarpDirectionEnd?.Invoke();
         FOnLevelUped?.Invoke(CurrentLevel);
     }
 
     private void DirectionProgress(bool bprogress)
+    {
+       
+        UFOBeam.SetSwallow(!bprogress);
+       
+        UFOWidget.gameObject.SetActive(!bprogress);
+        LevelText.gameObject.SetActive(!bprogress);
+
+    }
+
+    private void CameraDirection(bool bprogress)
     {
         if (bprogress)
         {
@@ -214,22 +231,10 @@ public class UFOPlayer : MonoBehaviour, IDetctable
         {
             ResetCameraDistance();
         }
-        UFOBeam.SetSwallow(!bprogress);
-        /*  TimeGaugeBar.gameObject.SetActive(!bprogress);
-          TimeGaugeBar2.gameObject.SetActive(!bprogress);*/
-        UFOWidget.gameObject.SetActive(!bprogress);
-        LevelText.gameObject.SetActive(!bprogress);
-
     }
 
-
-    void Update()
-    {
-
-        //UpdateSizeGaugeBar();
-      
-    }
    
+  
     private void OnDisable()
     {
         
@@ -466,6 +471,7 @@ public class UFOPlayer : MonoBehaviour, IDetctable
     public void CallBack_StopMovement(bool active)
     {
         ufoMovement.SetMoveActive(!active);
+        UFOBeam.SetSwallow(!active);
     }
 
     public void Skill_UFOspeedUp(bool bactivate)
@@ -483,12 +489,7 @@ public class UFOPlayer : MonoBehaviour, IDetctable
         UFORenderer.material = newmaterial;
     }
 
-   /* private void UpdateSizeGaugeBar()
-    {
-
-        EXPGaugeBar.fillAmount = Mathf.Lerp(EXPGaugeBar.fillAmount, TargetfillPercent, Time.deltaTime * fillSpeed);
-      
-    }*/
+  
 
     public void AddEXPGauge(float gauge , float mass)
     {
@@ -514,9 +515,6 @@ public class UFOPlayer : MonoBehaviour, IDetctable
             {
                 CurrentExpGauge = 0.0f;
             }
-            
-
-           // EXPGaugeBar.fillAmount = 0.0f;
 
             ChangeLevel(true);
 
@@ -573,8 +571,10 @@ public class UFOPlayer : MonoBehaviour, IDetctable
             GameManager.Instance.soundManager.PlaySfx(SoundEnum.LevelUp, 0.3f);
         }
 
-        Vector3 newpos = transform.position + Vector3.up*1;
-        LevelUpPrefab.Spawn(newpos, "Level Up");
+        /*Vector3 newpos = transform.position + Vector3.up*1;
+        LevelUpPrefab.Spawn(newpos, "Level Up");*/
+
+        levelupEffect.PlayPop();
 
         UFOBeam.SetSwallowLevelSet(CurrentLevel);
         trigger.SetCurrentLevel(CurrentLevel);
@@ -642,5 +642,30 @@ public class UFOPlayer : MonoBehaviour, IDetctable
         possibleWidget.SetPossibleIcon(shape);
     }
 
+    public void ForcePopPossibleWidget()
+    {
+        possibleWidget.ForcePop();
+    }
 
+    public void CallBack_PassMapObject(bool bpass,float targetheight)
+    {
+        if(bpass)
+        {
+            heightController.MoveToHeight(targetheight);
+            PassProgress(bpass);
+        }
+        else
+        {
+            heightController.ResetHeight();
+        }  
+       
+    }
+
+    public void PassProgress(bool bpass)
+    {
+        BeamColor.HideMaterial(bpass);
+        DirectionProgress(bpass);
+    }
 }
+
+

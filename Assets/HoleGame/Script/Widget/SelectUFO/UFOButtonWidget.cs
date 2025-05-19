@@ -41,6 +41,8 @@ public class UFOButtonWidget : MonoBehaviour
 
         if (!bIsUnlocked)
             UFOIcon.color = LockColor;
+        else
+            UFOIcon.color = UnlockColor;
 
         if (bIsReward)
             LockImage.sprite = RewardIcon;

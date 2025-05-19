@@ -45,6 +45,8 @@ public class UFOAllWidget : MonoBehaviour
 
     private string selecetUFOname = null;
 
+    [SerializeField] private UFOModelAround modelaround;
+
     void Start()
     {
         UFOButtonImage.gameObject.SetActive(true);
@@ -67,11 +69,10 @@ public class UFOAllWidget : MonoBehaviour
         isVisible = true;
         UFOButtonImage.gameObject.SetActive(false);
         SlideDownImage.gameObject.SetActive(true);
-        Vector2 shownPos = new Vector2(0, 0f);
 
-      /*  UFOSelectButton.gameObject.SetActive(true);
-        UFOReinforceButton.gameObject.SetActive(true);*/
-       
+        modelaround.SetModelDrag(true);
+
+        Vector2 shownPos = new Vector2(0, 0f);
 
         UFOAllWidgetTransform.DOAnchorPos(shownPos, slideDuration)
             .SetEase(Ease.OutQuart)
@@ -88,20 +89,20 @@ public class UFOAllWidget : MonoBehaviour
         UFOButtonImage.gameObject.SetActive(true);
         SlideDownImage.gameObject.SetActive(false);
         string currentufo = GameManager.Instance.userData.SelectUFOName;
-
+       
         //ÆÇ³Ú ´èÈú¶§ °­Á¦ ¸®¼Â
         selectUFOWidget.SelectUFOType(currentufo, true, 0,false);
 
+        modelaround.SetModelDrag(false);
+        //modelaround.ResetRotation();
 
-       /* UFOSelectButton.gameObject.SetActive(false);
-        UFOReinforceButton.gameObject.SetActive(false);*/
 
         Vector2 hiddenPos = new Vector2(0.0f, -1250.0f);
         UFOAllWidgetTransform.DOAnchorPos(hiddenPos, slideDuration)
             .SetEase(Ease.InQuart)
             .OnComplete(() =>
             {
-                //isVisible = false;
+              
                 
             });
     }

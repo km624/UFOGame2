@@ -115,7 +115,7 @@ public class AchievementManager : MonoBehaviour
         // 2) ID로 업적 정의 가져오기
         if (!subDict.TryGetValue(id, out var data))
         {
-            Debug.LogWarning($"[Achievement] ReportProgress 실패: 타입 '{type}'에 ID '{id}' 업적이 없습니다.");
+            //Debug.LogWarning($"[Achievement] ReportProgress 실패: 타입 '{type}'에 ID '{id}' 업적이 없습니다.");
             return;
         }
 

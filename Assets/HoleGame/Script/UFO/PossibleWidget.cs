@@ -8,7 +8,7 @@ public class PossibleWidget : MonoBehaviour
     [SerializeField] private float showDuration = 0.4f;
     [SerializeField] private float hideDuration = 0.3f;
     [SerializeField] private float visibleTime = 5.0f;
-    [SerializeField] private float bossvisibleTime = 1.5f;
+    //[SerializeField] private float bossvisibleTime = 1.5f;
 
     private Sequence currentSeq;
 
@@ -22,7 +22,6 @@ public class PossibleWidget : MonoBehaviour
     public void SetPossibleIcon(ShapeEnum shapetype)
     {
      
-
         if (ShapeManager.Instance != null)
         {
             Sprite shapeicon = ShapeManager.Instance.GetShapeSprite(shapetype);
@@ -49,17 +48,32 @@ public class PossibleWidget : MonoBehaviour
         targetUI.localScale = transform.localScale;
 
         float visbletime = visibleTime;
-        if (shapetype == ShapeEnum.boss)
-            visbletime = bossvisibleTime;
+       /* if (shapetype == ShapeEnum.boss)
+            visbletime = bossvisibleTime;*/
 
         // 등장 애니메이션
         currentSeq = DOTween.Sequence();
         currentSeq.Append(targetUI.DOScale(1.2f, showDuration * 0.6f).SetEase(Ease.OutBack))
                   .Append(targetUI.DOScale(1f, showDuration * 0.4f).SetEase(Ease.OutElastic));
 
-        // 대기 후 사라짐
-        currentSeq.AppendInterval(visbletime);
+        if (shapetype != ShapeEnum.boss)
+        {
+            // 대기 후 사라짐
+            currentSeq.AppendInterval(visbletime);
 
+            // 사라지는 애니메이션
+            currentSeq.Append(targetUI.DOScale(0.6f, hideDuration * 0.5f).SetEase(Ease.InBack))
+                      .Append(targetUI.DOScale(0f, hideDuration * 0.5f).SetEase(Ease.InSine))
+                      .OnComplete(() => targetUI.gameObject.SetActive(false));
+        }
+         
+    }
+
+    public void ForcePop()
+    {
+        Debug.Log("없어짐");
+        currentSeq?.Kill();
+        currentSeq = DOTween.Sequence();
         // 사라지는 애니메이션
         currentSeq.Append(targetUI.DOScale(0.6f, hideDuration * 0.5f).SetEase(Ease.InBack))
                   .Append(targetUI.DOScale(0f, hideDuration * 0.5f).SetEase(Ease.InSine))
