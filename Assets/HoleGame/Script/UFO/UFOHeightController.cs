@@ -16,8 +16,6 @@ public class UFOHeightController : MonoBehaviour
     private float addheight = 0.0f;
 
 
-    
-
     public void MoveToHeight(float targetHeight)
     {
         if (moveTween != null) moveTween.Kill();

@@ -330,7 +330,7 @@ public class GameState : MonoBehaviour
     }
     private void CallBack_BombSwallow(float minustime)
     {
-       
+        if (bIgnoredbomb) return;
         TotalTime -= minustime;
         GameManager.Instance.soundManager.PlaySfx(SoundEnum.Bomb,0.5f);
         Camerashake.HitShakeCamera();
